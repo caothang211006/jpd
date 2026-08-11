@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JPD · Học tiếng Nhật</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="brand" data-nav="home">
+    <span class="brand-mark">日</span>
+    <span class="brand-text">JPD<small>できる日本語</small></span>
+  </button>
+  <nav class="tabs" id="tabs" hidden>
+    <button data-nav="vocab">Từ vựng</button>
+    <button data-nav="flash">Flashcard</button>
+    <button data-nav="grammar">Ngữ pháp</button>
+    <button data-nav="kanji">Kanji</button>
+    <button data-nav="quiz">Kiểm tra</button>
+  </nav>
+  <button class="theme-toggle" id="themeToggle" title="Đổi giao diện sáng/tối">◐</button>
+</header>
+
+<div class="lesson-bar" id="lessonBar" hidden>
+  <button class="back" data-nav="home">← Tất cả bài</button>
+  <span class="lesson-crumb" id="lessonCrumb"></span>
+</div>
+
+<main id="view"></main>
+
+<footer class="foot">
+  Dữ liệu từ giáo trình <b>できる日本語</b> · Tiến độ học được lưu trong trình duyệt này
+</footer>
+
+<script src="js/store.js"></script>
+<script src="js/data.js"></script>
+<script src="js/vocab.js"></script>
+<script src="js/flash.js"></script>
+<script src="js/grammar.js"></script>
+<script src="js/kanji.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/study.js"></script>
+<script src="js/app.js"></script>
+<script src="data/manifest.js"></script>
+</body>
+</html>
