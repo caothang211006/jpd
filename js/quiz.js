@@ -29,7 +29,7 @@
 
   /* exam item shapes:
        {sec, t:'mcq', q, opt, ans}
-       {sec, t:'fill', q, ans:string|[string]}
+       {sec, t:'fill', q, acc:[accepted answer, ...]}
        {sec, t:'reading', passage, qs:[{q,opt,ans}]} */
   function runExamSession(root, lesson) {
     var questions = flattenExam(lesson.exam);
@@ -38,7 +38,7 @@
 
     function setup() {
       var best = Store.bestScore(storeId), secs = sectionNames(questions);
-      root.innerHTML = '<div class="quiz-wrap"><h1>Đề kiểm tra bài ' + esc(lesson.n || '') + '</h1>' +
+      root.innerHTML = '<div class="quiz-wrap"><h1>Đề luyện tập bài ' + esc(lesson.n || '') + '</h1>' +
         '<p class="sub">' + questions.length + ' câu · làm theo từng phần, nộp bài để xem kết quả.' +
         (best !== null ? ' Điểm cao nhất: <b>' + Math.round(best * 100) + '%</b>.' : '') + '</p>' +
         '<div class="exam-sections">' + secs.map(function (s) { return '<span>' + esc(s) + '</span>'; }).join('') + '</div>' +
@@ -72,7 +72,7 @@
       function finish() {
         var correct = 0, wrong = [];
         questions.forEach(function (q, i) {
-          var ok = q.opt ? answers[i] === q.ans : matchesFill(answers[i], q.ans);
+          var ok = q.opt ? answers[i] === q.ans : matchesFill(answers[i], q.acc || q.ans);
           if (ok) correct++; else wrong.push({ q: q, answer: answers[i] });
         });
         Store.addScore(storeId, correct, questions.length);
@@ -97,7 +97,8 @@
   function review(wrong) {
     if (!wrong.length) return '';
     return '<div class="review"><h2>Câu sai (' + wrong.length + ')</h2>' + wrong.map(function (x) {
-      var right = x.q.opt ? x.q.opt[x.q.ans] : (Array.isArray(x.q.ans) ? x.q.ans.join(' / ') : x.q.ans);
+      var accepted = x.q.acc || x.q.ans;
+      var right = x.q.opt ? x.q.opt[x.q.ans] : (Array.isArray(accepted) ? accepted.join(' / ') : accepted);
       var yours = x.q.opt && x.answer !== undefined ? x.q.opt[x.answer] : (x.answer || 'Chưa trả lời');
       return '<div class="row exam-review"><span class="jp">' + esc(x.q.q) + '</span><span><span class="yours">Bạn chọn: ' + esc(yours) + '</span><br><span class="right">Đúng: ' + esc(right) + '</span></span></div>';
     }).join('') + '</div>';
