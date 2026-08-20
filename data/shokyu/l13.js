@@ -115,6 +115,9 @@ JPD.lesson({
     }
   ],
 
+  // Đề xác nhận chính thức chưa có nguồn công khai để đối chiếu.
+  exam: [],
+
   kanji: [
     { c: '葉', m: 'DIỆP — lá; lời (言葉)', on: 'ヨウ', kun: 'は',
       w: [{ jp: '紅葉', k: 'こうよう', vi: 'lá đỏ (mùa thu)' }] },

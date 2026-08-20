@@ -108,6 +108,9 @@ JPD.lesson({
     }
   ],
 
+  // Đề xác nhận chính thức chưa có nguồn công khai để đối chiếu.
+  exam: [],
+
   kanji: [
     { c: '曇', m: 'ĐÀM — nhiều mây, u ám', on: 'ドン', kun: 'くも・る',
       w: [{ jp: '曇り', k: 'くもり', vi: 'trời nhiều mây' }] },

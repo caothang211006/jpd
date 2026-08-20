@@ -45,7 +45,10 @@
     var nav = el.getAttribute('data-nav');
     if (nav === 'home') { go('#/'); return; }
     if (nav === 'study') { go('#/study'); return; }
-    if (TAB_LABEL[nav] && current.lessonId) { go('#/l/' + current.lessonId + '/' + nav); }
+    var navParts = nav.split('/');
+    if (TAB_LABEL[navParts[0]] && current.lessonId) {
+      go('#/l/' + current.lessonId + '/' + nav);
+    }
   });
 
   var current = { lessonId: null, tab: null };

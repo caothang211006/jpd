@@ -2,13 +2,11 @@
    mark known.
 
    Card shapes on the front/back:
-     kind 'vocab'    front: word + kana (kana styled large, easy to read)
-                      back:  meaning
+     kind 'vocab'    front: word only; back: reading + meaning
      kind 'kanji'    front: the character ALONE — no reading, so it tests
                              recognition honestly
                       back:  ON/KUN readings + meaning
-     kind 'compound' front: compound word + kana (same as vocab)
-                      back:  meaning + which kanji it belongs to
+     kind 'compound' front: compound word only; back: reading + meaning + tag
 
    Every card carries its own .store (a Store bucket id) and .key (via
    wordKey). That is what makes pooled multi-lesson sessions possible: a
@@ -157,9 +155,9 @@
       } else {
         jpSide =
           '<div class="big jp">' + esc(w.w) + '</div>' +
-          (w.k ? '<div class="kana jp">' + esc(w.k) + '</div>' : '') +
           '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
         viSide =
+          (w.k ? '<div class="kana jp">' + esc(w.k) + '</div>' : '') +
           '<div class="mean-big">' + esc(w.m) + '</div>' +
           (w.tag ? '<div class="card-tag">' + esc(w.tag) + '</div>' : '') +
           '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';

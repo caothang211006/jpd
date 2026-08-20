@@ -58,14 +58,13 @@ bài sách vàng đều để trống.
 
 Tab Flashcard có 2 bộ thẻ: **Từ vựng** và **Kanji & từ ghép**.
 
-- Thẻ **từ vựng**: mặt trước là từ + cách đọc hiragana/katakana (cỡ lớn, rõ),
-  mặt sau là nghĩa.
+- Thẻ **từ vựng**: mặt trước chỉ là từ; mặt sau hiện cách đọc hiragana/katakana
+  rồi đến nghĩa. Từ thuần kana không có dòng cách đọc riêng.
 - Thẻ **kanji** (chữ Hán đơn lẻ): mặt trước **chỉ hiện chữ**, không có cách đọc
   — để việc nhận mặt chữ được kiểm tra thật. Cách đọc On/Kun dồn sang mặt sau
   cùng nghĩa Hán–Việt.
-- Thẻ **từ ghép** (đi kèm mỗi chữ kanji, ví dụ 大家 dưới chữ 家): coi như từ
-  vựng bình thường — mặt trước có kana, mặt sau là nghĩa, kèm ghi chú "từ ghép
-  của [chữ]".
+- Thẻ **từ ghép** (đi kèm mỗi chữ kanji, ví dụ 大家 dưới chữ 家): mặt trước chỉ
+  có từ; mặt sau có cách đọc, nghĩa và ghi chú "từ ghép của [chữ]".
 
 Bài 8 ra 41 thẻ từ 12 chữ (chữ đơn + từ ghép, đã loại trùng — 映画 nằm dưới cả
 映 và 画 nhưng chỉ hiện một lần). Hai bộ thẻ đếm tiến độ riêng, nên đánh dấu

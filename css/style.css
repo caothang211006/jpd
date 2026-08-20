@@ -342,6 +342,12 @@ h2 { font-size: 17px; margin: 30px 0 12px; }
 .review .row .jp { font-family: var(--jp); font-size: 17px; }
 .review .row .yours { color: var(--bad); font-size: 13.5px; }
 .review .row .right { color: var(--ok); font-size: 13.5px; }
+.exam-sections { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0; }
+.exam-sections span { background: var(--panel-2); border-radius: 99px; color: var(--ink-soft); font-size: 13px; padding: 5px 10px; }
+.passage { white-space: pre-wrap; text-align: left; border-bottom: 1px solid var(--line); margin: 0 0 18px; padding: 0 0 18px; font-size: 16px; line-height: 1.8; }
+.fill-answer { display: flex; gap: 9px; }
+.fill-answer input { flex: 1; min-width: 0; font: 18px var(--jp); border: 1px solid var(--line); border-radius: 11px; background: var(--panel); color: var(--ink); padding: 11px 13px; }
+.exam-review { align-items: flex-start !important; }
 
 @media (max-width: 620px) {
   .word { grid-template-columns: 1fr auto; }

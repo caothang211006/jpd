@@ -136,6 +136,9 @@ JPD.lesson({
     }
   ],
 
+  // Đề xác nhận chính thức chưa có nguồn công khai để đối chiếu.
+  exam: [],
+
   kanji: [
     { c: '券', m: 'KHOÁN — vé, phiếu', on: 'ケン', kun: '',
       w: [{ jp: '食券', k: 'しょっけん', vi: 'phiếu ăn' }] },

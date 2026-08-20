@@ -120,6 +120,9 @@ JPD.lesson({
     }
   ],
 
+  // Đề xác nhận chính thức chưa có nguồn công khai để đối chiếu.
+  exam: [],
+
   kanji: [
     { c: '欲', m: 'DỤC — muốn, ham muốn', on: 'ヨク', kun: 'ほ・しい',
       w: [{ jp: '食欲', k: 'しょくよく', vi: 'sự thèm ăn, sự ngon miệng' }] },
