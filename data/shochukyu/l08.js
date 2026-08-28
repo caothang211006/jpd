@@ -40,7 +40,7 @@ JPD.lesson({
     { g: 'お世話になりました', w: 'くださる', k: '', m: 'Cho (kính ngữ)' },
 
     { g: 'もう一度聞こう', w: 'どういたしまして', k: '', m: 'Không có chi' },
-    { g: 'もう一度聞こう', w: 'チヂミ', k: '', m: 'Món Chijimi (bánh kếp Hàn Quốc)' },
+    { g: 'もう一度聞こう', w: 'チヂミ', k: '', m: 'Chijimi (Món Chijimi (bánh kếp Hàn Quốc))' },
     { g: 'もう一度聞こう', w: '飾る', k: 'かざる', m: 'Trang trí' },
     { g: 'もう一度聞こう', w: '乾杯', k: 'かんぱい', m: 'Cạn chén, chúc mừng' }
   ],

@@ -9,7 +9,7 @@ JPD.lesson({
     { g: 'アルバイトを探す', w: '方', k: 'かた', m: 'Người (cách nói lịch sự)' },
     { g: 'アルバイトを探す', w: '者', k: 'もの', m: 'Người (cách nói khiêm nhường)' },
     { g: 'アルバイトを探す', w: 'チラシ', k: '', m: 'Tờ rơi' },
-    { g: 'アルバイトを探す', w: 'ホームページ', k: '', m: 'Trang web' },
+    { g: 'アルバイトを探す', w: 'ホームページ', k: '', m: 'Homepage (Trang web)' },
     { g: 'アルバイトを探す', w: '学生証', k: 'がくせいしょう', m: 'Thẻ sinh viên' },
     { g: 'アルバイトを探す', w: '資格外活動許可書', k: 'しかくがいかつどうきょかしょ', m: 'Giấy phép hoạt động làm thêm ngoài tư cách lưu trú' },
     { g: 'アルバイトを探す', w: '面接', k: 'めんせつ', m: 'Phỏng vấn' },
