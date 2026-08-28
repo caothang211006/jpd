@@ -44,7 +44,13 @@
     if (!el) return;
     var nav = el.getAttribute('data-nav');
     if (nav === 'home') { go('#/'); return; }
-    if (nav === 'study') { go('#/study'); return; }
+    if (nav === 'study') {
+      // Pooled flashcard/quiz sessions keep the URL at #/study. Setting the
+      // same hash does not fire hashchange, so restore the picker directly.
+      if (location.hash.replace(/^#/, '') === '/study') renderStudy();
+      else go('#/study');
+      return;
+    }
     var navParts = nav.split('/');
     if (TAB_LABEL[navParts[0]] && current.lessonId) {
       go('#/l/' + current.lessonId + '/' + nav);

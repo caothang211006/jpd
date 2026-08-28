@@ -152,7 +152,16 @@
           (w.k ? '<div class="onkun jp">' + esc(w.k) + '</div>' : '') +
           '<div class="mean-big">' + esc(w.m) + '</div>' +
           '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';
-      } else {
+      } else if (w.kind === 'vocab') {
+        jpSide =
+          '<div class="big jp">' + esc(w.k || w.w) + '</div>' +
+          '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
+        viSide =
+          (w.k ? '<div class="kana jp">' + esc(w.w) + '</div>' : '') +
+          '<div class="mean-big">' + esc(w.m) + '</div>' +
+          (w.tag ? '<div class="card-tag">' + esc(w.tag) + '</div>' : '') +
+          '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';
+      } else { // compound: keep the written form on the recognition side
         jpSide =
           '<div class="big jp">' + esc(w.w) + '</div>' +
           '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
