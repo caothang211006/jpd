@@ -108,5 +108,41 @@ JPD.lesson({
     }
   ],
 
-  kanji: []
+    kanji: [
+    { c: '仕', m: 'SĨ — làm việc, phụng sự', on: 'シ', kun: 'つか・える',
+      w: [{ jp: '仕事', k: 'しごと', vi: 'công việc' }] },
+    { c: '事', m: 'SỰ — việc, sự việc', on: 'ジ', kun: 'こと',
+      w: [{ jp: '仕事', k: 'しごと', vi: 'công việc' }, { jp: '事故', k: 'じこ', vi: 'tai nạn, sự cố' },
+          { jp: '事務所', k: 'じむしょ', vi: 'văn phòng' }, { jp: '大事', k: 'だいじ', vi: 'quan trọng' },
+          { jp: '行事', k: 'ぎょうじ', vi: 'sự kiện, hoạt động' }] },
+    { c: '働', m: 'ĐỘNG — làm việc, lao động', on: 'ドウ', kun: 'はたら・く',
+      w: [{ jp: '働く', k: 'はたらく', vi: 'làm việc' }] },
+    { c: '教', m: 'GIÁO — dạy', on: 'キョウ', kun: 'おし・える',
+      w: [{ jp: '教える', k: 'おしえる', vi: 'dạy' }, { jp: '教室', k: 'きょうしつ', vi: 'phòng học' }] },
+    { c: '泳', m: 'VỊNH — bơi', on: 'エイ', kun: 'およ・ぐ',
+      w: [{ jp: '水泳', k: 'すいえい', vi: 'môn bơi lội' }, { jp: '泳ぐ', k: 'およぐ', vi: 'bơi' }] },
+    { c: '英', m: 'ANH — (nước) Anh, ưu tú', on: 'エイ', kun: '',
+      w: [{ jp: '英語', k: 'えいご', vi: 'tiếng Anh' }] },
+    { c: '運', m: 'VẬN — vận chuyển, vận may', on: 'ウン', kun: 'はこ・ぶ',
+      w: [{ jp: '運転', k: 'うんてん', vi: 'lái xe' }, { jp: '運ぶ', k: 'はこぶ', vi: 'vận chuyển, mang đi' }] },
+    { c: '転', m: 'CHUYỂN — xoay, lăn, chuyển', on: 'テン', kun: 'ころ・ぶ',
+      w: [{ jp: '運転', k: 'うんてん', vi: 'lái xe' }, { jp: '自転車', k: 'じてんしゃ', vi: 'xe đạp' },
+          { jp: '転ぶ', k: 'ころぶ', vi: 'ngã, té' }] },
+    { c: '方', m: 'PHƯƠNG — phía, cách, người (kính ngữ)', on: 'ホウ', kun: 'かた',
+      w: [{ jp: 'この方', k: 'このかた', vi: 'vị này (kính ngữ)' }, { jp: '読み方', k: 'よみかた', vi: 'cách đọc' },
+          { jp: '夕方', k: 'ゆうがた', vi: 'buổi chiều tối' }, { jp: '方法', k: 'ほうほう', vi: 'phương pháp' },
+          { jp: '行方', k: 'ゆくえ', vi: 'tung tích, nơi đến' }] },
+    { c: '留', m: 'LƯU — lưu lại, ở lại', on: 'リュウ、ル', kun: 'と・める',
+      w: [{ jp: '留学', k: 'りゅうがく', vi: 'du học' }, { jp: '留守', k: 'るす', vi: 'vắng nhà' }] },
+    { c: '可', m: 'KHẢ — được, đúng, khả thi', on: 'カ', kun: '',
+      w: [{ jp: '可', k: 'か', vi: 'được, đúng, khả thi' }, { jp: '不可', k: 'ふか', vi: 'không được, sai, không khả thi' }] },
+    { c: '給', m: 'CẤP — cấp, phát', on: 'キュウ', kun: '',
+      w: [{ jp: '時給', k: 'じきゅう', vi: 'lương theo giờ' }] },
+    { c: '履', m: 'LÝ — thực hiện, mang (giày)', on: 'リ', kun: 'は・く',
+      w: [{ jp: '履歴書', k: 'りれきしょ', vi: 'sơ yếu lý lịch' }] },
+    { c: '歴', m: 'LỊCH — trải qua, lịch sử', on: 'レキ', kun: '',
+      w: [{ jp: '履歴書', k: 'りれきしょ', vi: 'sơ yếu lý lịch' }] },
+    { c: '書', m: 'THƯ — viết, sách', on: 'ショ', kun: 'か・く',
+      w: [{ jp: '履歴書', k: 'りれきしょ', vi: 'sơ yếu lý lịch' }] }
+  ]
 });
