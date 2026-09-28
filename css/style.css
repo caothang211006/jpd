@@ -356,3 +356,14 @@ h2 { font-size: 17px; margin: 30px 0 12px; }
   main { padding: 20px 14px 50px; }
   .topbar { padding: 10px 14px; }
 }
+
+/* kanji: mark-as-known */
+.kcard { position: relative; }
+.kcard.known { border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); background: var(--ok-soft); }
+.kmark { position: absolute; top: 8px; right: 8px; }
+.kcard.known .kmark { background: var(--ok); border-color: var(--ok); color: #fff; }
+.kword { cursor: pointer; padding: 1px 4px; margin: 0 -4px; border-radius: 4px; }
+.kword:hover { background: var(--ok-soft); }
+.kword .vi { color: var(--ink-faint); }
+.kword.known { color: var(--ok); }
+.kword.known::after { content: ' ✓'; }
