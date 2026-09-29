@@ -187,7 +187,17 @@
         prog.innerHTML = '<div class="empty"><b>Xong rồi!</b><br>' +
           (source.length ? 'Bạn đã đánh dấu thuộc hết thẻ của phần này. Tắt “Bỏ qua thẻ đã thuộc” để ôn lại.'
                           : 'Không có thẻ nào ở đây.') +
-          '</div>';
+          '</div>' +
+          (source.length ? '<div class="toolbar" style="justify-content:center"><button class="btn" id="freset">Bỏ đánh dấu tất cả</button></div>' : '');
+        var rb = prog.querySelector('#freset');
+        if (rb) rb.addEventListener('click', function () {
+          if (!confirm('Bỏ đánh dấu tất cả thẻ đã thuộc của phần này?')) return;
+          source.forEach(function (w) {
+            if (Store.isKnown(w.store, wordKey(w))) Store.toggleKnown(w.store, wordKey(w));
+          });
+          build();
+          draw();
+        });
         return;
       }
       card.style.display = '';
