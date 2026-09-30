@@ -1,7 +1,7 @@
 /* 第３課 私の目標
    Từ vựng: reference/tu-vung-shochukyu-15-bai.txt (bản dịch tiếng Việt chính thức của ALC).
    Ngữ pháp: cột 学習項目 trong syllabus chính thức (reference/syllabus-sach-vang.txt).
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: 進試験卒業説明写真願部科 (do người học cung cấp). */
 JPD.lesson({
   id: 'shochukyu-3', n: 3, jp: '私の目標', vi: 'Mục tiêu của tôi',
 
@@ -14,7 +14,7 @@ JPD.lesson({
     { g: 'これからの計画', w: '経済', k: 'けいざい', m: 'Kinh tế' },
     { g: 'これからの計画', w: '見学会', k: 'けんがくかい', m: 'Buổi tham quan học tập' },
     { g: 'これからの計画', w: '答え', k: 'こたえ', m: 'Câu trả lời' },
-    { g: 'これからの計画', w: 'サークル', k: '', m: 'Circle (Câu lạc bộ)' },
+    { g: 'これからの計画', w: 'サークル', k: '', m: 'Club (Câu lạc bộ)' },
     { g: 'これからの計画', w: '試験', k: 'しけん', m: 'Kỳ thi' },
     { g: 'これからの計画', w: '将来', k: 'しょうらい', m: 'Tương lai' },
     { g: 'これからの計画', w: '説明会', k: 'せつめいかい', m: 'Buổi giải thích, tư vấn' },
@@ -68,7 +68,9 @@ JPD.lesson({
     { g: '夢に向かって', w: '体験（する）', k: 'たいけん', m: 'Trải nghiệm' },
     { g: '夢に向かって', w: 'デッサン（する）', k: '', m: 'Vẽ phác thảo' },
     { g: '夢に向かって', w: '復習（する）', k: 'ふくしゅう', m: 'Ôn tập' },
-    { g: '夢に向かって', w: '予習（する）', k: 'よしゅう', m: 'Chuẩn bị bài trước' }
+    { g: '夢に向かって', w: '予習（する）', k: 'よしゅう', m: 'Chuẩn bị bài trước' },
+    { g: '夢に向かって', w: '専門', k: 'せんもん', m: 'Chuyên ngành' },
+    { g: '夢に向かって', w: '必着', k: 'ひっちゃく', m: 'Phải đến nơi trước hạn (nộp hồ sơ)' }
   ],
 
   grammar: [
@@ -130,5 +132,33 @@ JPD.lesson({
     }
   ],
 
-  kanji: []
+  kanji: [
+    { c: '進', m: 'TIẾN — tiến lên', on: 'シン', kun: 'すす・む、すす・める',
+      w: [{ jp: '進学', k: 'しんがく', vi: 'học lên' }, { jp: '進む', k: 'すすむ', vi: 'tiến lên' }] },
+    { c: '試', m: 'THÍ — thử, thi', on: 'シ', kun: 'こころ・みる、ため・す',
+      w: [{ jp: '試験', k: 'しけん', vi: 'kỳ thi' }, { jp: '入試', k: 'にゅうし', vi: 'thi tuyển sinh' }] },
+    { c: '験', m: 'NGHIỆM — kiểm chứng, kinh nghiệm', on: 'ケン、ゲン', kun: '',
+      w: [{ jp: '試験', k: 'しけん', vi: 'kỳ thi' }, { jp: '体験入学', k: 'たいけんにゅうがく', vi: 'nhập học trải nghiệm' },
+          { jp: '経験', k: 'けいけん', vi: 'kinh nghiệm' }, { jp: '受験', k: 'じゅけん', vi: 'dự thi' }] },
+    { c: '卒', m: 'TỐT — tốt nghiệp', on: 'ソツ', kun: '',
+      w: [{ jp: '卒業', k: 'そつぎょう', vi: 'tốt nghiệp' }] },
+    { c: '業', m: 'NGHIỆP — nghề, học nghiệp', on: 'ギョウ、ゴウ', kun: 'わざ',
+      w: [{ jp: '卒業', k: 'そつぎょう', vi: 'tốt nghiệp' }, { jp: '授業', k: 'じゅぎょう', vi: 'tiết học' }] },
+    { c: '説', m: 'THUYẾT — giải thích, thuyết', on: 'セツ、ゼイ', kun: 'と・く',
+      w: [{ jp: '説明', k: 'せつめい', vi: 'giải thích' }, { jp: '小説', k: 'しょうせつ', vi: 'tiểu thuyết' }] },
+    { c: '明', m: 'MINH — sáng, rõ', on: 'メイ、ミョウ', kun: 'あか・るい、あ・く、あ・ける',
+      w: [{ jp: '説明', k: 'せつめい', vi: 'giải thích' }, { jp: '明るい', k: 'あかるい', vi: 'sáng' },
+          { jp: '明日', k: 'あした', vi: 'ngày mai' }] },
+    { c: '写', m: 'TẢ — chép, chụp', on: 'シャ', kun: 'うつ・す、うつ・る',
+      w: [{ jp: '写真', k: 'しゃしん', vi: 'ảnh' }, { jp: '写す', k: 'うつす', vi: 'chép, sao lại' }] },
+    { c: '真', m: 'CHÂN — thật', on: 'シン', kun: 'ま',
+      w: [{ jp: '写真', k: 'しゃしん', vi: 'ảnh' }, { jp: '真ん中', k: 'まんなか', vi: 'chính giữa' }] },
+    { c: '願', m: 'NGUYỆN — xin, mong muốn', on: 'ガン', kun: 'ねが・う',
+      w: [{ jp: '願書', k: 'がんしょ', vi: 'đơn xin (nhập học/dự thi)' }, { jp: 'お願い', k: 'おねがい', vi: 'nhờ vả' }] },
+    { c: '部', m: 'BỘ — bộ phận', on: 'ブ', kun: '',
+      w: [{ jp: '学部', k: 'がくぶ', vi: 'khoa (đại học)' }, { jp: '～部', k: '～ぶ', vi: 'bộ phận' },
+          { jp: '部長', k: 'ぶちょう', vi: 'trưởng bộ phận' }, { jp: '部屋', k: 'へや', vi: 'phòng' }] },
+    { c: '科', m: 'KHOA — ngành, môn', on: 'カ', kun: '',
+      w: [{ jp: '学科', k: 'がっか', vi: 'ngành học' }] }
+  ]
 });
