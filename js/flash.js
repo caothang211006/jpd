@@ -14,7 +14,7 @@
    from, never to some synthetic pooled bucket, so studying bài 8+9 together
    and studying bài 8 alone stay in sync. */
 (function () {
-  'use strict';
+  'use strict';   var activeKeyHandler = null;
   window.Views = window.Views || {};
 
   window.buildKanjiDeck = buildKanjiDeck;
@@ -265,17 +265,28 @@
       });
     }
 
-    function onKey(e) {
+        function onKey(e) {
       if (!document.body.contains(root)) {
         document.removeEventListener('keydown', onKey);
+        if (activeKeyHandler === onKey) activeKeyHandler = null;
         return;
       }
-      if (e.target.tagName === 'INPUT') return;
-      if (e.key === ' ') { e.preventDefault(); flipped = !flipped; draw(); }
+      var tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (e.key === ' ') {
+        if (tag === 'BUTTON') return;   // để nút tự xử lý, tránh lật 2 lần
+        e.preventDefault(); flipped = !flipped; draw();
+      }
       else if (e.key === 'ArrowLeft') move(-1);
       else if (e.key === 'ArrowRight') move(1);
-      else if (e.key === 'Enter') root.querySelector('#fknown').click();
+      else if (e.key === 'Enter') {
+        e.preventDefault();             // chặn click mặc định của nút đang focus
+        if (e.repeat) return;           // giữ phím Enter không được lặp
+        root.querySelector('#fknown').click();
+      }
     }
+    if (activeKeyHandler) document.removeEventListener('keydown', activeKeyHandler);
+    activeKeyHandler = onKey;
     document.addEventListener('keydown', onKey);
 
     build();
