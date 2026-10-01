@@ -1,7 +1,7 @@
 /* 第３課 私の目標
    Từ vựng: reference/tu-vung-shochukyu-15-bai.txt (bản dịch tiếng Việt chính thức của ALC).
    Ngữ pháp: cột 学習項目 trong syllabus chính thức (reference/syllabus-sach-vang.txt).
-   Kanji: 進試験卒業説明写真願部科 (do người học cung cấp). */
+   Kanji: 進試験卒業説明写真願部科 (do người học cung cấp) + 専門就職必着. */
 JPD.lesson({
   id: 'shochukyu-3', n: 3, jp: '私の目標', vi: 'Mục tiêu của tôi',
 
@@ -159,6 +159,18 @@ JPD.lesson({
       w: [{ jp: '学部', k: 'がくぶ', vi: 'khoa (đại học)' }, { jp: '～部', k: '～ぶ', vi: 'bộ phận' },
           { jp: '部長', k: 'ぶちょう', vi: 'trưởng bộ phận' }, { jp: '部屋', k: 'へや', vi: 'phòng' }] },
     { c: '科', m: 'KHOA — ngành, môn', on: 'カ', kun: '',
-      w: [{ jp: '学科', k: 'がっか', vi: 'ngành học' }] }
+      w: [{ jp: '学科', k: 'がっか', vi: 'ngành học' }] },
+    { c: '専', m: 'CHUYÊN — chuyên, chuyên môn', on: 'セン', kun: 'もっぱ・ら',
+      w: [{ jp: '専門', k: 'せんもん', vi: 'chuyên ngành' }] },
+    { c: '門', m: 'MÔN — cổng; môn, lĩnh vực', on: 'モン', kun: 'かど',
+      w: [{ jp: '専門', k: 'せんもん', vi: 'chuyên ngành' }] },
+    { c: '就', m: 'TỰU — nhận (việc), đạt tới', on: 'シュウ、ジュ', kun: 'つ・く、つ・ける',
+      w: [{ jp: '就職', k: 'しゅうしょく', vi: 'đi làm, xin việc' }] },
+    { c: '職', m: 'CHỨC — chức vụ, nghề nghiệp', on: 'ショク', kun: '',
+      w: [{ jp: '就職', k: 'しゅうしょく', vi: 'đi làm, xin việc' }] },
+    { c: '必', m: 'TẤT — nhất định, tất yếu', on: 'ヒツ', kun: 'かなら・ず',
+      w: [{ jp: '必着', k: 'ひっちゃく', vi: 'phải đến nơi trước hạn (nộp hồ sơ)' }] },
+    { c: '着', m: 'TRƯỚC — đến nơi; mặc', on: 'チャク、ジャク', kun: 'き・る、つ・く、き・せる、つ・ける',
+      w: [{ jp: '必着', k: 'ひっちゃく', vi: 'phải đến nơi trước hạn (nộp hồ sơ)' }] }
   ]
 });
