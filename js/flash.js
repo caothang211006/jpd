@@ -176,7 +176,6 @@
       var hasKan = source.some(function (x) { return x.kind !== 'vocab'; });
       root.querySelector('#fshowkanji').style.display = hasVocab ? '' : 'none';
       root.querySelector('#fshowvi').style.display = hasKan ? '' : 'none';
-      root.querySelector('#fdir').disabled = hasKan && !showVi;
 
       if (modes) {
         Array.prototype.forEach.call(root.querySelectorAll('[data-mode]'), function (b) {
@@ -213,9 +212,8 @@
         ' · đã thuộc ' + knownInSource() + '/' + source.length;
 
       var f = faces(w);
-      var jf = jpFirst || (!showVi && w.kind !== 'vocab');
-      front.innerHTML = jf ? f.jp : f.vi;
-      back.innerHTML = jf ? f.vi : f.jp;
+      front.innerHTML = jpFirst ? f.jp : f.vi;
+      back.innerHTML = jpFirst ? f.vi : f.jp;
 
       card.classList.toggle('flipped', flipped);
       root.querySelector('#fknown').textContent = known ? '✓ Đã thuộc' : '✓ Đánh dấu thuộc';
