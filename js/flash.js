@@ -79,14 +79,22 @@
     var skipKnown = true;
     var showVi = true;
     var showKanji = true;
+    var onlyWatch = false;
+    var compoundOnly = false;   // kanji deck: ẩn chữ gốc, chỉ giữ từ ghép
+    var showLocked = false;     // panel quản lý từ đã loại ra
 
     function setSource(list) {
       source = list;
       build();
     }
 
+    function activeSource() {
+      return compoundOnly ? source.filter(function (w) { return w.kind !== 'kanji'; }) : source;
+    }
+
     function build() {
-      deck = source.filter(function (w) {
+      deck = activeSource().filter(function (w) {
+        if (onlyWatch && !Store.isWatch(w.store, wordKey(w))) return false;
         return !(skipKnown && Store.isKnown(w.store, wordKey(w)));
       });
       shuffle(deck);
@@ -103,7 +111,15 @@
     }
 
     function knownInSource() {
-      return source.filter(function (w) { return Store.isKnown(w.store, wordKey(w)); }).length;
+      return activeSource().filter(function (w) { return Store.isKnown(w.store, wordKey(w)); }).length;
+    }
+
+    function lockedInSource() {
+      return activeSource().filter(function (w) { return Store.isLocked(w.store, wordKey(w)); });
+    }
+
+    function watchInSource() {
+      return activeSource().filter(function (w) { return Store.isWatch(w.store, wordKey(w)); }).length;
     }
 
     root.innerHTML =
@@ -125,7 +141,11 @@
           '<button class="btn" id="fshuffle">Xáo lại</button>' +
           '<button class="btn" id="fshowvi" aria-pressed="true">Hiện tiếng Việt</button>' +
           '<button class="btn" id="fshowkanji" aria-pressed="true">Hiện kanji</button>' +
+          '<button class="btn" id="fonlywatch" aria-pressed="false">Chỉ học từ cần lưu ý</button>' +
+          '<button class="btn" id="fcompound" aria-pressed="false" title="Bỏ các thẻ kanji gốc, chỉ học từ ghép">Chỉ từ ghép (ẩn kanji gốc)</button>' +
+          '<button class="btn" id="flockedbtn" aria-pressed="false">Từ đã loại ra</button>' +
         '</div>' +
+        '<div id="flocked"></div>' +
         '<div class="flash-progress" id="fprog"></div>' +
         '<div class="card" id="fcard"><div class="card-inner">' +
           '<div class="card-face front" id="ffront"></div>' +
@@ -135,6 +155,10 @@
           '<button class="btn" id="fprev">← Trước</button>' +
           '<button class="btn primary" id="fknown">✓ Đánh dấu thuộc</button>' +
           '<button class="btn" id="fnext">Sau →</button>' +
+        '</div>' +
+        '<div class="flash-controls flash-controls-2">' +
+          '<button class="btn" id="fwatch">☆ Cần lưu ý</button>' +
+          '<button class="btn" id="fexclude" title="Loại từ này ra: luôn tính là đã thuộc, không bị mất khi bấm Bỏ đánh dấu tất cả">⛔ Loại ra (đã nắm chắc)</button>' +
         '</div>' +
       '</div>';
 
@@ -149,7 +173,7 @@
     function faces(w) {
       var jpSide, viSide;
       var flip = '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
-      var hint = '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';
+      var hint = '<div class="hint">Enter: đã thuộc · W: cần lưu ý · X: loại ra · ← →: chuyển thẻ</div>';
       var mean = showVi ? '<div class="mean-big">' + esc(w.m) + '</div>' : '';
       var tag = w.tag ? '<div class="card-tag">' + esc(w.tag) + '</div>' : '';
 
@@ -171,11 +195,46 @@
       return { jp: jpSide, vi: viSide };
     }
 
+    function renderLocked() {
+      var box = root.querySelector('#flocked');
+      var list = lockedInSource();
+      var lb = root.querySelector('#flockedbtn');
+      lb.textContent = 'Từ đã loại ra (' + list.length + ')';
+      lb.setAttribute('aria-pressed', showLocked ? 'true' : 'false');
+      if (!showLocked) { box.innerHTML = ''; return; }
+      if (!list.length) {
+        box.innerHTML = '<div class="empty">Chưa có từ nào bị loại ra.</div>';
+        return;
+      }
+      box.innerHTML = '<div class="locked-list">' + list.map(function (w, n) {
+        return '<div class="locked-row">' +
+          '<span class="jp locked-w">' + esc(w.w) + '</span>' +
+          '<span class="locked-k jp">' + esc(w.k && w.k !== w.w ? w.k : '') + '</span>' +
+          '<span class="locked-m">' + esc(w.m) + '</span>' +
+          '<button class="btn" data-restore="' + n + '">↩ Khôi phục</button>' +
+        '</div>';
+      }).join('') + '</div>';
+      Array.prototype.forEach.call(box.querySelectorAll('[data-restore]'), function (b) {
+        b.addEventListener('click', function () {
+          var w = list[+b.getAttribute('data-restore')];
+          Store.toggleLocked(w.store, wordKey(w));   // gỡ khóa
+          Store.unmark(w.store, wordKey(w));         // đảm bảo quay lại bộ thẻ
+          build();
+          draw();
+        });
+      });
+    }
+
     function draw() {
       var hasVocab = source.some(function (x) { return x.kind === 'vocab'; });
       var hasKan = source.some(function (x) { return x.kind !== 'vocab'; });
       root.querySelector('#fshowkanji').style.display = hasVocab ? '' : 'none';
       root.querySelector('#fshowvi').style.display = hasKan ? '' : 'none';
+      var hasKanjiCard = source.some(function (x) { return x.kind === 'kanji'; });
+      var cb = root.querySelector('#fcompound');
+      cb.style.display = hasKanjiCard ? '' : 'none';
+      cb.setAttribute('aria-pressed', compoundOnly ? 'true' : 'false');
+      renderLocked();
 
       if (modes) {
         Array.prototype.forEach.call(root.querySelectorAll('[data-mode]'), function (b) {
@@ -183,20 +242,26 @@
         });
       }
 
+      var wc = watchInSource();
+      var wbtn = root.querySelector('#fonlywatch');
+      wbtn.textContent = 'Chỉ học từ cần lưu ý (' + wc + ')';
+      wbtn.setAttribute('aria-pressed', onlyWatch ? 'true' : 'false');
+
       if (!deck.length) {
         card.style.display = 'none';
         root.querySelector('#fknown').disabled = true;
-        prog.innerHTML = '<div class="empty"><b>Xong rồi!</b><br>' +
-          (source.length ? 'Bạn đã đánh dấu thuộc hết thẻ của phần này. Tắt “Bỏ qua thẻ đã thuộc” để ôn lại.'
-                          : 'Không có thẻ nào ở đây.') +
-          '</div>' +
-          (source.length ? '<div class="toolbar" style="justify-content:center"><button class="btn" id="freset">Bỏ đánh dấu tất cả</button></div>' : '');
+        root.querySelector('#fwatch').disabled = true;
+        root.querySelector('#fexclude').disabled = true;
+        var emptyMsg;
+        if (!activeSource().length) emptyMsg = 'Không có thẻ nào ở đây.';
+        else if (onlyWatch) emptyMsg = 'Chưa có từ nào trong danh sách cần lưu ý (hoặc đã thuộc hết). Tắt “Chỉ học từ cần lưu ý” để quay lại toàn bộ thẻ.';
+        else emptyMsg = 'Bạn đã đánh dấu thuộc hết thẻ của phần này. Tắt “Bỏ qua thẻ đã thuộc” để ôn lại, hoặc mở “Từ đã loại ra” để khôi phục từng từ.';
+        prog.innerHTML = '<div class="empty"><b>Xong rồi!</b><br>' + emptyMsg + '</div>' +
+          (activeSource().length && !onlyWatch ? '<div class="toolbar" style="justify-content:center"><button class="btn" id="freset">Bỏ đánh dấu tất cả</button></div>' : '');
         var rb = prog.querySelector('#freset');
         if (rb) rb.addEventListener('click', function () {
-          if (!confirm('Bỏ đánh dấu tất cả thẻ đã thuộc của phần này?')) return;
-          source.forEach(function (w) {
-            if (Store.isKnown(w.store, wordKey(w))) Store.toggleKnown(w.store, wordKey(w));
-          });
+          if (!confirm('Bỏ đánh dấu tất cả thẻ đã thuộc của phần này?\n(Từ đã “Loại ra” vẫn được giữ là đã thuộc.)')) return;
+          activeSource().forEach(function (w) { Store.unmark(w.store, wordKey(w)); });
           build();
           draw();
         });
@@ -204,12 +269,16 @@
       }
       card.style.display = '';
       root.querySelector('#fknown').disabled = false;
+      root.querySelector('#fwatch').disabled = false;
+      root.querySelector('#fexclude').disabled = false;
 
       var w = deck[i];
       var known = Store.isKnown(w.store, wordKey(w));
+      var watched = Store.isWatch(w.store, wordKey(w));
+      var locked = Store.isLocked(w.store, wordKey(w));
 
       prog.textContent = (i + 1) + ' / ' + deck.length +
-        ' · đã thuộc ' + knownInSource() + '/' + source.length;
+        ' · đã thuộc ' + knownInSource() + '/' + activeSource().length;
 
       var f = faces(w);
       front.innerHTML = jpFirst ? f.jp : f.vi;
@@ -217,6 +286,12 @@
 
       card.classList.toggle('flipped', flipped);
       root.querySelector('#fknown').textContent = known ? '✓ Đã thuộc' : '✓ Đánh dấu thuộc';
+      var wb = root.querySelector('#fwatch');
+      wb.textContent = watched ? '★ Đang cần lưu ý' : '☆ Cần lưu ý';
+      wb.setAttribute('aria-pressed', watched ? 'true' : 'false');
+      var xb = root.querySelector('#fexclude');
+      xb.textContent = locked ? '↩ Bỏ loại ra' : '⛔ Loại ra (đã nắm chắc)';
+      xb.setAttribute('aria-pressed', locked ? 'true' : 'false');
     }
 
     function move(d) {
@@ -238,6 +313,42 @@
         if (i >= deck.length) i = 0;
         flipped = false;
       }
+      draw();
+    });
+    root.querySelector('#fwatch').addEventListener('click', function () {
+      if (!deck.length) return;
+      var w = deck[i];
+      Store.toggleWatch(w.store, wordKey(w));
+      if (onlyWatch && !Store.isWatch(w.store, wordKey(w))) {   // vừa gỡ khỏi list đang học
+        deck.splice(i, 1);
+        if (i >= deck.length) i = 0;
+        flipped = false;
+      }
+      draw();
+    });
+    root.querySelector('#fexclude').addEventListener('click', function () {
+      if (!deck.length) return;
+      var w = deck[i];
+      var nowLocked = Store.toggleLocked(w.store, wordKey(w));
+      if (nowLocked && (skipKnown || onlyWatch)) {   // loại ra: bỏ khỏi bộ thẻ hiện tại
+        deck.splice(i, 1);
+        if (i >= deck.length) i = 0;
+        flipped = false;
+      }
+      draw();
+    });
+    root.querySelector('#fcompound').addEventListener('click', function () {
+      compoundOnly = !compoundOnly;
+      build();
+      draw();
+    });
+    root.querySelector('#flockedbtn').addEventListener('click', function () {
+      showLocked = !showLocked;
+      draw();
+    });
+    root.querySelector('#fonlywatch').addEventListener('click', function () {
+      onlyWatch = !onlyWatch;
+      build();
       draw();
     });
     root.querySelector('#fdir').addEventListener('click', function (e) {
@@ -291,6 +402,8 @@
       }
       else if (e.key === 'ArrowLeft') move(-1);
       else if (e.key === 'ArrowRight') move(1);
+      else if (e.key === 'w' || e.key === 'W') root.querySelector('#fwatch').click();
+      else if (e.key === 'x' || e.key === 'X') root.querySelector('#fexclude').click();
       else if (e.key === 'Enter') {
         e.preventDefault();
         if (e.repeat) return;

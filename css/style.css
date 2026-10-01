@@ -280,6 +280,7 @@ h2 { font-size: 17px; margin: 30px 0 12px; }
 .card-face .card-tag { font-size: 13px; color: var(--ink-faint); margin-top: 2px; }
 .card-face .hint { position: absolute; bottom: 16px; left: 0; right: 0; font-size: 12px; color: var(--ink-faint); }
 .flash-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.flash-controls-2 { margin-top: 10px; }
 .flash-progress { text-align: center; color: var(--ink-faint); font-size: 13px; margin-bottom: 14px; }
 
 /* --------------------------------------------------------------- grammar */
@@ -367,3 +368,11 @@ h2 { font-size: 17px; margin: 30px 0 12px; }
 .kword .vi { color: var(--ink-faint); }
 .kword.known { color: var(--ok); }
 .kword.known::after { content: ' ✓'; }
+
+/* flashcard: danh sách từ đã loại ra */
+.locked-list { display: grid; gap: 6px; margin: 0 0 14px; }
+.locked-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px;
+  border: 1px solid var(--line, #ddd); border-radius: 10px; flex-wrap: wrap; }
+.locked-w { font-size: 18px; font-weight: 600; }
+.locked-k { color: var(--ink-faint); }
+.locked-m { flex: 1; min-width: 120px; }
