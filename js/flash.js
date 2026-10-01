@@ -14,7 +14,8 @@
    from, never to some synthetic pooled bucket, so studying bài 8+9 together
    and studying bài 8 alone stay in sync. */
 (function () {
-  'use strict';   var activeKeyHandler = null;
+  'use strict';
+  var activeKeyHandler = null;
   window.Views = window.Views || {};
 
   window.buildKanjiDeck = buildKanjiDeck;
@@ -76,6 +77,8 @@
     var flipped = false;
     var jpFirst = true;
     var skipKnown = true;
+    var showVi = true;
+    var showKanji = true;
 
     function setSource(list) {
       source = list;
@@ -120,6 +123,8 @@
           '<button class="btn" id="fdir">Nhật → Việt</button>' +
           '<button class="btn" id="fskip" aria-pressed="true">Bỏ qua thẻ đã thuộc</button>' +
           '<button class="btn" id="fshuffle">Xáo lại</button>' +
+          '<button class="btn" id="fshowvi" aria-pressed="true">Hiện tiếng Việt</button>' +
+          '<button class="btn" id="fshowkanji" aria-pressed="true">Hiện kanji</button>' +
         '</div>' +
         '<div class="flash-progress" id="fprog"></div>' +
         '<div class="card" id="fcard"><div class="card-inner">' +
@@ -143,38 +148,36 @@
        kanji drill — and surface it opposite the meaning instead. */
     function faces(w) {
       var jpSide, viSide;
+      var flip = '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
+      var hint = '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';
+      var mean = showVi ? '<div class="mean-big">' + esc(w.m) + '</div>' : '';
+      var tag = w.tag ? '<div class="card-tag">' + esc(w.tag) + '</div>' : '';
 
       if (w.kind === 'kanji') {
-        jpSide =
-          '<div class="big jp kanji-solo">' + esc(w.w) + '</div>' +
-          '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
-        viSide =
-          (w.k ? '<div class="onkun jp">' + esc(w.k) + '</div>' : '') +
-          '<div class="mean-big">' + esc(w.m) + '</div>' +
-          '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';
+        jpSide = '<div class="big jp kanji-solo">' + esc(w.w) + '</div>' + flip;
+        viSide = (w.k ? '<div class="onkun jp">' + esc(w.k) + '</div>' : '') + mean + hint;
       } else if (w.kind === 'vocab') {
+        // kanji nằm cùng mặt với hiragana, có thể ẩn bằng nút
+        var hasKanji = w.k && w.k !== w.w;
         jpSide =
           '<div class="big jp">' + esc(w.k || w.w) + '</div>' +
-          '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
-        viSide =
-          (w.k ? '<div class="kana jp">' + esc(w.w) + '</div>' : '') +
-          '<div class="mean-big">' + esc(w.m) + '</div>' +
-          (w.tag ? '<div class="card-tag">' + esc(w.tag) + '</div>' : '') +
-          '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';
-      } else { // compound: keep the written form on the recognition side
-        jpSide =
-          '<div class="big jp">' + esc(w.w) + '</div>' +
-          '<div class="hint">Bấm thẻ hoặc phím Space để lật</div>';
-        viSide =
-          (w.k ? '<div class="kana jp">' + esc(w.k) + '</div>' : '') +
-          '<div class="mean-big">' + esc(w.m) + '</div>' +
-          (w.tag ? '<div class="card-tag">' + esc(w.tag) + '</div>' : '') +
-          '<div class="hint">Enter: đánh dấu đã thuộc · ← →: chuyển thẻ</div>';
+          (hasKanji && showKanji ? '<div class="kana jp">' + esc(w.w) + '</div>' : '') +
+          flip;
+        viSide = '<div class="mean-big">' + esc(w.m) + '</div>' + tag + hint;
+      } else { // compound
+        jpSide = '<div class="big jp">' + esc(w.w) + '</div>' + flip;
+        viSide = (w.k ? '<div class="kana jp">' + esc(w.k) + '</div>' : '') + mean + tag + hint;
       }
       return { jp: jpSide, vi: viSide };
     }
 
     function draw() {
+      var hasVocab = source.some(function (x) { return x.kind === 'vocab'; });
+      var hasKan = source.some(function (x) { return x.kind !== 'vocab'; });
+      root.querySelector('#fshowkanji').style.display = hasVocab ? '' : 'none';
+      root.querySelector('#fshowvi').style.display = hasKan ? '' : 'none';
+      root.querySelector('#fdir').disabled = hasKan && !showVi;
+
       if (modes) {
         Array.prototype.forEach.call(root.querySelectorAll('[data-mode]'), function (b) {
           b.setAttribute('aria-pressed', b.getAttribute('data-mode') === activeKey ? 'true' : 'false');
@@ -210,8 +213,9 @@
         ' · đã thuộc ' + knownInSource() + '/' + source.length;
 
       var f = faces(w);
-      front.innerHTML = jpFirst ? f.jp : f.vi;
-      back.innerHTML = jpFirst ? f.vi : f.jp;
+      var jf = jpFirst || (!showVi && w.kind !== 'vocab');
+      front.innerHTML = jf ? f.jp : f.vi;
+      back.innerHTML = jf ? f.vi : f.jp;
 
       card.classList.toggle('flipped', flipped);
       root.querySelector('#fknown').textContent = known ? '✓ Đã thuộc' : '✓ Đánh dấu thuộc';
@@ -254,6 +258,16 @@
       build();
       draw();
     });
+    root.querySelector('#fshowvi').addEventListener('click', function (e) {
+      showVi = !showVi;
+      e.target.setAttribute('aria-pressed', showVi ? 'true' : 'false');
+      draw();
+    });
+    root.querySelector('#fshowkanji').addEventListener('click', function (e) {
+      showKanji = !showKanji;
+      e.target.setAttribute('aria-pressed', showKanji ? 'true' : 'false');
+      draw();
+    });
     if (modes) {
       Array.prototype.forEach.call(root.querySelectorAll('[data-mode]'), function (b) {
         b.addEventListener('click', function () {
@@ -265,7 +279,7 @@
       });
     }
 
-        function onKey(e) {
+    function onKey(e) {
       if (!document.body.contains(root)) {
         document.removeEventListener('keydown', onKey);
         if (activeKeyHandler === onKey) activeKeyHandler = null;
@@ -274,14 +288,14 @@
       var tag = e.target.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       if (e.key === ' ') {
-        if (tag === 'BUTTON') return;   // để nút tự xử lý, tránh lật 2 lần
+        if (tag === 'BUTTON') return;
         e.preventDefault(); flipped = !flipped; draw();
       }
       else if (e.key === 'ArrowLeft') move(-1);
       else if (e.key === 'ArrowRight') move(1);
       else if (e.key === 'Enter') {
-        e.preventDefault();             // chặn click mặc định của nút đang focus
-        if (e.repeat) return;           // giữ phím Enter không được lặp
+        e.preventDefault();
+        if (e.repeat) return;
         root.querySelector('#fknown').click();
       }
     }
