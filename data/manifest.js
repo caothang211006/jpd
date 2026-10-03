@@ -47,7 +47,7 @@
     tone: 'gold',
     lessons: [
       { id: 'shochukyu-1',  n: 1,  jp: '新しい一歩',           vi: 'Bước đi mới',
-        file: 'data/shochukyu/l01.js', words: 50, grammar: 5, kanji: 0 },
+        file: 'data/shochukyu/l01.js', words: 50, grammar: 9, kanji: 0 },
       { id: 'shochukyu-2',  n: 2,  jp: '楽しいショッピング',   vi: 'Mua sắm vui vẻ',
         file: 'data/shochukyu/l02.js', words: 64, grammar: 8, kanji: 0 },
       { id: 'shochukyu-3',  n: 3,  jp: '私の目標',             vi: 'Mục tiêu của tôi',

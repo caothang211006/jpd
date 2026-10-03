@@ -174,7 +174,7 @@ JPD.lesson({
   kanji: [
     { c: '家', m: 'GIA — nhà', on: 'カ', kun: 'うち、いえ',
       w: [{ jp: '家', k: 'うち', vi: 'nhà' }, { jp: '大家', k: 'おおや', vi: 'chủ trọ' }] },
-    { c: '族', m: 'TỘC', on: 'ゾク', kun: '',
+    { c: '族', m: 'TỘC — dòng họ, gia tộc', on: 'ゾク', kun: '',
       w: [{ jp: '家族', k: 'かぞく', vi: 'gia đình' }] },
     { c: '父', m: 'PHỤ — cha', on: 'フ', kun: 'ちち',
       w: [{ jp: '父', k: 'ちち', vi: 'bố (của mình)' }, { jp: 'お父さん', k: 'おとうさん', vi: 'bố (của người khác)' }] },
@@ -193,7 +193,7 @@ JPD.lesson({
           { jp: '姉妹', k: 'しまい', vi: 'chị em gái' }] },
     { c: '犬', m: 'KHUYỂN — chó', on: 'ケン', kun: 'いぬ',
       w: [{ jp: '犬', k: 'いぬ', vi: 'con chó' }] },
-    { c: '高', m: 'CAO', on: 'コウ', kun: 'たか・い',
+    { c: '高', m: 'CAO — cao', on: 'コウ', kun: 'たか・い',
       w: [{ jp: '高い', k: 'たかい', vi: 'cao, đắt' }, { jp: '高校', k: 'こうこう', vi: 'trường cấp ba' },
           { jp: '高校生', k: 'こうこうせい', vi: 'học sinh cấp ba' }] },
     { c: '短', m: 'ĐOẢN — ngắn', on: 'タン', kun: 'みじか・い',

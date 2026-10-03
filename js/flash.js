@@ -26,7 +26,8 @@
     var store = lesson.id + ':kanji';
     (lesson.kanji || []).forEach(function (k) {
       var readings = [k.on, k.kun].filter(Boolean).join(' ・ ');
-      out.push({ kind: 'kanji', w: k.c, k: readings, m: k.m, store: store });
+      var parts = String(k.m || '').split(/\s*[—–]\s*/);
+      out.push({ kind: 'kanji', w: k.c, k: readings, m: k.m, hv: parts[0] || '', vi: parts.slice(1).join(' — '), store: store });
       (k.w || []).forEach(function (x) {
         var id = x.jp + '|' + (x.k || '');
         if (seen[id]) return;          // 映画 sits under both 映 and 画
@@ -166,6 +167,7 @@
     var front = root.querySelector('#ffront');
     var back = root.querySelector('#fback');
     var prog = root.querySelector('#fprog');
+    var backTimer = null;
 
     /* Builds the two faces for one card. Kanji glyphs deliberately hide
        their reading on the recognition side — that's the whole point of a
@@ -179,7 +181,9 @@
 
       if (w.kind === 'kanji') {
         jpSide = '<div class="big jp kanji-solo">' + esc(w.w) + '</div>' + flip;
-        viSide = (w.k ? '<div class="onkun jp">' + esc(w.k) + '</div>' : '') + mean + hint;
+        var hvBlock = w.hv ? '<div class="kv-label">Âm Hán Việt</div><div class="mean-big hanviet">' + esc(w.hv) + '</div>' : '';
+        var viBlock = (showVi && w.vi) ? '<div class="kv-label">Nghĩa tiếng Việt</div><div class="mean-big">' + esc(w.vi) + '</div>' : '';
+        viSide = (w.k ? '<div class="onkun jp">' + esc(w.k) + '</div>' : '') + hvBlock + viBlock + hint;
       } else if (w.kind === 'vocab') {
         // kanji nằm cùng mặt với hiragana, có thể ẩn bằng nút
         var hasKanji = w.k && w.k !== w.w;
@@ -281,8 +285,16 @@
         ' · đã thuộc ' + knownInSource() + '/' + activeSource().length;
 
       var f = faces(w);
+      var wasFlipped = card.classList.contains('flipped');
       front.innerHTML = jpFirst ? f.jp : f.vi;
-      back.innerHTML = jpFirst ? f.vi : f.jp;
+      /* Đang lật về mặt trước: mặt sau vẫn còn thấy trong lúc thẻ xoay,
+         nên chỉ đổi nội dung mặt sau khi animation lật xong (tránh lộ nghĩa thẻ kế). */
+      clearTimeout(backTimer);
+      if (wasFlipped && !flipped) {
+        backTimer = setTimeout(function () { back.innerHTML = jpFirst ? f.vi : f.jp; }, 480);
+      } else {
+        back.innerHTML = jpFirst ? f.vi : f.jp;
+      }
 
       card.classList.toggle('flipped', flipped);
       root.querySelector('#fknown').textContent = known ? '✓ Đã thuộc' : '✓ Đánh dấu thuộc';

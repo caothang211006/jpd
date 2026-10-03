@@ -33,14 +33,42 @@
       body.innerHTML = list.map(function (g) {
         var ex = (g.ex || []).map(function (e) {
           return '<li><div class="ex jp">' + esc(e.jp) + '</div>' +
-                 '<div class="tr">' + esc(e.vi) + '</div></li>';
+                 (e.ro ? '<div class="ro">' + esc(e.ro) + '</div>' : '') +
+                 '<div class="tr"><span class="arr">→</span> ' + esc(e.vi) + '</div></li>';
         }).join('');
-        return '<div class="gitem">' +
-                 '<div class="pat jp">' + esc(g.pat) + '</div>' +
-                 '<div class="desc">' + esc(g.desc) + '</div>' +
-                 (ex ? '<ul>' + ex + '</ul>' : '') +
+        var summary = g.pat === 'Tóm tắt';
+        var num = summary ? '<span class="gnum gnum-sum">★</span>'
+                          : '<span class="gnum">' + (items.indexOf(g) + 1) + '</span>';
+        return '<div class="gitem' + (summary ? ' gsummary' : '') + '">' +
+                 '<div class="ghead">' + num + '<div class="pat jp">' + esc(g.pat) + '</div></div>' +
+                 '<div class="desc">' + descHtml(g.desc) + '</div>' +
+                 (ex ? '<div class="glabel">Ví dụ</div><ul class="gex">' + ex + '</ul>' : '') +
                '</div>';
       }).join('');
+    }
+
+    /* desc: dòng thường → đoạn văn; dòng bắt đầu bằng "•" → danh sách. */
+    function descHtml(desc) {
+      var out = '', bullets = [];
+      function flush() {
+        if (bullets.length) out += '<ul class="glist">' + bullets.join('') + '</ul>';
+        bullets = [];
+      }
+      String(desc || '').split('\n').forEach(function (line) {
+        line = line.trim();
+        if (!line) return;
+        if (line.charAt(0) === '•') {
+          bullets.push('<li>' + arrows(line.replace(/^•\s*/, '')) + '</li>');
+        } else {
+          flush();
+          out += '<p>' + arrows(line) + '</p>';
+        }
+      });
+      flush();
+      return out;
+    }
+    function arrows(t) {
+      return esc(t).replace(/ → /g, ' <span class="arr">→</span> ');
     }
 
     root.querySelector('#gq').addEventListener('input', function (e) { draw(e.target.value.trim()); });
