@@ -6,6 +6,7 @@
 
   var books = [];
   var lessons = {};          // id -> lesson data, once loaded
+  var routeQueued = false;  // first render waits for every JPD.book() call
   var pending = {};          // id -> [callbacks] while a script is in flight
 
   window.JPD = {
@@ -14,7 +15,15 @@
     /* Called by data/manifest.js */
     book: function (b) {
       books.push(b);
-      if (window.App && window.App.onManifest) window.App.onManifest();
+      // manifest.js registers several books in one synchronous run; wait until
+      // it has finished so a direct link to a later book is not bounced home.
+      if (!routeQueued) {
+        routeQueued = true;
+        setTimeout(function () {
+          routeQueued = false;
+          if (window.App && window.App.onManifest) window.App.onManifest();
+        }, 0);
+      }
     },
 
     /* Called by each data/<book>/lNN.js */

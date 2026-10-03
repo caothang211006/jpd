@@ -55,7 +55,7 @@
       { id: 'shochukyu-4',  n: 4,  jp: '住んでいる町',         vi: 'Thành phố đang sống',
         file: 'data/shochukyu/l04.js', words: 49, grammar: 8, kanji: 0 },
       { id: 'shochukyu-5',  n: 5,  jp: '大変な１日',           vi: 'Một ngày vất vả',
-        file: 'data/shochukyu/l05.js', words: 53, grammar: 6, kanji: 0 },
+        file: 'data/shochukyu/l05.js', words: 70, grammar: 6, kanji: 0 },
       { id: 'shochukyu-6',  n: 6,  jp: '旅行に行こう',         vi: 'Cùng đi du lịch',
         file: 'data/shochukyu/l06.js', words: 62, grammar: 5, kanji: 0 },
       { id: 'shochukyu-7',  n: 7,  jp: '西川さんの家',         vi: 'Nhà anh Nishikawa',
