@@ -1,6 +1,6 @@
 /* 第１課 新しい一歩
    Từ vựng: reference/tu-vung-shochukyu-15-bai.txt (bản dịch tiếng Việt chính thức của ALC).
-   Ngữ pháp: cột 学習項目 trong syllabus chính thức (reference/syllabus-sach-vang.txt).
+   Ngữ pháp: theo playlist YouTube PLGHw6vGdBH8OfSg64YkFYdvzbBxNaEf3C (bài 01).
    Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
 JPD.lesson({
   id: 'shochukyu-1', n: 1, jp: '新しい一歩', vi: 'Bước đi mới',
@@ -62,49 +62,66 @@ JPD.lesson({
 
   grammar: [
     {
-      pat: 'いらっしゃいます／申します／参ります',
-      desc: 'Ba động từ kính ngữ - khiêm nhường cơ bản, rất hay dùng khi tự giới thiệu bản thân hoặc trong phỏng vấn xin việc. いらっしゃいます là kính ngữ của 来ます/行きます/います (dùng cho đối phương); 申します là khiêm nhường ngữ của 言います (dùng khi nói tên mình); 参ります là khiêm nhường ngữ của 来ます/行きます (dùng khi nói về hành động của mình).',
+      pat: 'いらっしゃいます',
+      desc: 'Kính ngữ của 来ます（きます）／行きます（いきます）／います.\n• 来ます（きます）→ đến → いらっしゃいます\n• 行きます（いきます）→ đi → いらっしゃいます\n• います → ở / có mặt → いらっしゃいます',
       ex: [
-        { jp: '初めまして。グエンと申します。', vi: 'Rất vui được gặp anh/chị. Tôi tên là Nguyễn ạ.' },
-        { jp: '明日、９時に会社へ参ります。', vi: 'Ngày mai tôi sẽ đến công ty lúc 9 giờ.' },
-        { jp: '田中様はいらっしゃいますか。', vi: 'Anh Tanaka có ở đó không ạ?' }
+        { jp: '先生（せんせい）は教室（きょうしつ）にいらっしゃいます。', ro: 'Sensei wa kyoushitsu ni irasshaimasu.', vi: 'Thầy/cô đang ở trong lớp.' }
       ]
     },
     {
-      pat: '～ので、～',
-      desc: 'Nêu lý do một cách lịch sự, khách quan hơn so với ～から。 Hay dùng trong hội thoại trang trọng như phỏng vấn, xin phép.',
+      pat: 'まいります',
+      desc: 'Khiêm nhường ngữ của 来ます（きます）／行きます（いきます）, dùng khi nói về hành động của chính mình.\n• 来ます（きます）→ đến → まいります\n• 行きます（いきます）→ đi → まいります',
       ex: [
-        { jp: '日本語が少し話せますので、大丈夫です。', vi: 'Vì tôi có thể nói được một chút tiếng Nhật nên không sao ạ.' },
-        { jp: 'アルバイトは初めてですので、いろいろ教えてください。', vi: 'Vì đây là lần đầu tôi đi làm thêm nên xin hãy chỉ bảo cho tôi nhiều điều ạ.' },
-        { jp: '今日は用事がありますので、お先に失礼します。', vi: 'Hôm nay tôi có việc bận nên xin phép về trước ạ.' }
+        { jp: 'すぐまいります。', ro: 'Sugu mairimasu.', vi: 'Tôi đến ngay ạ.' }
       ]
     },
     {
-      pat: 'Động từ khả năng（可能動詞）',
-      desc: 'Thể hiện khả năng làm được việc gì. Nhóm 1: đổi đuôi u → e + ます (話す→話せます); Nhóm 2: bỏ ます, thêm られます (食べます→食べられます); Nhóm 3: します→できます、来ます→来られます。',
+      pat: 'V thể thường ＋ ので',
+      desc: 'Vì… nên…\nThể thường là dạng động từ không có ます:\n• 食（た）べます → 食べる（taberu）\n• 行（い）きます → 行く（iku）\n• 飲（の）みます → 飲む（nomu）\n• 降（ふ）ります → 降る（furu）\n• します → する（suru）',
       ex: [
-        { jp: '日常会話ができます。', vi: 'Tôi có thể giao tiếp hội thoại hàng ngày.' },
-        { jp: '私は漢字が少し読めます。', vi: 'Tôi có thể đọc được một chút chữ Hán.' },
-        { jp: '土曜日と日曜日は働けます。', vi: 'Thứ bảy và chủ nhật tôi có thể làm việc được.' }
+        { jp: '雨（あめ）が降（ふ）っているので、傘（かさ）を持（も）って行（い）きます。', ro: 'Ame ga futte iru node, kasa o motte ikimasu.', vi: 'Vì trời đang mưa nên tôi mang ô theo.' }
       ]
     },
     {
-      pat: '～なら',
-      desc: 'Nêu điều kiện dựa trên một chủ đề đối phương vừa nói tới: “nếu là ~ thì…”. Hay dùng để đưa ra gợi ý, lời khuyên liên quan tới chủ đề đó.',
+      pat: 'V thể khả năng',
+      desc: 'Diễn tả “có thể làm gì”.\n• 食べる → 食べられる：có thể ăn\n• 行く → 行ける：có thể đi\n• 飲む → 飲める：có thể uống\n• 話す → 話せる：có thể nói\n• する → できる：có thể làm\n• 来る（くる）→ 来（こ）られる：có thể đến\nDạng thường của 話せます（hanasemasu）là 話せる（hanaseru）.',
       ex: [
-        { jp: 'アルバイトを探しているなら、このホームページがいいですよ。', vi: 'Nếu bạn đang tìm việc làm thêm thì trang web này tốt đấy.' },
-        { jp: '面接ならスーツを着たほうがいいです。', vi: 'Nếu là phỏng vấn thì nên mặc comple.' },
-        { jp: 'その時間なら、私も行けます。', vi: 'Nếu là giờ đó thì tôi cũng có thể đi được.' }
+        { jp: '日本語（にほんご）が話（はな）せます。', ro: 'Nihongo ga hanasemasu.', vi: 'Tôi có thể nói tiếng Nhật.' }
       ]
     },
     {
-      pat: '～のが／～のは Ａ',
-      desc: 'Danh từ hóa một mệnh đề bằng の, dùng làm chủ ngữ (のが) hoặc chủ đề (のは) cho câu có tính từ, để nói về sở thích, sự dễ/khó của một hành động.',
+      pat: 'N ＋ なら',
+      desc: 'Nếu là N thì… / Nếu nói về N thì…（N là danh từ）',
       ex: [
-        { jp: '新しい人と話すのが好きです。', vi: 'Tôi thích nói chuyện với người mới.' },
-        { jp: '朝早く起きるのは苦手です。', vi: 'Việc dậy sớm buổi sáng thì tôi kém (không giỏi).' },
-        { jp: '楽器を演奏するのが得意です。', vi: 'Tôi có sở trường chơi nhạc cụ.' }
+        { jp: '旅行（りょこう）なら京都（きょうと）がいいです。', ro: 'Ryokou nara Kyoto ga ii desu.', vi: 'Nếu là du lịch thì Kyoto là lựa chọn tốt.' }
       ]
+    },
+    {
+      pat: 'V thể từ điển ＋ のが ＋ A',
+      desc: 'Nói về việc thích / ghét / giỏi / kém khi làm gì.\nThể từ điển là dạng gốc của động từ, thường kết thúc bằng る・う・く・む…:\n• 食べます → 食べる（taberu）\n• 行きます → 行く（iku）\n• 飲みます → 飲む（nomu）\n• 話します → 話す（hanasu）\n• します → する（suru）\nCông thức: V thể từ điển ＋ のが ＋ 好き（すき）／嫌い（きらい）／上手（じょうず）／苦手（にがて）',
+      ex: [
+        { jp: '泳（およ）ぐのが好（す）きです。', ro: 'Oyogu no ga suki desu.', vi: 'Tôi thích bơi.' },
+        { jp: '料理（りょうり）をするのが好（す）きです。', ro: 'Ryouri o suru no ga suki desu.', vi: 'Tôi thích nấu ăn.' }
+      ]
+    },
+    {
+      pat: 'V thể từ điển ＋ のは ＋ A',
+      desc: 'Nói “việc làm gì đó thì…”. Hay đi với:\n• 楽（たの）しい（tanoshii）：vui\n• 大変（たいへん）（taihen）：vất vả\n• 面白（おもしろ）い（omoshiroi）：thú vị\n• 難（むずか）しい（muzukashii）：khó\n• つまらない（tsumaranai）：chán\nPhân biệt: のが好き → thích làm gì; のは楽しい → việc làm gì thì vui.',
+      ex: [
+        { jp: '日本（にほん）で歩（ある）くのは面白（おもしろ）いです。', ro: 'Nihon de aruku no wa omoshiroi desu.', vi: 'Đi bộ ở Nhật thì thú vị.' }
+      ]
+    },
+    {
+      pat: 'V thể khả năng ＋ ようになります',
+      desc: 'Trở nên có thể làm được…\nV thể khả năng (“có thể làm”) ＋ ようになります → “trở nên có thể làm được”.\nVí dụ: 読める（yomeru）là thể khả năng của 読む（yomu, đọc）= có thể đọc; 読める ＋ ようになりました = đã trở nên có thể đọc.',
+      ex: [
+        { jp: '漢字（かんじ）が読（よ）めるようになりました。', ro: 'Kanji ga yomeru you ni narimashita.', vi: 'Tôi đã đọc được chữ Hán rồi.' }
+      ]
+    },
+    {
+      pat: 'Tóm tắt',
+      desc: '• Thể thường → dạng không có ます: 食べる、行く、飲む…\n• Thể từ điển → dạng gốc: 食べる、行く、飲む…\n• Thể khả năng → có thể làm: 食べられる、行ける、飲める…\n• V thể thường ＋ ので → vì…\n• V thể từ điển ＋ のが好き → thích làm…\n• V thể từ điển ＋ のは楽しい → làm… thì vui\n• V thể khả năng ＋ ようになります → trở nên có thể làm…',
+      ex: []
     }
   ],
 
