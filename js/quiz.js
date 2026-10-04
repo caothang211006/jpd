@@ -24,11 +24,24 @@
     { sub: 'de', key: 'exam', store: ':exam', title: 'Đề luyện tập tổng hợp', jp: '' }
   ];
   function hasItems(a) { return Array.isArray(a) && a.length > 0; }
+  /* examVocab / examGrammar may be one test (array of items) or several
+     tests (array of arrays). Always returns a list of item arrays. */
+  function testsOf(lesson, key) {
+    var v = lesson[key];
+    if (!hasItems(v)) return [];
+    return Array.isArray(v[0]) ? v.filter(hasItems) : [v];
+  }
 
   window.Views.quiz = function (root, lesson, meta, sub) {
-    var avail = TESTS.filter(function (t) { return hasItems(lesson[t.key]); });
-    var picked = avail.filter(function (t) { return t.sub === sub; })[0];
-    if (picked) { runExamSession(root, lesson, picked); return; }
+    var avail = TESTS.filter(function (t) { return testsOf(lesson, t.key).length; });
+    var parts = String(sub || '').split('/');
+    var picked = avail.filter(function (t) { return t.sub === parts[0]; })[0];
+    if (picked) {
+      var list = testsOf(lesson, picked.key);
+      var idx = Math.max(1, Math.min(list.length, parseInt(parts[1], 10) || 1));
+      runExamSession(root, lesson, picked, list[idx - 1], idx, list.length);
+      return;
+    }
     if (avail.length && sub !== 'vocab') { renderChooser(root, lesson, avail); return; }
     runQuizSession(root, {
       pool: lesson.vocab || [], storeId: lesson.id,
@@ -38,16 +51,21 @@
     });
   };
 
+  function storeKey(lesson, test, idx) { return lesson.id + test.store + (idx > 1 ? ':' + idx : ''); }
+
   function renderChooser(root, lesson, avail) {
     root.innerHTML = '<div class="quiz-wrap"><h1>Kiểm tra bài ' + esc(lesson.n || '') + '</h1>' +
-      '<p class="sub">Chọn bài kiểm tra. Mỗi câu 1 điểm.</p><div class="exam-pick">' +
+      '<p class="sub">Chọn bài kiểm tra. Mỗi câu 1 điểm.</p>' +
       avail.map(function (t) {
-        var n = flattenExam(lesson[t.key]).length, best = Store.bestScore(lesson.id + t.store);
-        return '<button class="exam-card" data-nav="quiz/' + t.sub + '">' +
-          '<span class="exam-card-title">' + esc(t.title) + '</span>' +
-          (t.jp ? '<span class="exam-card-jp jp">' + esc(t.jp) + '</span>' : '') +
-          '<span class="exam-card-meta">' + n + ' câu' + (best !== null ? ' · cao nhất ' + Math.round(best * n) + '/' + n : '') + '</span></button>';
-      }).join('') + '</div>' +
+        var list = testsOf(lesson, t.key);
+        return '<h2 class="exam-group">' + esc(t.title) + (t.jp ? ' <span class="jp">' + esc(t.jp) + '</span>' : '') + '</h2><div class="exam-pick">' +
+          list.map(function (items, i) {
+            var n = flattenExam(items).length, best = Store.bestScore(storeKey(lesson, t, i + 1));
+            return '<button class="exam-card" data-nav="quiz/' + t.sub + '/' + (i + 1) + '">' +
+              '<span class="exam-card-title">' + (list.length > 1 ? 'Đề ' + (i + 1) : esc(t.title)) + '</span>' +
+              '<span class="exam-card-meta">' + n + ' câu' + (best !== null ? ' · cao nhất ' + Math.round(best * n) + '/' + n : '') + '</span></button>';
+          }).join('') + '</div>';
+      }).join('') +
       '<div class="toolbar"><button class="btn" data-nav="quiz/vocab">Luyện từ vựng nhanh</button></div></div>';
   }
 
@@ -57,14 +75,15 @@
        {sec, t:'reading', passage, qs:[{q,opt,ans}]}
      optional on mcq/fill: pic (emoji hoặc mô tả hình), box ([từ trong khung]),
      hint (dạng cần chia, vd 'て形'). */
-  function runExamSession(root, lesson, test) {
-    var questions = flattenExam(lesson[test.key]);
-    var storeId = lesson.id + test.store;
+  function runExamSession(root, lesson, test, items, idx, total) {
+    var questions = flattenExam(items);
+    var storeId = storeKey(lesson, test, idx);
+    var label = test.title + (total > 1 ? ' — Đề ' + idx : '');
     setup();
 
     function setup() {
       var best = Store.bestScore(storeId), secs = sectionNames(questions);
-      root.innerHTML = '<div class="quiz-wrap"><h1>' + esc(test.title) + ' — bài ' + esc(lesson.n || '') + '</h1>' +
+      root.innerHTML = '<div class="quiz-wrap"><h1>' + esc(label) + ' · bài ' + esc(lesson.n || '') + '</h1>' +
         '<p class="sub">' + questions.length + ' câu · ' + questions.length + ' điểm · làm theo từng phần, nộp bài để xem kết quả.' +
         (best !== null ? ' Điểm cao nhất: <b>' + Math.round(best * questions.length) + '/' + questions.length + '</b>.' : '') + '</p>' +
         '<div class="exam-sections">' + secs.map(function (s) { return '<span>' + esc(s) + '</span>'; }).join('') + '</div>' +
@@ -82,7 +101,7 @@
           return '<button class="opt" data-i="' + i + '" aria-pressed="' + (answers[idx] === i) + '">' + esc(o) + '</button>';
         }).join('') + '</div>' : '<div class="fill-answer"><input id="qfill" autocomplete="off" value="' + esc(answers[idx] || '') + '" placeholder="Nhập đáp án"></div>';
         root.innerHTML = '<div class="quiz-wrap"><div class="qbar"><i style="width:' + (idx / questions.length * 100) + '%"></i></div>' +
-          '<div class="qprompt"><div class="lead">' + esc(q.sec || test.title) + ' · Câu ' + (idx + 1) + '/' + questions.length + '</div>' +
+          '<div class="qprompt"><div class="lead">' + esc(q.sec || label) + ' · Câu ' + (idx + 1) + '/' + questions.length + '</div>' +
           (q.passage ? '<div class="passage jp">' + esc(q.passage) + '</div>' : '') +
           (q.box ? '<div class="word-box jp">' + q.box.map(function (w) { return '<span>' + esc(w) + '</span>'; }).join('') + '</div>' : '') +
           (q.pic ? '<div class="q-pic">' + esc(q.pic) + '</div>' : '') +
@@ -111,7 +130,7 @@
           if (ok) correct++; else wrong.push({ q: q, answer: answers[i] });
         });
         Store.addScore(storeId, correct, questions.length);
-        root.innerHTML = '<div class="quiz-wrap score"><div class="big">' + correct + '<small>/' + questions.length + '</small></div><p class="sub">' + esc(test.title) + ' · đúng ' + Math.round(correct / questions.length * 100) + '%.</p>' +
+        root.innerHTML = '<div class="quiz-wrap score"><div class="big">' + correct + '<small>/' + questions.length + '</small></div><p class="sub">' + esc(label) + ' · đúng ' + Math.round(correct / questions.length * 100) + '%.</p>' +
           '<div class="flash-controls"><button class="btn primary" id="qagain">Làm lại</button><button class="btn" data-nav="quiz">Chọn bài khác</button></div>' + review(wrong) + '</div>';
         root.querySelector('#qagain').addEventListener('click', setup);
       }
