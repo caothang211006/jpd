@@ -17,7 +17,7 @@
   - `ex.jp` có furigana trong （）, `ro` = romaji, `vi` = nghĩa.
   - Mục cuối `pat: 'Tóm tắt'` (ex: []) hiện màu vàng. Mẫu trình bày: shochukyu bài 01.
 - kanji: `{c, m, on, kun, w:[{jp, k, hv, vi}]}`. Từ ghép có `hv` = Âm Hán Việt viết HOA (VD 試験 → `hv:'THÍ NGHIỆM'`, `vi:'kỳ thi'`); flashcard từ ghép hiện 2 phần có nhãn: Âm Hán Việt + Nghĩa tiếng Việt. Chữ đa âm chọn âm đúng theo từ (銀行 NGÂN HÀNG, 社長 XÃ TRƯỞNG, 計画 KẾ HOẠCH). `m` dạng `HÁN VIỆT — nghĩa tiếng Việt` (flashcard tách 2 phần). Mỗi chữ kèm từ ghép; từ ghép trùng ở nhiều chữ chỉ hiện một thẻ.
-- Đề kiểm tra: 2 mảng riêng `examVocab` (ことばテスト) và `examGrammar` (文法テスト). Mảng `exam` cũ (shokyu 12-15) vẫn chạy, hiện thành "Đề luyện tập tổng hợp".
+- Đề kiểm tra: 2 mảng riêng `examVocab` (ことばテスト) và `examGrammar` (文法テスト). Mỗi mảng có thể là 1 đề (mảng câu) hoặc nhiều đề (mảng các mảng); sách vàng bài 3–15 có 5 đề × 30 câu mỗi loại. Route `quiz/tuvung/<số đề>`, `quiz/nguphap/<số đề>`. Mảng `exam` cũ (shokyu 12-15) vẫn chạy, hiện thành "Đề luyện tập tổng hợp".
   - Mỗi câu: `{sec, t:'mcq', q, opt, ans}` | `{sec, t:'fill', q, acc:[...]}` | `{sec, t:'reading', passage, qs:[...]}`.
   - Trường thêm (tùy chọn): `pic` (emoji/mô tả thay cho hình), `box` (mảng từ trong khung), `hint` (dạng cần chia, VD `'て形'`).
   - `acc` so khớp bỏ khoảng trắng, dấu 。, và đồng nhất chữ full-width/half-width; nên ghi cả bản kanji lẫn hiragana nếu chấp nhận cả hai.
@@ -50,4 +50,5 @@
 - Đã sửa trên máy (cần người dùng push nếu chưa): flashcard kanji Hán Việt/Việt, sửa lỗi lộ nghĩa khi lật, ngữ pháp shochukyu bài 01 (9 mục + romaji), giao diện trang ngữ pháp mới. Các phần giao diện chưa được mở trang kiểm tra.
 - Đã làm (session 2): tách đề từ vựng / ngữ pháp (`js/quiz.js`, `css/style.css`); sửa lỗi mở link trực tiếp bài sách vàng bị đá về trang chủ (`js/data.js`). Đã chạy thử trên trình duyệt ảo.
 - Đã làm (session 3): nhập lại từ vựng sách vàng bài 5–15 theo ảnh ことば; thêm `hv` cho toàn bộ từ ghép kanji sách đỏ bài 1–15.
-- Chưa làm: ngữ pháp bài 3 theo video (app hiện có 7 mẫu theo syllabus: Nにします, Vすぎ, Vたら, ようと思っています, つもり, 疑問詞か, かどうか); nhập các unit tiếp theo từ ảnh + soạn 2 đề 30 câu cho mỗi unit.
+- Đã làm (session 3): ngữ pháp sách vàng bài 3–15 theo trang 文型 cuối sách (mẫu 22–121); 5 đề từ vựng + 5 đề ngữ pháp (30 câu/đề) cho bài 3–15.
+- Chưa làm: đề kiểm tra sách vàng bài 1–2; kanji sách vàng; nhập ảnh các unit còn lại.

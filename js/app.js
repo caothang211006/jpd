@@ -173,7 +173,7 @@
     window.scrollTo(0, 0);
 
     if (parts[0] === 'l' && parts[1]) {
-      renderLesson(parts[1], TAB_LABEL[parts[2]] ? parts[2] : 'vocab', parts[3]);
+      renderLesson(parts[1], TAB_LABEL[parts[2]] ? parts[2] : 'vocab', parts.slice(3).join('/') || undefined);
     } else if (parts[0] === 'study') {
       renderStudy();
     } else {
