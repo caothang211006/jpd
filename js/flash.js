@@ -32,7 +32,7 @@
         var id = x.jp + '|' + (x.k || '');
         if (seen[id]) return;          // 映画 sits under both 映 and 画
         seen[id] = 1;
-        out.push({ kind: 'compound', w: x.jp, k: x.k, m: x.vi, tag: 'từ ghép của ' + k.c, store: store });
+        out.push({ kind: 'compound', w: x.jp, k: x.k, m: x.vi, hv: x.hv || '', vi: x.vi, tag: 'từ ghép của ' + k.c, store: store });
       });
     });
     return out;
@@ -194,7 +194,10 @@
         viSide = '<div class="mean-big">' + esc(w.m) + '</div>' + tag + hint;
       } else { // compound
         jpSide = '<div class="big jp">' + esc(w.w) + '</div>' + flip;
-        viSide = (w.k ? '<div class="kana jp">' + esc(w.k) + '</div>' : '') + mean + tag + hint;
+        // Từ ghép: Âm Hán Việt (VD 試験 → THÍ NGHIỆM) và nghĩa tiếng Việt thật (kỳ thi), tách 2 phần
+        var cHv = w.hv ? '<div class="kv-label">Âm Hán Việt</div><div class="mean-big hanviet">' + esc(w.hv) + '</div>' : '';
+        var cVi = showVi ? (w.hv ? '<div class="kv-label">Nghĩa tiếng Việt</div>' : '') + '<div class="mean-big">' + esc(w.m) + '</div>' : '';
+        viSide = (w.k ? '<div class="kana jp">' + esc(w.k) + '</div>' : '') + cHv + cVi + tag + hint;
       }
       return { jp: jpSide, vi: viSide };
     }

@@ -41,6 +41,7 @@
           return '<div class="kword' + (Store.isKnown(store, wk) ? ' known' : '') + '" data-k="' + esc(wk) +
                  '" title="Bấm để đánh dấu / bỏ đánh dấu">' +
                  esc(w.jp) + (w.k ? '（' + esc(w.k) + '）' : '') +
+                 (w.hv ? ' <span class="hv">' + esc(w.hv) + '</span>' : '') +
                  ' <span class="vi">' + esc(w.vi) + '</span></div>';
         }).join('');
         return '<div class="kcard' + (isKnown ? ' known' : '') + '">' +

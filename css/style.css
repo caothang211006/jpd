@@ -427,3 +427,5 @@ h2 { font-size: 17px; margin: 30px 0 12px; }
 .locked-m { flex: 1; min-width: 120px; }
 .card-face .kv-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); margin-top: 8px; }
 .card-face .hanviet { font-weight: 700; letter-spacing: .03em; }
+
+.kword .hv { font-size: 11.5px; letter-spacing: .03em; color: var(--accent); font-weight: 600; }

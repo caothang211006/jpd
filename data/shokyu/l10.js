@@ -156,25 +156,25 @@ JPD.lesson({
 
   kanji: [
     { c: '駅', m: 'DỊCH — nhà ga', on: 'エキ', kun: '',
-      w: [{ jp: '駅', k: 'えき', vi: 'nhà ga' }, { jp: '駅長', k: 'えきちょう', vi: 'trưởng ga' }] },
+      w: [{ jp: '駅', k: 'えき', hv: 'DỊCH', vi: 'nhà ga' }, { jp: '駅長', k: 'えきちょう', hv: 'DỊCH TRƯỞNG', vi: 'trưởng ga' }] },
     { c: '上', m: 'THƯỢNG — trên', on: 'ジョウ', kun: 'うえ',
-      w: [{ jp: '上', k: 'うえ', vi: 'trên' }, { jp: '上京', k: 'じょうきょう', vi: 'lên Tokyo' }] },
+      w: [{ jp: '上', k: 'うえ', hv: 'THƯỢNG', vi: 'trên' }, { jp: '上京', k: 'じょうきょう', hv: 'THƯỢNG KINH', vi: 'lên Tokyo' }] },
     { c: '下', m: 'HẠ — dưới', on: 'カ', kun: 'した',
-      w: [{ jp: '下', k: 'した', vi: 'dưới' }, { jp: '下車', k: 'げしゃ', vi: 'xuống xe' },
-          { jp: '上下', k: 'じょうげ', vi: 'trên dưới' }] },
+      w: [{ jp: '下', k: 'した', hv: 'HẠ', vi: 'dưới' }, { jp: '下車', k: 'げしゃ', hv: 'HẠ XA', vi: 'xuống xe' },
+          { jp: '上下', k: 'じょうげ', hv: 'THƯỢNG HẠ', vi: 'trên dưới' }] },
     { c: '地', m: 'ĐỊA — đất', on: 'チ', kun: '',
-      w: [{ jp: '土地', k: 'とち', vi: 'đất đai' }, { jp: '地下', k: 'ちか', vi: 'ngầm, dưới lòng đất' }] },
+      w: [{ jp: '土地', k: 'とち', hv: 'THỔ ĐỊA', vi: 'đất đai' }, { jp: '地下', k: 'ちか', hv: 'ĐỊA HẠ', vi: 'ngầm, dưới lòng đất' }] },
     { c: '図', m: 'ĐỒ — bản vẽ', on: 'ト、ズ', kun: '',
-      w: [{ jp: '地図', k: 'ちず', vi: 'bản đồ' }, { jp: '図', k: 'ず', vi: 'hình vẽ' }] },
+      w: [{ jp: '地図', k: 'ちず', hv: 'ĐỊA ĐỒ', vi: 'bản đồ' }, { jp: '図', k: 'ず', hv: 'ĐỒ', vi: 'hình vẽ' }] },
     { c: '館', m: 'QUÁN — toà nhà', on: 'カン', kun: '',
-      w: [{ jp: '図書館', k: 'としょかん', vi: 'thư viện' }, { jp: '旅館', k: 'りょかん', vi: 'nhà trọ kiểu Nhật' },
-          { jp: '会館', k: 'かいかん', vi: 'hội quán' }, { jp: '映画館', k: 'えいがかん', vi: 'rạp chiếu phim' }] },
+      w: [{ jp: '図書館', k: 'としょかん', hv: 'ĐỒ THƯ QUÁN', vi: 'thư viện' }, { jp: '旅館', k: 'りょかん', hv: 'LỮ QUÁN', vi: 'nhà trọ kiểu Nhật' },
+          { jp: '会館', k: 'かいかん', hv: 'HỘI QUÁN', vi: 'hội quán' }, { jp: '映画館', k: 'えいがかん', hv: 'ẢNH HỌA QUÁN', vi: 'rạp chiếu phim' }] },
     { c: '右', m: 'HỮU — phải', on: 'ユウ', kun: 'みぎ',
-      w: [{ jp: '右', k: 'みぎ', vi: 'bên phải' }] },
+      w: [{ jp: '右', k: 'みぎ', hv: 'HỮU', vi: 'bên phải' }] },
     { c: '左', m: 'TẢ — trái', on: 'サ', kun: 'ひだり',
-      w: [{ jp: '左', k: 'ひだり', vi: 'bên trái' }, { jp: '左右', k: 'さゆう', vi: 'trái phải' }] },
+      w: [{ jp: '左', k: 'ひだり', hv: 'TẢ', vi: 'bên trái' }, { jp: '左右', k: 'さゆう', hv: 'TẢ HỮU', vi: 'trái phải' }] },
     { c: '道', m: 'ĐẠO — đường', on: 'ドウ', kun: 'みち',
-      w: [{ jp: '道', k: 'みち', vi: 'đường' }, { jp: '書道', k: 'しょどう', vi: 'thư pháp' },
-          { jp: '国道', k: 'こくどう', vi: 'quốc lộ' }, { jp: '車道', k: 'しゃどう', vi: 'lòng đường' }] }
+      w: [{ jp: '道', k: 'みち', hv: 'ĐẠO', vi: 'đường' }, { jp: '書道', k: 'しょどう', hv: 'THƯ ĐẠO', vi: 'thư pháp' },
+          { jp: '国道', k: 'こくどう', hv: 'QUỐC ĐẠO', vi: 'quốc lộ' }, { jp: '車道', k: 'しゃどう', hv: 'XA ĐẠO', vi: 'lòng đường' }] }
   ]
 });
