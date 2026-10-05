@@ -1,7 +1,7 @@
 /* 第５課 大変な１日
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 10 chữ. */
 JPD.lesson({
   id: 'shochukyu-5', n: 5, jp: '大変な１日', vi: 'Một ngày vất vả',
 
@@ -415,5 +415,16 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "急", "m": "CẤP — gấp, vội", "on": "キュウ", "kun": "いそ・ぐ", "w": [{"jp": "急行", "k": "きゅうこう", "hv": "CẤP HÀNH", "vi": "tàu nhanh"}, {"jp": "急ぐ", "k": "いそぐ", "hv": "CẤP", "vi": "vội, khẩn trương"}, {"jp": "急に", "k": "きゅうに", "hv": "CẤP", "vi": "đột nhiên, bất ngờ"}]},
+    {"c": "特", "m": "ĐẶC — đặc biệt", "on": "トク", "kun": "", "w": [{"jp": "特急", "k": "とっきゅう", "hv": "ĐẶC CẤP", "vi": "tàu tốc hành đặc biệt"}, {"jp": "特別", "k": "とくべつ", "hv": "ĐẶC BIỆT", "vi": "đặc biệt"}, {"jp": "特に", "k": "とくに", "hv": "ĐẶC", "vi": "đặc biệt là"}]},
+    {"c": "線", "m": "TUYẾN — đường, tuyến", "on": "セン", "kun": "", "w": [{"jp": "線", "k": "せん", "hv": "TUYẾN", "vi": "đường kẻ, vạch"}, {"jp": "1番線", "k": "いちばんせん", "hv": "PHIÊN TUYẾN", "vi": "đường ray số 1"}, {"jp": "新幹線", "k": "しんかんせん", "hv": "TÂN CÁN TUYẾN", "vi": "tàu cao tốc Shinkansen"}]},
+    {"c": "回", "m": "HỒI — vòng, lần, quay", "on": "カイ、エ", "kun": "まわ・す、まわ・る", "w": [{"jp": "1回", "k": "いっかい", "hv": "HỒI", "vi": "một lần"}, {"jp": "回送電車", "k": "かいそうでんしゃ", "hv": "HỒI TỐNG ĐIỆN XA", "vi": "tàu chạy rỗng về bãi (không đón khách)"}, {"jp": "回す", "k": "まわす", "hv": "HỒI", "vi": "xoay, vặn"}, {"jp": "回る", "k": "まわる", "hv": "HỒI", "vi": "quay, đi vòng quanh"}]},
+    {"c": "遅", "m": "TRÌ — muộn, chậm", "on": "チ", "kun": "おく・れる、おそ・い、おく・らす", "w": [{"jp": "遅れる", "k": "おくれる", "hv": "TRÌ", "vi": "bị trễ, đến muộn"}, {"jp": "遅い", "k": "おそい", "hv": "TRÌ", "vi": "chậm, muộn"}]},
+    {"c": "忘", "m": "VONG — quên", "on": "ボウ", "kun": "わす・れる", "w": [{"jp": "忘れる", "k": "わすれる", "hv": "VONG", "vi": "quên"}, {"jp": "忘れ物", "k": "わすれもの", "hv": "VONG VẬT", "vi": "đồ bỏ quên"}]},
+    {"c": "待", "m": "ĐÃI — chờ, đợi", "on": "タイ", "kun": "ま・つ", "w": [{"jp": "待つ", "k": "まつ", "hv": "ĐÃI", "vi": "chờ, đợi"}, {"jp": "招待", "k": "しょうたい", "hv": "CHIÊU ĐÃI", "vi": "mời"}]},
+    {"c": "取", "m": "THỦ — lấy", "on": "シュ", "kun": "と・る", "w": [{"jp": "取る", "k": "とる", "hv": "THỦ", "vi": "lấy, lấy được"}, {"jp": "取り消し", "k": "とりけし", "hv": "THỦ TIÊU", "vi": "sự hủy bỏ"}]},
+    {"c": "消", "m": "TIÊU — tắt, xóa, mất đi", "on": "ショウ", "kun": "き・える、け・す", "w": [{"jp": "消す", "k": "けす", "hv": "TIÊU", "vi": "tắt, xóa"}, {"jp": "消える", "k": "きえる", "hv": "TIÊU", "vi": "tắt, biến mất"}, {"jp": "取り消し", "k": "とりけし", "hv": "THỦ TIÊU", "vi": "sự hủy bỏ"}, {"jp": "消しゴム", "k": "けしゴム", "hv": "TIÊU", "vi": "cục tẩy"}]},
+    {"c": "残", "m": "TÀN — còn lại, sót lại", "on": "ザン", "kun": "のこ・る、のこ・す", "w": [{"jp": "残る", "k": "のこる", "hv": "TÀN", "vi": "còn lại"}, {"jp": "残高", "k": "ざんだか", "hv": "TÀN CAO", "vi": "số dư (tài khoản)"}, {"jp": "残念", "k": "ざんねん", "hv": "TÀN NIỆM", "vi": "đáng tiếc"}]}
+  ]
 });

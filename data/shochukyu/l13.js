@@ -1,7 +1,7 @@
 /* 第13課 親の気持ち・子の気持ち
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 10 chữ. */
 JPD.lesson({
   id: 'shochukyu-13', n: 13, jp: '親の気持ち・子の気持ち', vi: 'Lòng cha mẹ, lòng con cái',
 
@@ -382,5 +382,16 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "文", "m": "VĂN — văn, chữ, câu văn", "on": "ブン、モン", "kun": "ふみ", "w": [{"jp": "作文", "k": "さくぶん", "hv": "TÁC VĂN", "vi": "bài văn, tập làm văn"}, {"jp": "文学部", "k": "ぶんがくぶ", "hv": "VĂN HỌC BỘ", "vi": "khoa văn học"}, {"jp": "注文", "k": "ちゅうもん", "hv": "CHÚ VĂN", "vi": "đặt hàng, gọi món"}, {"jp": "文化", "k": "ぶんか", "hv": "VĂN HÓA", "vi": "văn hóa"}, {"jp": "文字", "k": "もじ", "hv": "VĂN TỰ", "vi": "chữ viết, ký tự"}]},
+    {"c": "研", "m": "NGHIÊN — mài, nghiên cứu", "on": "ケン", "kun": "と・ぐ", "w": [{"jp": "研究", "k": "けんきゅう", "hv": "NGHIÊN CỨU", "vi": "nghiên cứu"}]},
+    {"c": "究", "m": "CỨU — tìm tòi đến cùng", "on": "キュウ", "kun": "きわ・める", "w": [{"jp": "研究", "k": "けんきゅう", "hv": "NGHIÊN CỨU", "vi": "nghiên cứu"}]},
+    {"c": "課", "m": "KHÓA — bài, phòng ban, giao (nhiệm vụ)", "on": "カ", "kun": "", "w": [{"jp": "学生課", "k": "がくせいか", "hv": "HỌC SINH KHÓA", "vi": "phòng công tác sinh viên"}, {"jp": "課題", "k": "かだい", "hv": "KHÓA ĐỀ", "vi": "bài tập, đề tài"}, {"jp": "課長", "k": "かちょう", "hv": "KHÓA TRƯỞNG", "vi": "trưởng phòng"}]},
+    {"c": "題", "m": "ĐỀ — đề, chủ đề", "on": "ダイ", "kun": "", "w": [{"jp": "問題", "k": "もんだい", "hv": "VẤN ĐỀ", "vi": "vấn đề, câu hỏi"}, {"jp": "宿題", "k": "しゅくだい", "hv": "TÚC ĐỀ", "vi": "bài tập về nhà"}]},
+    {"c": "習", "m": "TẬP — học, luyện tập", "on": "シュウ", "kun": "なら・う", "w": [{"jp": "習う", "k": "ならう", "hv": "TẬP", "vi": "học (từ ai đó)"}, {"jp": "予習", "k": "よしゅう", "hv": "DỰ TẬP", "vi": "chuẩn bị bài trước"}, {"jp": "実習", "k": "じっしゅう", "hv": "THỰC TẬP", "vi": "thực tập, thực hành"}, {"jp": "練習", "k": "れんしゅう", "hv": "LUYỆN TẬP", "vi": "luyện tập"}]},
+    {"c": "堂", "m": "ĐƯỜNG — gian nhà lớn, hội trường", "on": "ドウ", "kun": "", "w": [{"jp": "食堂", "k": "しょくどう", "hv": "THỰC ĐƯỜNG", "vi": "nhà ăn, căng tin"}, {"jp": "講堂", "k": "こうどう", "hv": "GIẢNG ĐƯỜNG", "vi": "hội trường, giảng đường"}]},
+    {"c": "席", "m": "TỊCH — chỗ ngồi", "on": "セキ", "kun": "", "w": [{"jp": "出席", "k": "しゅっせき", "hv": "XUẤT TỊCH", "vi": "có mặt, tham dự"}, {"jp": "席", "k": "せき", "hv": "TỊCH", "vi": "chỗ ngồi"}]},
+    {"c": "欠", "m": "KHIẾM — thiếu, vắng", "on": "ケツ", "kun": "か・ける、か・く", "w": [{"jp": "欠席", "k": "けっせき", "hv": "KHIẾM TỊCH", "vi": "vắng mặt, nghỉ (học)"}]},
+    {"c": "全", "m": "TOÀN — toàn bộ, tất cả", "on": "ゼン", "kun": "まった・く、すべ・て", "w": [{"jp": "全部", "k": "ぜんぶ", "hv": "TOÀN BỘ", "vi": "toàn bộ, tất cả"}, {"jp": "安全", "k": "あんぜん", "hv": "AN TOÀN", "vi": "an toàn"}, {"jp": "全～", "k": "ぜん～", "hv": "TOÀN", "vi": "toàn ~, tất cả ~"}]}
+  ]
 });

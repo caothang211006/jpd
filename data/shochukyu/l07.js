@@ -1,7 +1,7 @@
 /* 第７課 西川さんの家へ
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 11 chữ. */
 JPD.lesson({
   id: 'shochukyu-7', n: 7, jp: '西川さんの家', vi: 'Nhà anh Nishikawa',
 
@@ -407,5 +407,17 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "牛", "m": "NGƯU — con bò", "on": "ギュウ", "kun": "うし", "w": [{"jp": "牛肉", "k": "ぎゅうにく", "hv": "NGƯU NHỤC", "vi": "thịt bò"}, {"jp": "牛", "k": "うし", "hv": "NGƯU", "vi": "con bò"}]},
+    {"c": "魚", "m": "NGƯ — con cá", "on": "ギョ", "kun": "さかな、うお", "w": [{"jp": "魚", "k": "さかな", "hv": "NGƯ", "vi": "con cá"}]},
+    {"c": "飯", "m": "PHẠN — cơm", "on": "ハン", "kun": "めし", "w": [{"jp": "ご飯", "k": "ごはん", "hv": "PHẠN", "vi": "cơm, bữa ăn"}]},
+    {"c": "菜", "m": "THÁI — rau", "on": "サイ", "kun": "な", "w": [{"jp": "野菜", "k": "やさい", "hv": "DÃ THÁI", "vi": "rau"}]},
+    {"c": "味", "m": "VỊ — mùi vị", "on": "ミ", "kun": "あじ、あじ・わう", "w": [{"jp": "味", "k": "あじ", "hv": "VỊ", "vi": "vị, mùi vị"}, {"jp": "調味料", "k": "ちょうみりょう", "hv": "ĐIỀU VỊ LIỆU", "vi": "gia vị"}, {"jp": "意味", "k": "いみ", "hv": "Ý VỊ", "vi": "ý nghĩa"}]},
+    {"c": "色", "m": "SẮC — màu sắc", "on": "シキ、ショク", "kun": "いろ", "w": [{"jp": "色", "k": "いろ", "hv": "SẮC", "vi": "màu sắc"}, {"jp": "景色", "k": "けしき", "hv": "CẢNH SẮC", "vi": "phong cảnh"}, {"jp": "3色", "k": "さんしょく", "hv": "SẮC", "vi": "ba màu"}]},
+    {"c": "茶", "m": "TRÀ — trà", "on": "チャ、サ", "kun": "", "w": [{"jp": "お茶", "k": "おちゃ", "hv": "TRÀ", "vi": "trà"}, {"jp": "茶色", "k": "ちゃいろ", "hv": "TRÀ SẮC", "vi": "màu nâu"}, {"jp": "喫茶店", "k": "きっさてん", "hv": "KHIẾT TRÀ ĐIẾM", "vi": "quán cà phê, quán giải khát"}]},
+    {"c": "少", "m": "THIỂU — ít", "on": "ショウ", "kun": "すく・ない、すこ・し", "w": [{"jp": "少し", "k": "すこし", "hv": "THIỂU", "vi": "một chút, một ít"}, {"jp": "少々", "k": "しょうしょう", "hv": "THIỂU", "vi": "một chút, chút ít"}, {"jp": "少ない", "k": "すくない", "hv": "THIỂU", "vi": "ít"}]},
+    {"c": "洗", "m": "TẨY — rửa, giặt", "on": "セン", "kun": "あら・う", "w": [{"jp": "洗う", "k": "あらう", "hv": "TẨY", "vi": "rửa"}, {"jp": "洗濯", "k": "せんたく", "hv": "TẨY TRẠC", "vi": "giặt giũ"}]},
+    {"c": "弱", "m": "NHƯỢC — yếu", "on": "ジャク", "kun": "よわ・い、よわ・まる、よわ・める、よわ・る", "w": [{"jp": "弱い", "k": "よわい", "hv": "NHƯỢC", "vi": "yếu"}, {"jp": "弱火", "k": "よわび", "hv": "NHƯỢC HỎA", "vi": "lửa nhỏ"}]},
+    {"c": "暗", "m": "ÁM — tối", "on": "アン", "kun": "くら・い", "w": [{"jp": "暗い", "k": "くらい", "hv": "ÁM", "vi": "tối"}, {"jp": "冷暗所", "k": "れいあんしょ", "hv": "LÃNH ÁM SỞ", "vi": "nơi tối và mát"}]}
+  ]
 });

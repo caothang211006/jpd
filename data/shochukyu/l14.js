@@ -1,7 +1,7 @@
 /* 第14課 イベント・行事
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 11 chữ. */
 JPD.lesson({
   id: 'shochukyu-14', n: 14, jp: 'イベント・行事', vi: 'Sự kiện & lễ hội',
 
@@ -425,5 +425,17 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "都", "m": "ĐÔ — kinh đô, thủ đô", "on": "ツ、ト", "kun": "みやこ", "w": [{"jp": "都合", "k": "つごう", "hv": "ĐÔ HỢP", "vi": "sự thuận tiện, lịch (bận/rảnh)"}, {"jp": "東京都", "k": "とうきょうと", "hv": "ĐÔNG KINH ĐÔ", "vi": "thủ đô Tokyo"}]},
+    {"c": "県", "m": "HUYỆN — tỉnh", "on": "ケン", "kun": "", "w": [{"jp": "～県", "k": "～けん", "hv": "HUYỆN", "vi": "tỉnh ~"}]},
+    {"c": "北", "m": "BẮC — phía bắc", "on": "ホク", "kun": "きた", "w": [{"jp": "北", "k": "きた", "hv": "BẮC", "vi": "phía bắc"}, {"jp": "東北地方", "k": "とうほくちほう", "hv": "ĐÔNG BẮC ĐỊA PHƯƠNG", "vi": "vùng Tohoku (Đông Bắc Nhật Bản)"}, {"jp": "北海道", "k": "ほっかいどう", "hv": "BẮC HẢI ĐẠO", "vi": "Hokkaido"}]},
+    {"c": "西", "m": "TÂY — phía tây", "on": "サイ、セイ", "kun": "にし", "w": [{"jp": "西", "k": "にし", "hv": "TÂY", "vi": "phía tây"}, {"jp": "関西", "k": "かんさい", "hv": "QUAN TÂY", "vi": "vùng Kansai"}, {"jp": "西洋", "k": "せいよう", "hv": "TÂY DƯƠNG", "vi": "phương Tây"}, {"jp": "東西南北", "k": "とうざいなんぼく", "hv": "ĐÔNG TÂY NAM BẮC", "vi": "đông tây nam bắc, bốn phương"}]},
+    {"c": "正", "m": "CHÍNH — đúng, ngay thẳng", "on": "ショウ、セイ", "kun": "ただ・しい、ただ・す、まさ", "w": [{"jp": "正しい", "k": "ただしい", "hv": "CHÍNH", "vi": "đúng, chính xác"}, {"jp": "正月", "k": "しょうがつ", "hv": "CHÍNH NGUYỆT", "vi": "Tết, năm mới"}]},
+    {"c": "花", "m": "HOA — hoa", "on": "カ", "kun": "はな", "w": [{"jp": "花", "k": "はな", "hv": "HOA", "vi": "hoa"}, {"jp": "花見", "k": "はなみ", "hv": "HOA KIẾN", "vi": "ngắm hoa (anh đào)"}, {"jp": "花瓶", "k": "かびん", "hv": "HOA BÌNH", "vi": "bình hoa, lọ hoa"}, {"jp": "花粉症", "k": "かふんしょう", "hv": "HOA PHẤN CHỨNG", "vi": "dị ứng phấn hoa"}]},
+    {"c": "祭", "m": "TẾ — lễ hội, cúng tế", "on": "サイ", "kun": "まつ・り、まつ・る", "w": [{"jp": "祭り", "k": "まつり", "hv": "TẾ", "vi": "lễ hội"}, {"jp": "文化祭", "k": "ぶんかさい", "hv": "VĂN HÓA TẾ", "vi": "lễ hội văn hóa (ở trường)"}]},
+    {"c": "青", "m": "THANH — màu xanh", "on": "セイ、ショウ", "kun": "あお、あお・い", "w": [{"jp": "青", "k": "あお", "hv": "THANH", "vi": "màu xanh"}, {"jp": "青い", "k": "あおい", "hv": "THANH", "vi": "xanh"}, {"jp": "青春", "k": "せいしゅん", "hv": "THANH XUÂN", "vi": "tuổi thanh xuân"}, {"jp": "真っ青", "k": "まっさお", "hv": "CHÂN THANH", "vi": "xanh ngắt; tái mét"}]},
+    {"c": "黒", "m": "HẮC — màu đen", "on": "コク", "kun": "くろ、くろ・い", "w": [{"jp": "黒", "k": "くろ", "hv": "HẮC", "vi": "màu đen"}, {"jp": "黒い", "k": "くろい", "hv": "HẮC", "vi": "đen"}]},
+    {"c": "白", "m": "BẠCH — màu trắng", "on": "ハク、ビャク", "kun": "しろ、しろ・い、しら", "w": [{"jp": "白", "k": "しろ", "hv": "BẠCH", "vi": "màu trắng"}, {"jp": "白い", "k": "しろい", "hv": "BẠCH", "vi": "trắng"}, {"jp": "白紙", "k": "はくし", "hv": "BẠCH CHỈ", "vi": "giấy trắng; (trở về) con số không"}]},
+    {"c": "赤", "m": "XÍCH — màu đỏ", "on": "セキ、シャク", "kun": "あか、あか・い、あか・らむ、あか・らめる", "w": [{"jp": "赤", "k": "あか", "hv": "XÍCH", "vi": "màu đỏ"}, {"jp": "赤い", "k": "あかい", "hv": "XÍCH", "vi": "đỏ"}, {"jp": "赤飯", "k": "せきはん", "hv": "XÍCH PHẠN", "vi": "xôi đậu đỏ"}, {"jp": "真っ赤", "k": "まっか", "hv": "CHÂN XÍCH", "vi": "đỏ rực, đỏ chót"}]}
+  ]
 });

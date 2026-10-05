@@ -51,4 +51,5 @@
 - Đã làm (session 2): tách đề từ vựng / ngữ pháp (`js/quiz.js`, `css/style.css`); sửa lỗi mở link trực tiếp bài sách vàng bị đá về trang chủ (`js/data.js`). Đã chạy thử trên trình duyệt ảo.
 - Đã làm (session 3): nhập lại từ vựng sách vàng bài 5–15 theo ảnh ことば; thêm `hv` cho toàn bộ từ ghép kanji sách đỏ bài 1–15.
 - Đã làm (session 3): ngữ pháp sách vàng bài 3–15 theo trang 文型 cuối sách (mẫu 22–121); 5 đề từ vựng + 5 đề ngữ pháp (30 câu/đề) cho bài 3–15.
-- Chưa làm: đề kiểm tra sách vàng bài 1–2; kanji sách vàng; nhập ảnh các unit còn lại.
+- Đã làm (session 3): kanji sách vàng bài 5–15 (chữ số 45–164, theo số in trên trang; bỏ 55–58 心主糸刀 thuộc trang 漢字のパーツ, chưa rõ bài). Phân bài: 5:45–54, 6:59–68, 7:69–79, 8:80–89, 9:90–100, 10:101–111, 11:112–121, 12:122–131, 13:132–141, 14:142–152, 15:153–164.
+- Chưa làm: đề kiểm tra sách vàng bài 1–2; kanji sách vàng bài 1–4 và số 55–58; nhập ảnh các unit còn lại.

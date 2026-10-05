@@ -1,7 +1,7 @@
 /* 第８課 ありがとう
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 10 chữ. */
 JPD.lesson({
   id: 'shochukyu-8', n: 8, jp: 'ありがとう', vi: 'Cảm ơn',
 
@@ -382,5 +382,16 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "広", "m": "QUẢNG — rộng", "on": "コウ", "kun": "ひろ・い、ひろ・がる、ひろ・げる、ひろ・まる、ひろ・める", "w": [{"jp": "広い", "k": "ひろい", "hv": "QUẢNG", "vi": "rộng"}]},
+    {"c": "便", "m": "TIỆN — thuận tiện; thư tín", "on": "ベン、ビン", "kun": "たよ・り", "w": [{"jp": "便利", "k": "べんり", "hv": "TIỆN LỢI", "vi": "tiện lợi"}, {"jp": "郵便局", "k": "ゆうびんきょく", "hv": "BƯU TIỆN CỤC", "vi": "bưu điện"}]},
+    {"c": "利", "m": "LỢI — lợi ích, có lợi", "on": "リ", "kun": "き・く", "w": [{"jp": "便利", "k": "べんり", "hv": "TIỆN LỢI", "vi": "tiện lợi"}, {"jp": "利用", "k": "りよう", "hv": "LỢI DỤNG", "vi": "sử dụng"}]},
+    {"c": "建", "m": "KIẾN — xây dựng", "on": "ケン、コン", "kun": "た・てる、た・つ", "w": [{"jp": "建物", "k": "たてもの", "hv": "KIẾN VẬT", "vi": "tòa nhà"}, {"jp": "2階建て", "k": "にかいだて", "hv": "GIAI KIẾN", "vi": "nhà 2 tầng"}, {"jp": "建てる", "k": "たてる", "hv": "KIẾN", "vi": "xây (nhà)"}, {"jp": "建築", "k": "けんちく", "hv": "KIẾN TRÚC", "vi": "kiến trúc, xây dựng"}]},
+    {"c": "近", "m": "CẬN — gần", "on": "キン", "kun": "ちか・い", "w": [{"jp": "近い", "k": "ちかい", "hv": "CẬN", "vi": "gần"}, {"jp": "近所", "k": "きんじょ", "hv": "CẬN SỞ", "vi": "hàng xóm, khu lân cận"}, {"jp": "最近", "k": "さいきん", "hv": "TỐI CẬN", "vi": "gần đây"}]},
+    {"c": "空", "m": "KHÔNG — bầu trời; trống", "on": "クウ", "kun": "あ・く、そら、あ・ける、から", "w": [{"jp": "空", "k": "そら", "hv": "KHÔNG", "vi": "bầu trời"}, {"jp": "空く", "k": "あく", "hv": "KHÔNG", "vi": "trống, vắng"}, {"jp": "空気", "k": "くうき", "hv": "KHÔNG KHÍ", "vi": "không khí"}, {"jp": "空港", "k": "くうこう", "hv": "KHÔNG CẢNG", "vi": "sân bay"}]},
+    {"c": "室", "m": "THẤT — phòng", "on": "シツ", "kun": "むろ", "w": [{"jp": "空室", "k": "くうしつ", "hv": "KHÔNG THẤT", "vi": "phòng trống"}, {"jp": "室内", "k": "しつない", "hv": "THẤT NỘI", "vi": "trong phòng"}, {"jp": "教室", "k": "きょうしつ", "hv": "GIÁO THẤT", "vi": "lớp học, phòng học"}]},
+    {"c": "和", "m": "HÒA — hòa bình; kiểu Nhật", "on": "ワ、オ", "kun": "なご・む、なご・やか、やわ・らぐ、やわ・らげる", "w": [{"jp": "和室", "k": "わしつ", "hv": "HÒA THẤT", "vi": "phòng kiểu Nhật"}, {"jp": "和食", "k": "わしょく", "hv": "HÒA THỰC", "vi": "món ăn Nhật"}]},
+    {"c": "洋", "m": "DƯƠNG — đại dương; phương Tây", "on": "ヨウ", "kun": "", "w": [{"jp": "洋室", "k": "ようしつ", "hv": "DƯƠNG THẤT", "vi": "phòng kiểu Tây"}, {"jp": "洋服", "k": "ようふく", "hv": "DƯƠNG PHỤC", "vi": "quần áo (kiểu Tây)"}]},
+    {"c": "有", "m": "HỮU — có", "on": "ユウ、ウ", "kun": "あ・る", "w": [{"jp": "有り", "k": "あり", "hv": "HỮU", "vi": "có"}, {"jp": "有名", "k": "ゆうめい", "hv": "HỮU DANH", "vi": "nổi tiếng"}]}
+  ]
 });

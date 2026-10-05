@@ -1,7 +1,7 @@
 /* 第６課 旅行に行こう
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 10 chữ. */
 JPD.lesson({
   id: 'shochukyu-6', n: 6, jp: '旅行に行こう', vi: 'Cùng đi du lịch',
 
@@ -399,5 +399,16 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "子", "m": "TỬ — con, đứa trẻ", "on": "シ、ス", "kun": "こ", "w": [{"jp": "子", "k": "こ", "hv": "TỬ", "vi": "đứa trẻ, con"}, {"jp": "子ども", "k": "こども", "hv": "TỬ", "vi": "trẻ em, con cái"}, {"jp": "お菓子", "k": "おかし", "hv": "QUẢ TỬ", "vi": "bánh kẹo"}]},
+    {"c": "親", "m": "THÂN — cha mẹ; thân thiết", "on": "シン", "kun": "おや、した・しい、した・しむ", "w": [{"jp": "親", "k": "おや", "hv": "THÂN", "vi": "cha mẹ"}, {"jp": "親子", "k": "おやこ", "hv": "THÂN TỬ", "vi": "cha mẹ và con cái"}, {"jp": "親切", "k": "しんせつ", "hv": "THÂN THIẾT", "vi": "tử tế, tốt bụng"}]},
+    {"c": "代", "m": "ĐẠI — thay thế; thời đại; tiền phí", "on": "ダイ、タイ", "kun": "か・わる、か・える、しろ、よ", "w": [{"jp": "代金", "k": "だいきん", "hv": "ĐẠI KIM", "vi": "tiền hàng, tiền thanh toán"}, {"jp": "~代", "k": "だい", "hv": "ĐẠI", "vi": "tiền ~, phí ~"}, {"jp": "時代", "k": "じだい", "hv": "THỜI ĐẠI", "vi": "thời đại"}, {"jp": "代わる", "k": "かわる", "hv": "ĐẠI", "vi": "thay thế, thay cho"}]},
+    {"c": "屋", "m": "ỐC — nhà, mái nhà; cửa hàng", "on": "オク", "kun": "や", "w": [{"jp": "屋上", "k": "おくじょう", "hv": "ỐC THƯỢNG", "vi": "sân thượng"}, {"jp": "~屋", "k": "や", "hv": "ỐC", "vi": "cửa hàng ~, tiệm ~"}, {"jp": "部屋", "k": "へや", "hv": "BỘ ỐC", "vi": "căn phòng"}]},
+    {"c": "内", "m": "NỘI — bên trong", "on": "ナイ、ダイ", "kun": "うち", "w": [{"jp": "国内", "k": "こくない", "hv": "QUỐC NỘI", "vi": "trong nước, nội địa"}, {"jp": "屋内", "k": "おくない", "hv": "ỐC NỘI", "vi": "trong nhà, trong phòng"}, {"jp": "内科", "k": "ないか", "hv": "NỘI KHOA", "vi": "khoa nội"}]},
+    {"c": "自", "m": "TỰ — tự mình, bản thân", "on": "ジ、シ", "kun": "みずか・ら", "w": [{"jp": "自分", "k": "じぶん", "hv": "TỰ PHÂN", "vi": "bản thân, tự mình"}, {"jp": "自転車", "k": "じてんしゃ", "hv": "TỰ CHUYỂN XA", "vi": "xe đạp"}]},
+    {"c": "由", "m": "DO — lý do; tự do", "on": "ユウ、ユ、ユイ", "kun": "よし", "w": [{"jp": "自由", "k": "じゆう", "hv": "TỰ DO", "vi": "tự do"}, {"jp": "理由", "k": "りゆう", "hv": "LÝ DO", "vi": "lý do"}]},
+    {"c": "発", "m": "PHÁT — xuất phát, phát ra", "on": "ハツ、ホツ", "kun": "", "w": [{"jp": "出発", "k": "しゅっぱつ", "hv": "XUẤT PHÁT", "vi": "khởi hành, xuất phát"}, {"jp": "始発", "k": "しはつ", "hv": "THỦY PHÁT", "vi": "chuyến tàu đầu tiên (trong ngày)"}, {"jp": "発見", "k": "はっけん", "hv": "PHÁT KIẾN", "vi": "phát hiện"}]},
+    {"c": "着", "m": "TRƯỚC — mặc; đến nơi", "on": "チャク、ジャク", "kun": "き・る、つ・く、き・せる、つ・ける", "w": [{"jp": "着く", "k": "つく", "hv": "TRƯỚC", "vi": "đến nơi"}, {"jp": "到着", "k": "とうちゃく", "hv": "ĐÁO TRƯỚC", "vi": "đến nơi, cập bến"}, {"jp": "着る", "k": "きる", "hv": "TRƯỚC", "vi": "mặc (áo)"}, {"jp": "上着", "k": "うわぎ", "hv": "THƯỢNG TRƯỚC", "vi": "áo khoác"}, {"jp": "着物", "k": "きもの", "hv": "TRƯỚC VẬT", "vi": "kimono"}]},
+    {"c": "遠", "m": "VIỄN — xa", "on": "エン", "kun": "とお・い", "w": [{"jp": "遠い", "k": "とおい", "hv": "VIỄN", "vi": "xa"}, {"jp": "遠足", "k": "えんそく", "hv": "VIỄN TÚC", "vi": "chuyến dã ngoại, đi chơi xa"}]}
+  ]
 });

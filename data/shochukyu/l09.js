@@ -1,7 +1,7 @@
 /* 第９課 アルバイト先で
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 11 chữ. */
 JPD.lesson({
   id: 'shochukyu-9', n: 9, jp: 'アルバイト先で', vi: 'Ở nơi làm thêm',
 
@@ -433,5 +433,17 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "足", "m": "TÚC — chân; đủ", "on": "ソク", "kun": "あし、た・す、た・りる、た・る", "w": [{"jp": "足", "k": "あし", "hv": "TÚC", "vi": "chân"}, {"jp": "足りる", "k": "たりる", "hv": "TÚC", "vi": "đủ"}, {"jp": "足す", "k": "たす", "hv": "TÚC", "vi": "cộng thêm"}, {"jp": "不足", "k": "ふそく", "hv": "BẤT TÚC", "vi": "thiếu, không đủ"}]},
+    {"c": "手", "m": "THỦ — tay", "on": "シュ", "kun": "て、た", "w": [{"jp": "手", "k": "て", "hv": "THỦ", "vi": "tay"}, {"jp": "運転手", "k": "うんてんしゅ", "hv": "VẬN CHUYỂN THỦ", "vi": "tài xế"}, {"jp": "手伝う", "k": "てつだう", "hv": "THỦ TRUYỀN", "vi": "giúp đỡ"}]},
+    {"c": "元", "m": "NGUYÊN — gốc, nguồn", "on": "ゲン、ガン", "kun": "もと", "w": [{"jp": "元気", "k": "げんき", "hv": "NGUYÊN KHÍ", "vi": "khỏe mạnh"}, {"jp": "火元", "k": "ひもと", "hv": "HỎA NGUYÊN", "vi": "nguồn lửa, nơi phát hỏa"}, {"jp": "足元", "k": "あしもと", "hv": "TÚC NGUYÊN", "vi": "dưới chân"}]},
+    {"c": "作", "m": "TÁC — làm, chế tạo", "on": "サク、サ", "kun": "つく・る", "w": [{"jp": "作る", "k": "つくる", "hv": "TÁC", "vi": "làm, chế tạo, nấu"}, {"jp": "作文", "k": "さくぶん", "hv": "TÁC VĂN", "vi": "bài văn"}]},
+    {"c": "返", "m": "PHẢN — trả lại", "on": "ヘン", "kun": "かえ・す、かえ・る", "w": [{"jp": "返す", "k": "かえす", "hv": "PHẢN", "vi": "trả lại"}, {"jp": "返事", "k": "へんじ", "hv": "PHẢN SỰ", "vi": "trả lời, hồi âm"}, {"jp": "返信", "k": "へんしん", "hv": "PHẢN TÍN", "vi": "thư trả lời, hồi âm"}]},
+    {"c": "者", "m": "GIẢ — người", "on": "シャ", "kun": "もの", "w": [{"jp": "者", "k": "もの", "hv": "GIẢ", "vi": "người (kẻ)"}, {"jp": "送信者", "k": "そうしんしゃ", "hv": "TỐNG TÍN GIẢ", "vi": "người gửi"}, {"jp": "参加者", "k": "さんかしゃ", "hv": "THAM GIA GIẢ", "vi": "người tham gia"}]},
+    {"c": "林", "m": "LÂM — rừng thưa", "on": "リン", "kun": "はやし", "w": [{"jp": "林", "k": "はやし", "hv": "LÂM", "vi": "rừng thưa, lùm cây"}, {"jp": "小林さん", "k": "こばやしさん", "hv": "TIỂU LÂM", "vi": "anh/chị Kobayashi"}]},
+    {"c": "森", "m": "SÂM — rừng rậm", "on": "シン", "kun": "もり", "w": [{"jp": "森", "k": "もり", "hv": "SÂM", "vi": "rừng"}, {"jp": "森林", "k": "しんりん", "hv": "SÂM LÂM", "vi": "rừng rậm, rừng"}]},
+    {"c": "村", "m": "THÔN — làng", "on": "ソン", "kun": "むら", "w": [{"jp": "村", "k": "むら", "hv": "THÔN", "vi": "làng"}, {"jp": "木村さん", "k": "きむらさん", "hv": "MỘC THÔN", "vi": "anh/chị Kimura"}]},
+    {"c": "山", "m": "SƠN — núi", "on": "サン", "kun": "やま", "w": [{"jp": "山", "k": "やま", "hv": "SƠN", "vi": "núi"}, {"jp": "山田さん", "k": "やまださん", "hv": "SƠN ĐIỀN", "vi": "anh/chị Yamada"}, {"jp": "~山", "k": "さん", "hv": "SƠN", "vi": "núi ~ (tên núi)"}, {"jp": "山車", "k": "だし", "hv": "SƠN XA", "vi": "xe hoa rước lễ hội"}]},
+    {"c": "川", "m": "XUYÊN — sông", "on": "セン", "kun": "かわ", "w": [{"jp": "川", "k": "かわ", "hv": "XUYÊN", "vi": "sông"}, {"jp": "小川さん", "k": "おがわさん", "hv": "TIỂU XUYÊN", "vi": "anh/chị Ogawa"}]}
+  ]
 });

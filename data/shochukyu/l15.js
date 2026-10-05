@@ -1,7 +1,7 @@
 /* 第15課 気になるニュース
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 12 chữ. */
 JPD.lesson({
   id: 'shochukyu-15', n: 15, jp: '気になるニュース', vi: 'Tin tức đáng chú ý',
 
@@ -400,5 +400,18 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "漢", "m": "HÁN — chữ Hán, người Hán", "on": "カン", "kun": "", "w": [{"jp": "漢字", "k": "かんじ", "hv": "HÁN TỰ", "vi": "chữ Hán"}]},
+    {"c": "字", "m": "TỰ — chữ", "on": "ジ", "kun": "あざ", "w": [{"jp": "字", "k": "じ", "hv": "TỰ", "vi": "chữ, nét chữ"}, {"jp": "漢字", "k": "かんじ", "hv": "HÁN TỰ", "vi": "chữ Hán"}, {"jp": "ローマ字", "k": "ローマじ", "hv": "TỰ", "vi": "chữ La-tinh (romaji)"}, {"jp": "文字", "k": "もじ", "hv": "VĂN TỰ", "vi": "chữ, văn tự"}]},
+    {"c": "暑", "m": "THỬ — nóng (thời tiết)", "on": "ショ", "kun": "あつ・い", "w": [{"jp": "暑い", "k": "あつい", "hv": "THỬ", "vi": "nóng"}, {"jp": "残暑", "k": "ざんしょ", "hv": "TÀN THỬ", "vi": "cái nóng cuối hè"}]},
+    {"c": "寒", "m": "HÀN — lạnh", "on": "カン", "kun": "さむ・い", "w": [{"jp": "寒い", "k": "さむい", "hv": "HÀN", "vi": "lạnh"}]},
+    {"c": "去", "m": "KHỨ — đi qua, đã qua", "on": "キョ、コ", "kun": "さ・る", "w": [{"jp": "去年", "k": "きょねん", "hv": "KHỨ NIÊN", "vi": "năm ngoái"}, {"jp": "過去", "k": "かこ", "hv": "QUÁ KHỨ", "vi": "quá khứ"}]},
+    {"c": "質", "m": "CHẤT — chất lượng, hỏi", "on": "シツ、シチ、チ", "kun": "", "w": [{"jp": "質問", "k": "しつもん", "hv": "CHẤT VẤN", "vi": "câu hỏi"}]},
+    {"c": "答", "m": "ĐÁP — trả lời", "on": "トウ", "kun": "こた・える", "w": [{"jp": "答える", "k": "こたえる", "hv": "ĐÁP", "vi": "trả lời"}, {"jp": "答え", "k": "こたえ", "hv": "ĐÁP", "vi": "câu trả lời, đáp án"}]},
+    {"c": "同", "m": "ĐỒNG — giống nhau, cùng", "on": "ドウ", "kun": "おな・じ", "w": [{"jp": "同じ", "k": "おなじ", "hv": "ĐỒNG", "vi": "giống nhau"}, {"jp": "同時", "k": "どうじ", "hv": "ĐỒNG THỜI", "vi": "cùng lúc"}]},
+    {"c": "思", "m": "TƯ — nghĩ", "on": "シ", "kun": "おも・う", "w": [{"jp": "思う", "k": "おもう", "hv": "TƯ", "vi": "nghĩ"}, {"jp": "思い出す", "k": "おもいだす", "hv": "TƯ XUẤT", "vi": "nhớ ra, nhớ lại"}]},
+    {"c": "考", "m": "KHẢO — suy nghĩ", "on": "コウ", "kun": "かんが・える", "w": [{"jp": "考える", "k": "かんがえる", "hv": "KHẢO", "vi": "suy nghĩ"}]},
+    {"c": "銀", "m": "NGÂN — bạc", "on": "ギン", "kun": "", "w": [{"jp": "銀行", "k": "ぎんこう", "hv": "NGÂN HÀNG", "vi": "ngân hàng"}, {"jp": "銀", "k": "ぎん", "hv": "NGÂN", "vi": "bạc (kim loại)"}]},
+    {"c": "悪", "m": "ÁC — xấu, ác", "on": "アク", "kun": "わる・い", "w": [{"jp": "悪い", "k": "わるい", "hv": "ÁC", "vi": "xấu, tệ"}, {"jp": "最悪", "k": "さいあく", "hv": "TỐI ÁC", "vi": "tồi tệ nhất"}]}
+  ]
 });

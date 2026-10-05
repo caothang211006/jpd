@@ -1,7 +1,7 @@
 /* 第11課 地域社会の中で
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 10 chữ. */
 JPD.lesson({
   id: 'shochukyu-11', n: 11, jp: '地域社会の中で', vi: 'Trong cộng đồng địa phương',
 
@@ -380,5 +380,16 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "工", "m": "CÔNG — công việc, thợ, chế tạo", "on": "コウ、ク", "kun": "", "w": [{"jp": "工事", "k": "こうじ", "hv": "CÔNG SỰ", "vi": "công trình, thi công"}, {"jp": "工場", "k": "こうじょう", "hv": "CÔNG TRƯỜNG", "vi": "nhà máy"}]},
+    {"c": "医", "m": "Y — y học, chữa bệnh", "on": "イ", "kun": "", "w": [{"jp": "医者", "k": "いしゃ", "hv": "Y GIẢ", "vi": "bác sĩ"}, {"jp": "歯医者", "k": "はいしゃ", "hv": "XỈ Y GIẢ", "vi": "nha sĩ"}, {"jp": "~医院", "k": "いいん", "hv": "Y VIỆN", "vi": "phòng khám ~"}]},
+    {"c": "紙", "m": "CHỈ — giấy", "on": "シ", "kun": "かみ", "w": [{"jp": "紙", "k": "かみ", "hv": "CHỈ", "vi": "giấy"}, {"jp": "手紙", "k": "てがみ", "hv": "THỦ CHỈ", "vi": "thư, lá thư"}, {"jp": "用紙", "k": "ようし", "hv": "DỤNG CHỈ", "vi": "giấy mẫu, mẫu đơn"}]},
+    {"c": "町", "m": "ĐINH — thị trấn, khu phố", "on": "チョウ", "kun": "まち", "w": [{"jp": "町", "k": "まち", "hv": "ĐINH", "vi": "thị trấn, phố"}, {"jp": "~町／町", "k": "ちょう／まち", "hv": "ĐINH", "vi": "phường ~, thị trấn ~"}, {"jp": "市町村", "k": "しちょうそん", "hv": "THỊ ĐINH THÔN", "vi": "thành phố, thị trấn và làng (các đơn vị hành chính địa phương)"}]},
+    {"c": "南", "m": "NAM — phía nam", "on": "ナン、ナ", "kun": "みなみ", "w": [{"jp": "南", "k": "みなみ", "hv": "NAM", "vi": "phía nam"}, {"jp": "東南アジア", "k": "とうなんアジア", "hv": "ĐÔNG NAM", "vi": "Đông Nam Á"}]},
+    {"c": "以", "m": "DĨ — lấy làm mốc, từ", "on": "イ", "kun": "", "w": [{"jp": "以上", "k": "いじょう", "hv": "DĨ THƯỢNG", "vi": "trở lên, trên"}, {"jp": "以下", "k": "いか", "hv": "DĨ HẠ", "vi": "trở xuống, dưới"}]},
+    {"c": "初", "m": "SƠ — ban đầu, lần đầu", "on": "ショ", "kun": "はじ・め、はじ・めて、うい、そ・める、はつ", "w": [{"jp": "初め", "k": "はじめ", "hv": "SƠ", "vi": "ban đầu, lúc đầu"}, {"jp": "初めて", "k": "はじめて", "hv": "SƠ", "vi": "lần đầu tiên"}, {"jp": "最初", "k": "さいしょ", "hv": "TỐI SƠ", "vi": "đầu tiên, ban đầu"}]},
+    {"c": "借", "m": "TÁ — vay, mượn", "on": "シャク", "kun": "か・りる", "w": [{"jp": "借りる", "k": "かりる", "hv": "TÁ", "vi": "mượn, vay"}]},
+    {"c": "貸", "m": "THẢI — cho mượn, cho vay", "on": "タイ", "kun": "か・す", "w": [{"jp": "貸す", "k": "かす", "hv": "THẢI", "vi": "cho mượn, cho vay"}]},
+    {"c": "押", "m": "ÁP — ấn, đẩy", "on": "オウ", "kun": "お・す、お・さえる", "w": [{"jp": "押す", "k": "おす", "hv": "ÁP", "vi": "ấn, bấm, đẩy"}]}
+  ]
 });

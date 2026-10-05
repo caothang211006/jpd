@@ -1,7 +1,7 @@
 /* 第12課 私の健康法
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 10 chữ. */
 JPD.lesson({
   id: 'shochukyu-12', n: 12, jp: '私の健康法', vi: 'Cách giữ sức khỏe của tôi',
 
@@ -400,5 +400,16 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "頭", "m": "ĐẦU — cái đầu", "on": "ズ、トウ、ト", "kun": "あたま、かしら", "w": [{"jp": "頭", "k": "あたま", "hv": "ĐẦU", "vi": "đầu"}, {"jp": "頭痛", "k": "ずつう", "hv": "ĐẦU THỐNG", "vi": "đau đầu"}, {"jp": "先頭", "k": "せんとう", "hv": "TIÊN ĐẦU", "vi": "đầu hàng, vị trí dẫn đầu"}]},
+    {"c": "顔", "m": "NHAN — khuôn mặt", "on": "ガン", "kun": "かお", "w": [{"jp": "顔", "k": "かお", "hv": "NHAN", "vi": "mặt, khuôn mặt"}, {"jp": "洗顔料", "k": "せんがんりょう", "hv": "TẨY NHAN LIỆU", "vi": "sữa rửa mặt"}]},
+    {"c": "首", "m": "THỦ — cổ, đứng đầu", "on": "シュ", "kun": "くび", "w": [{"jp": "首", "k": "くび", "hv": "THỦ", "vi": "cổ"}, {"jp": "手首", "k": "てくび", "hv": "THỦ THỦ", "vi": "cổ tay"}, {"jp": "足首", "k": "あしくび", "hv": "TÚC THỦ", "vi": "cổ chân"}, {"jp": "首都", "k": "しゅと", "hv": "THỦ ĐÔ", "vi": "thủ đô"}]},
+    {"c": "走", "m": "TẨU — chạy", "on": "ソウ", "kun": "はし・る", "w": [{"jp": "走る", "k": "はしる", "hv": "TẨU", "vi": "chạy"}, {"jp": "100m走", "k": "ひゃくメートルそう", "hv": "TẨU", "vi": "chạy 100 mét"}]},
+    {"c": "声", "m": "THANH — tiếng, giọng", "on": "セイ、ショウ", "kun": "こえ、こわ", "w": [{"jp": "声", "k": "こえ", "hv": "THANH", "vi": "giọng, tiếng (nói)"}, {"jp": "音声", "k": "おんせい", "hv": "ÂM THANH", "vi": "âm thanh, giọng nói"}]},
+    {"c": "重", "m": "TRỌNG — nặng", "on": "ジュウ、チョウ", "kun": "おも・い、え、かさ・なる、かさ・ねる", "w": [{"jp": "重い", "k": "おもい", "hv": "TRỌNG", "vi": "nặng"}, {"jp": "体重", "k": "たいじゅう", "hv": "THỂ TRỌNG", "vi": "cân nặng"}]},
+    {"c": "太", "m": "THÁI — to, béo", "on": "タ、タイ", "kun": "ふと・い、ふと・る", "w": [{"jp": "太い", "k": "ふとい", "hv": "THÁI", "vi": "to, dày (nét, vật)"}, {"jp": "太る", "k": "ふとる", "hv": "THÁI", "vi": "béo lên, tăng cân"}]},
+    {"c": "計", "m": "KẾ — đo, tính toán", "on": "ケイ", "kun": "はか・らう、はか・る", "w": [{"jp": "体重計", "k": "たいじゅうけい", "hv": "THỂ TRỌNG KẾ", "vi": "cân sức khỏe"}, {"jp": "計画", "k": "けいかく", "hv": "KẾ HOẠCH", "vi": "kế hoạch"}, {"jp": "時計", "k": "とけい", "hv": "THỜI KẾ", "vi": "đồng hồ"}]},
+    {"c": "不", "m": "BẤT — không", "on": "フ、ブ", "kun": "", "w": [{"jp": "~不足", "k": "ふそく", "hv": "BẤT TÚC", "vi": "thiếu ~"}, {"jp": "不便", "k": "ふべん", "hv": "BẤT TIỆN", "vi": "bất tiện"}, {"jp": "不可", "k": "ふか", "hv": "BẤT KHẢ", "vi": "không được, không thể"}, {"jp": "不明", "k": "ふめい", "hv": "BẤT MINH", "vi": "không rõ"}]},
+    {"c": "痛", "m": "THỐNG — đau", "on": "ツウ", "kun": "いた・い、いた・む、いた・める", "w": [{"jp": "頭痛", "k": "ずつう", "hv": "ĐẦU THỐNG", "vi": "đau đầu"}, {"jp": "痛い", "k": "いたい", "hv": "THỐNG", "vi": "đau"}]}
+  ]
 });

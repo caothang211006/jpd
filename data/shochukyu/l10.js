@@ -1,7 +1,7 @@
 /* 第10課 旅行に行って
    Từ vựng: trang ことば trong sách (ảnh người dùng gửi), nghĩa dịch lại theo ngữ cảnh.
    Ngữ pháp: trang tổng hợp 文型 cuối sách (ảnh người dùng gửi). Đề kiểm tra: examVocab/examGrammar mỗi loại 5 đề × 30 câu.
-   Kanji: sách giáo trình không có danh sách kanji riêng cho bài này. */
+   Kanji: trang kanji trong sách (ảnh người dùng gửi), 11 chữ. */
 JPD.lesson({
   id: 'shochukyu-10', n: 10, jp: '旅行に行って', vi: 'Đi du lịch về',
 
@@ -421,5 +421,17 @@ JPD.lesson({
     ]
   ],
 
-  kanji: []
+  kanji: [
+    {"c": "場", "m": "TRƯỜNG — nơi, chỗ", "on": "ジョウ", "kun": "ば", "w": [{"jp": "場所", "k": "ばしょ", "hv": "TRƯỜNG SỞ", "vi": "địa điểm, chỗ"}, {"jp": "乗り場", "k": "のりば", "hv": "THỪA TRƯỜNG", "vi": "bến, chỗ lên xe"}, {"jp": "~場", "k": "じょう", "hv": "TRƯỜNG", "vi": "bãi ~, sân ~ (VD sân trượt tuyết)"}]},
+    {"c": "動", "m": "ĐỘNG — chuyển động", "on": "ドウ", "kun": "うご・く、うご・かす", "w": [{"jp": "動く", "k": "うごく", "hv": "ĐỘNG", "vi": "chuyển động, chạy (máy)"}, {"jp": "動物", "k": "どうぶつ", "hv": "ĐỘNG VẬT", "vi": "động vật"}, {"jp": "自動車", "k": "じどうしゃ", "hv": "TỰ ĐỘNG XA", "vi": "ô tô"}, {"jp": "運動", "k": "うんどう", "hv": "VẬN ĐỘNG", "vi": "vận động, tập thể dục"}, {"jp": "動かす", "k": "うごかす", "hv": "ĐỘNG", "vi": "di chuyển, làm cho chạy"}]},
+    {"c": "公", "m": "CÔNG — công cộng", "on": "コウ", "kun": "おおやけ", "w": [{"jp": "公園", "k": "こうえん", "hv": "CÔNG VIÊN", "vi": "công viên"}]},
+    {"c": "園", "m": "VIÊN — vườn", "on": "エン", "kun": "その", "w": [{"jp": "公園", "k": "こうえん", "hv": "CÔNG VIÊN", "vi": "công viên"}, {"jp": "動物園", "k": "どうぶつえん", "hv": "ĐỘNG VẬT VIÊN", "vi": "sở thú"}]},
+    {"c": "鳥", "m": "ĐIỂU — chim", "on": "チョウ", "kun": "とり", "w": [{"jp": "鳥", "k": "とり", "hv": "ĐIỂU", "vi": "chim"}, {"jp": "小鳥", "k": "ことり", "hv": "TIỂU ĐIỂU", "vi": "chim nhỏ"}, {"jp": "白鳥", "k": "はくちょう", "hv": "BẠCH ĐIỂU", "vi": "thiên nga"}]},
+    {"c": "遊", "m": "DU — chơi", "on": "ユウ、ユ", "kun": "あそ・ぶ", "w": [{"jp": "遊ぶ", "k": "あそぶ", "hv": "DU", "vi": "chơi"}, {"jp": "遊園地", "k": "ゆうえんち", "hv": "DU VIÊN ĐỊA", "vi": "công viên giải trí"}]},
+    {"c": "池", "m": "TRÌ — ao", "on": "チ", "kun": "いけ", "w": [{"jp": "池", "k": "いけ", "hv": "TRÌ", "vi": "ao, hồ"}, {"jp": "電池", "k": "でんち", "hv": "ĐIỆN TRÌ", "vi": "pin"}]},
+    {"c": "店", "m": "ĐIẾM — cửa hàng", "on": "テン", "kun": "みせ", "w": [{"jp": "店", "k": "みせ", "hv": "ĐIẾM", "vi": "cửa hàng, quán"}, {"jp": "店員", "k": "てんいん", "hv": "ĐIẾM VIÊN", "vi": "nhân viên cửa hàng"}]},
+    {"c": "売", "m": "MẠI — bán", "on": "バイ、マイ", "kun": "う・る、う・れる", "w": [{"jp": "売店", "k": "ばいてん", "hv": "MẠI ĐIẾM", "vi": "quầy bán hàng, ki-ốt"}, {"jp": "売る", "k": "うる", "hv": "MẠI", "vi": "bán"}, {"jp": "売り場", "k": "うりば", "hv": "MẠI TRƯỜNG", "vi": "quầy bán, khu bán hàng"}]},
+    {"c": "産", "m": "SẢN — sinh ra, sản xuất", "on": "サン", "kun": "うぶ、う・まれる、う・む", "w": [{"jp": "~産", "k": "さん", "hv": "SẢN", "vi": "sản xuất tại ~, hàng ~"}, {"jp": "産地", "k": "さんち", "hv": "SẢN ĐỊA", "vi": "nơi sản xuất"}, {"jp": "生産", "k": "せいさん", "hv": "SINH SẢN", "vi": "sản xuất"}, {"jp": "土産", "k": "みやげ", "hv": "THỔ SẢN", "vi": "quà lưu niệm, đặc sản"}]},
+    {"c": "軽", "m": "KHINH — nhẹ", "on": "ケイ", "kun": "かる・い、かろ・やか", "w": [{"jp": "軽い", "k": "かるい", "hv": "KHINH", "vi": "nhẹ"}, {"jp": "軽食", "k": "けいしょく", "hv": "KHINH THỰC", "vi": "bữa ăn nhẹ"}]}
+  ]
 });
