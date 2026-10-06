@@ -36,6 +36,11 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
   window.esc = esc;
+  /* Escape, then turn 漢字（かな） into <ruby>漢字<rt>かな</rt></ruby> so the
+     reading sits above the kanji instead of cluttering the line. */
+  window.furi = function (s) {
+    return esc(s).replace(/([\u3400-\u9fff\uf900-\ufaff々〆ヵヶ]+)（([\u3041-\u3096\u30a1-\u30faー]+)）/g, '<ruby>$1<rt>$2</rt></ruby>');
+  };
 
   function go(hash) { location.hash = hash; }
 

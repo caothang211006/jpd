@@ -32,7 +32,7 @@
 
       body.innerHTML = list.map(function (g) {
         var ex = (g.ex || []).map(function (e) {
-          return '<li><div class="ex jp">' + esc(e.jp) + '</div>' +
+          return '<li><div class="ex jp">' + furi(e.jp) + '</div>' +
                  (e.ro ? '<div class="ro">' + esc(e.ro) + '</div>' : '') +
                  '<div class="tr"><span class="arr">→</span> ' + esc(e.vi) + '</div></li>';
         }).join('');
@@ -68,7 +68,7 @@
       return out;
     }
     function arrows(t) {
-      return esc(t).replace(/ → /g, ' <span class="arr">→</span> ');
+      return furi(t).replace(/ → /g, ' <span class="arr">→</span> ');
     }
 
     root.querySelector('#gq').addEventListener('input', function (e) { draw(e.target.value.trim()); });

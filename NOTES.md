@@ -32,6 +32,8 @@
 - Không bịa nội dung thi thật. Bài 12-15: `exam: []`; vocab/grammar bài 12-15 chờ tài liệu giáo viên.
 
 ## Quy tắc code
+- Furigana: viết 漢字（かな） trong data; `window.furi()` (js/app.js) đổi thành <ruby> hiện trên đầu chữ. Dùng ở ngữ pháp và đề kiểm tra. Đề ngữ pháp + phần Ⅱ đề từ vựng đã gắn furigana tự động (sudachipy); KHÔNG gắn cho phần Ⅲ Cách đọc (sẽ lộ đáp án).
+- Đề kiểm tra: chọn/điền xong là chấm ngay, hiện đáp án đúng, khóa câu đó; nút Tiếp chỉ bật sau khi trả lời.
 - Flashcard từ vựng: mặt trước kana, mặt sau kanji + nghĩa. Thẻ kanji: mặt trước chỉ chữ; mặt sau = ON/KUN + Âm Hán Việt + Nghĩa tiếng Việt (2 phần tách riêng, có nhãn). Thẻ từ ghép giữ nguyên.
 - Trạng thái "đã thuộc" ghi về đúng bài gốc của thẻ (store).
 - Mỗi phiên flashcard chỉ một listener bàn phím (`activeKeyHandler`).

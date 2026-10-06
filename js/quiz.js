@@ -84,7 +84,7 @@
     function setup() {
       var best = Store.bestScore(storeId), secs = sectionNames(questions);
       root.innerHTML = '<div class="quiz-wrap"><h1>' + esc(label) + ' · bài ' + esc(lesson.n || '') + '</h1>' +
-        '<p class="sub">' + questions.length + ' câu · ' + questions.length + ' điểm · làm theo từng phần, nộp bài để xem kết quả.' +
+        '<p class="sub">' + questions.length + ' câu · ' + questions.length + ' điểm · chọn đáp án là biết đúng sai ngay.' +
         (best !== null ? ' Điểm cao nhất: <b>' + Math.round(best * questions.length) + '/' + questions.length + '</b>.' : '') + '</p>' +
         '<div class="exam-sections">' + secs.map(function (s) { return '<span>' + esc(s) + '</span>'; }).join('') + '</div>' +
         '<button class="btn primary" id="qstart">Bắt đầu làm bài</button>' +
@@ -93,41 +93,65 @@
     }
 
     function start() {
-      var idx = 0, answers = [];
+      var idx = 0, answers = [], done = [];
       render();
+      function isRight(q, a) { return q.opt ? a === q.ans : matchesFill(a, q.acc || q.ans); }
+      function rightText(q) {
+        if (q.opt) return q.opt[q.ans];
+        var acc = q.acc || q.ans; return Array.isArray(acc) ? acc.join(' / ') : acc;
+      }
       function render() {
-        var q = questions[idx];
-        var body = q.opt ? '<div class="opts">' + q.opt.map(function (o, i) {
-          return '<button class="opt" data-i="' + i + '" aria-pressed="' + (answers[idx] === i) + '">' + esc(o) + '</button>';
-        }).join('') + '</div>' : '<div class="fill-answer"><input id="qfill" autocomplete="off" value="' + esc(answers[idx] || '') + '" placeholder="Nhập đáp án"></div>';
+        var q = questions[idx], checked = done[idx], a = answers[idx];
+        var body;
+        if (q.opt) {
+          body = '<div class="opts">' + q.opt.map(function (o, i) {
+            var cls = 'opt';
+            if (checked) { if (i === q.ans) cls += ' correct'; else if (i === a) cls += ' wrong'; }
+            return '<button class="' + cls + '" data-i="' + i + '"' + (checked ? ' disabled' : '') + '>' + furi(o) + '</button>';
+          }).join('') + '</div>';
+        } else {
+          body = '<div class="fill-answer"><input id="qfill" autocomplete="off" autocapitalize="off" value="' + esc(a || '') + '" placeholder="Nhập đáp án"' + (checked ? ' disabled' : '') + '>' +
+            (checked ? '' : '<button class="btn primary" id="qcheck">Kiểm tra</button>') + '</div>';
+        }
+        var fb = '';
+        if (checked) {
+          var ok = isRight(q, a);
+          fb = '<div class="q-feedback ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Đúng' : '✗ Sai') +
+            (ok && q.opt ? '' : ' — Đáp án: <span class="jp">' + furi(rightText(q)) + '</span>') + '</div>';
+        }
+        var score = done.reduce(function (n, d, i) { return n + (d && isRight(questions[i], answers[i]) ? 1 : 0); }, 0);
         root.innerHTML = '<div class="quiz-wrap"><div class="qbar"><i style="width:' + (idx / questions.length * 100) + '%"></i></div>' +
-          '<div class="qprompt"><div class="lead">' + esc(q.sec || label) + ' · Câu ' + (idx + 1) + '/' + questions.length + '</div>' +
-          (q.passage ? '<div class="passage jp">' + esc(q.passage) + '</div>' : '') +
-          (q.box ? '<div class="word-box jp">' + q.box.map(function (w) { return '<span>' + esc(w) + '</span>'; }).join('') + '</div>' : '') +
+          '<div class="qprompt"><div class="lead">' + esc(q.sec || label) + ' · Câu ' + (idx + 1) + '/' + questions.length + ' · Đúng ' + score + '</div>' +
+          (q.passage ? '<div class="passage jp">' + furi(q.passage) + '</div>' : '') +
+          (q.box ? '<div class="word-box jp">' + q.box.map(function (w) { return '<span>' + furi(w) + '</span>'; }).join('') + '</div>' : '') +
           (q.pic ? '<div class="q-pic">' + esc(q.pic) + '</div>' : '') +
-          '<div class="q jp' + (String(q.q).length > 14 ? ' long' : '') + '">' + esc(q.q) + '</div>' +
-          (q.hint ? '<div class="q-hint">→ <span class="jp">' + esc(q.hint) + '</span></div>' : '') + '</div>' + body +
-          '<div class="flash-controls"><button class="btn" id="qprev"' + (idx ? '' : ' disabled') + '>← Trước</button><button class="btn primary" id="qnext">' +
-          (idx + 1 === questions.length ? 'Nộp bài' : 'Tiếp →') + '</button></div></div>';
+          '<div class="q jp' + (String(q.q).replace(/（[^）]*）/g, '').length > 14 ? ' long' : '') + '">' + furi(q.q) + '</div>' +
+          (q.hint ? '<div class="q-hint">→ <span class="jp">' + esc(q.hint) + '</span></div>' : '') + '</div>' + body + fb +
+          '<div class="flash-controls"><button class="btn" id="qprev"' + (idx ? '' : ' disabled') + '>← Trước</button><button class="btn primary" id="qnext"' + (checked ? '' : ' disabled') + '>' +
+          (idx + 1 === questions.length ? 'Xem kết quả' : 'Tiếp →') + '</button></div></div>';
         Array.prototype.forEach.call(root.querySelectorAll('.opt'), function (b) {
-          b.addEventListener('click', function () { answers[idx] = parseInt(b.getAttribute('data-i'), 10); render(); });
+          b.addEventListener('click', function () {
+            if (done[idx]) return;
+            answers[idx] = parseInt(b.getAttribute('data-i'), 10); done[idx] = true; render();
+          });
         });
         var fill = root.querySelector('#qfill');
-        if (fill) {
+        function check() { if (done[idx]) return; answers[idx] = fill.value; done[idx] = true; render(); }
+        if (fill && !checked) {
           fill.focus();
-          fill.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) root.querySelector('#qnext').click(); });
+          fill.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) check(); });
+          root.querySelector('#qcheck').addEventListener('click', check);
         }
-        root.querySelector('#qprev').addEventListener('click', function () { if (fill) answers[idx] = fill.value; idx--; render(); });
+        root.querySelector('#qprev').addEventListener('click', function () { idx--; render(); });
         root.querySelector('#qnext').addEventListener('click', function () {
-          if (fill) answers[idx] = fill.value;
           if (idx + 1 === questions.length) finish(); else { idx++; render(); }
         });
+        if (checked && !q.opt) { var nx = root.querySelector('#qnext'); if (nx) nx.focus(); }
       }
       function finish() {
         var correct = 0, wrong = [];
         questions.forEach(function (q, i) {
-          var ok = q.opt ? answers[i] === q.ans : matchesFill(answers[i], q.acc || q.ans);
-          if (ok) correct++; else wrong.push({ q: q, answer: answers[i] });
+          if (isRight(q, answers[i])) correct++; else wrong.push({ q: q, answer: answers[i] });
         });
         Store.addScore(storeId, correct, questions.length);
         root.innerHTML = '<div class="quiz-wrap score"><div class="big">' + correct + '<small>/' + questions.length + '</small></div><p class="sub">' + esc(label) + ' · đúng ' + Math.round(correct / questions.length * 100) + '%.</p>' +
@@ -154,7 +178,7 @@
       var right = x.q.opt ? x.q.opt[x.q.ans] : (Array.isArray(accepted) ? accepted.join(' / ') : accepted);
       var yours = x.q.opt && x.answer !== undefined ? x.q.opt[x.answer] : (x.answer || 'Chưa trả lời');
       var label = (x.q.pic ? x.q.pic + ' ' : '') + x.q.q + (x.q.hint ? ' → ' + x.q.hint : '');
-      return '<div class="row exam-review"><span class="jp">' + esc(label) + '</span><span><span class="yours">Bạn chọn: ' + esc(yours) + '</span><br><span class="right">Đúng: ' + esc(right) + '</span></span></div>';
+      return '<div class="row exam-review"><span class="jp">' + furi(label) + '</span><span><span class="yours">Bạn chọn: ' + furi(yours) + '</span><br><span class="right">Đúng: ' + furi(right) + '</span></span></div>';
     }).join('') + '</div>';
   }
 
