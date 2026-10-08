@@ -136,18 +136,38 @@
           });
         });
         var fill = root.querySelector('#qfill');
-        function check() { if (done[idx]) return; answers[idx] = fill.value; done[idx] = true; render(); }
         if (fill && !checked) {
           fill.focus();
-          fill.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) check(); });
           root.querySelector('#qcheck').addEventListener('click', check);
         }
-        root.querySelector('#qprev').addEventListener('click', function () { idx--; render(); });
-        root.querySelector('#qnext').addEventListener('click', function () {
-          if (idx + 1 === questions.length) finish(); else { idx++; render(); }
-        });
-        if (checked && !q.opt) { var nx = root.querySelector('#qnext'); if (nx) nx.focus(); }
+        root.querySelector('#qprev').addEventListener('click', function (e) { if (e.detail === 0) return; idx--; render(); });
+        root.querySelector('#qnext').addEventListener('click', function (e) { if (e.detail === 0) return; next(); });
       }
+      function check() {
+        var fill = root.querySelector('#qfill');
+        if (done[idx] || !fill) return;
+        answers[idx] = fill.value; done[idx] = true; render();
+      }
+      function next() { if (!done[idx]) return; if (idx + 1 === questions.length) finish(); else { idx++; render(); } }
+      /* Phím tắt: Enter = kiểm tra / sang câu tiếp; 1–4 = chọn đáp án */
+      function onKey(e) {
+        if (!document.body.contains(root) || !root.querySelector('#qnext')) {
+          document.removeEventListener('keydown', onKey); return;
+        }
+        if (e.isComposing || e.keyCode === 229) return;   // đang gõ IME (chọn chữ kanji)
+        var q = questions[idx];
+        if (e.key === 'Enter') {
+          e.preventDefault(); e.stopPropagation();
+          if (e.repeat) return;
+          if (!done[idx] && !q.opt) check(); else next();
+        } else if (q.opt && !done[idx] && /^[1-9]$/.test(e.key) && e.target.tagName !== 'INPUT') {
+          var n = parseInt(e.key, 10) - 1;
+          if (n < q.opt.length) { answers[idx] = n; done[idx] = true; render(); }
+        }
+      }
+      if (window.__examKey) document.removeEventListener('keydown', window.__examKey);
+      window.__examKey = onKey;
+      document.addEventListener('keydown', onKey);
       function finish() {
         var correct = 0, wrong = [];
         questions.forEach(function (q, i) {

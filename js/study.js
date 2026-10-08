@@ -132,7 +132,8 @@
       var deck = [];
       ordered.forEach(function (l) {
         var meta = JPD.meta(l.id).lesson;
-        var tagPrefix = 'Bài ' + meta.n;
+        var bk = JPD.meta(l.id).book;
+        var tagPrefix = (bk.tone === 'red' ? 'Sách đỏ 初級' : bk.tone === 'gold' ? 'Sách vàng 初中級' : bk.name) + ' · Bài ' + meta.n;
         if (mode === 'kanji') {
           window.buildKanjiDeck(l).forEach(function (c) {
             c.tag = tagPrefix + (c.tag ? ' · ' + c.tag : '');

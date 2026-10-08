@@ -41,7 +41,7 @@
   function buildVocabDeck(lesson) {
     var store = lesson.id;
     return (lesson.vocab || []).map(function (w) {
-      return { kind: 'vocab', w: w.w, k: w.k, m: w.m, store: store };
+      return { kind: 'vocab', w: w.w, k: w.k, m: w.m, hv: w.hv || '', store: store };
     });
   }
   window.buildVocabDeck = buildVocabDeck;
@@ -191,7 +191,8 @@
           '<div class="big jp">' + esc(w.k || w.w) + '</div>' +
           (hasKanji && showKanji ? '<div class="kana jp">' + esc(w.w) + '</div>' : '') +
           flip;
-        viSide = '<div class="mean-big">' + esc(w.m) + '</div>' + tag + hint;
+        var vHv = w.hv ? '<div class="kv-label">Âm Hán Việt</div><div class="mean-big hanviet">' + esc(w.hv) + '</div><div class="kv-label">Nghĩa tiếng Việt</div>' : '';
+        viSide = vHv + '<div class="mean-big">' + esc(w.m) + '</div>' + tag + hint;
       } else { // compound
         jpSide = '<div class="big jp">' + esc(w.w) + '</div>' + flip;
         // Từ ghép: Âm Hán Việt (VD 試験 → THÍ NGHIỆM) và nghĩa tiếng Việt thật (kỳ thi), tách 2 phần
@@ -317,8 +318,9 @@
     }
 
     card.addEventListener('click', function () { flipped = !flipped; draw(); });
-    root.querySelector('#fprev').addEventListener('click', function () { move(-1); });
-    root.querySelector('#fnext').addEventListener('click', function () { move(1); });
+    // e.detail === 0: click do bàn phím (Enter/Space trên nút đang focus) — bỏ qua, phím tắt đã xử lý riêng
+    root.querySelector('#fprev').addEventListener('click', function (e) { if (e.detail === 0) return; this.blur(); move(-1); });
+    root.querySelector('#fnext').addEventListener('click', function (e) { if (e.detail === 0) return; this.blur(); move(1); });
     root.querySelector('#fknown').addEventListener('click', function () {
       if (!deck.length) return;
       var w = deck[i];
@@ -404,7 +406,7 @@
     }
 
     function onKey(e) {
-      if (!document.body.contains(root)) {
+      if (!document.body.contains(root) || !root.querySelector('#fknown')) {   // #view dùng chung: đã sang trang khác
         document.removeEventListener('keydown', onKey);
         if (activeKeyHandler === onKey) activeKeyHandler = null;
         return;
@@ -420,8 +422,9 @@
       else if (e.key === 'w' || e.key === 'W') root.querySelector('#fwatch').click();
       else if (e.key === 'x' || e.key === 'X') root.querySelector('#fexclude').click();
       else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (e.repeat) return;
+        e.preventDefault(); e.stopPropagation();
+        if (e.repeat || e.isComposing || e.keyCode === 229) return;
+        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
         root.querySelector('#fknown').click();
       }
     }

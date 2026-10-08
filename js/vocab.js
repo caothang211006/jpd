@@ -73,7 +73,7 @@
                '<div class="jp-main jp">' + esc(w.w) +
                  (w.k ? '<span class="kana">' + esc(w.k) + '</span>' : '') +
                '</div>' +
-               '<div class="mean">' + esc(w.m) + '</div>' +
+               '<div class="mean">' + (w.hv ? '<span class="hv">' + esc(w.hv) + '</span> ' : '') + esc(w.m) + '</div>' +
                '<button class="mark" data-k="' + esc(k) + '" title="Đánh dấu đã thuộc">✓</button>' +
              '</div>';
     }

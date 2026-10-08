@@ -11,7 +11,7 @@
 - Code: `js/flash.js`, `js/kanji.js`, `js/grammar.js`, `js/quiz.js`, `css/style.css`.
 
 ## Cấu trúc data
-- vocab: `{g, w, k, m}` (nhóm, từ, cách đọc, nghĩa). Không có trường ví dụ riêng; câu ví dụ gộp vào `m`.
+- vocab: `{g, w, k, hv, m}` — `hv` = Âm Hán Việt VIẾT HOA cho từ có kanji (hiện trên flashcard mặt sau và danh sách từ vựng); từ không có kanji thì không có `hv` (nhóm, từ, cách đọc, nghĩa). Không có trường ví dụ riêng; câu ví dụ gộp vào `m`.
 - grammar: `{pat, desc, ex:[{jp, ro, vi}]}`.
   - `desc`: dòng thường = đoạn văn; dòng bắt đầu bằng `•` = danh sách; ` → ` được tô màu.
   - `ex.jp` có furigana trong （）, `ro` = romaji, `vi` = nghĩa.
@@ -32,6 +32,8 @@
 - Không bịa nội dung thi thật. Bài 12-15: `exam: []`; vocab/grammar bài 12-15 chờ tài liệu giáo viên.
 
 ## Quy tắc code
+- Phím tắt: #view dùng chung cho mọi trang → handler keydown phải tự gỡ khi phần tử của nó không còn (flash: #fknown, đề: #qnext). Click do bàn phím (e.detail === 0) trên nút Trước/Sau bị bỏ qua. Đề: Enter = kiểm tra/sang câu, 1–9 = chọn đáp án; bỏ qua khi đang gõ IME.
+- Thẻ flashcard gộp nhiều bài ghi rõ sách: "Sách đỏ 初級 · Bài N" / "Sách vàng 初中級 · Bài N".
 - Furigana: viết 漢字（かな） trong data; `window.furi()` (js/app.js) đổi thành <ruby> hiện trên đầu chữ. Dùng ở ngữ pháp và đề kiểm tra. Đề ngữ pháp + phần Ⅱ đề từ vựng đã gắn furigana tự động (sudachipy); KHÔNG gắn cho phần Ⅲ Cách đọc (sẽ lộ đáp án).
 - Đề kiểm tra: chọn/điền xong là chấm ngay, hiện đáp án đúng, khóa câu đó; nút Tiếp chỉ bật sau khi trả lời.
 - Flashcard từ vựng: mặt trước kana, mặt sau kanji + nghĩa. Thẻ kanji: mặt trước chỉ chữ; mặt sau = ON/KUN + Âm Hán Việt + Nghĩa tiếng Việt (2 phần tách riêng, có nhãn). Thẻ từ ghép giữ nguyên.

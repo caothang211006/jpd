@@ -450,3 +450,5 @@ ruby { ruby-position: over; }
   .opt { font-size: 15px; padding: 11px 12px; }
   .gitem .gex .ex { font-size: 16px; line-height: 2; }
 }
+
+.word .mean .hv, .row .mean .hv { font-size: 11.5px; letter-spacing: .03em; color: var(--accent); font-weight: 600; }
