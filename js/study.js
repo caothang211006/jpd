@@ -48,6 +48,11 @@
           '<button class="btn" data-mode="kanji" aria-pressed="' + (mode === 'kanji') + '">Kanji &amp; từ ghép</button>' +
           '<span class="count">' + selectedCount + '/' + list.length + ' bài đã chọn</span>' +
         '</div>' +
+        '<div class="st-range"><span>Ôn từ đầu đến:</span><select id="stRange"><option value="">— chọn bài —</option>' +
+          list.map(function (x, i) {
+            return '<option value="' + i + '">' + (x.book.tone === 'red' ? 'Sách đỏ' : 'Sách vàng') + ' · Bài ' + esc(x.lesson.n) + ' ' + esc(x.lesson.jp) + '</option>';
+          }).join('') +
+        '</select><span class="note">(chọn tất cả các bài từ bài 1 sách đỏ đến bài này)</span></div>' +
         order.map(function (book) {
           return '<div class="book-head">' +
                    '<span class="book-dot ' + book.tone + '"></span>' +
@@ -83,6 +88,14 @@
           if (b.checked) checked[id] = true; else delete checked[id];
           render();
         });
+      });
+      var rangeSel = root.querySelector('#stRange');
+      if (rangeSel) rangeSel.addEventListener('change', function () {
+        if (rangeSel.value === '') return;
+        var upto = parseInt(rangeSel.value, 10);
+        checked = {};
+        list.forEach(function (x, i) { if (i <= upto) checked[x.lesson.id] = true; });
+        render();
       });
       Array.prototype.forEach.call(root.querySelectorAll('[data-pickall]'), function (b) {
         b.addEventListener('click', function () {
@@ -153,7 +166,7 @@
             '<br><button class="btn" data-nav="study" style="margin-top:12px">← Chọn lại</button></div>';
           return;
         }
-        var label = ordered.map(function (l) { return 'Bài ' + JPD.meta(l.id).lesson.n; }).join(', ');
+        var label = ordered.map(function (l) { var mm = JPD.meta(l.id); return (mm.book.tone === 'red' ? 'Đỏ ' : 'Vàng ') + mm.lesson.n; }).join(', ');
         window.runQuizSession(root, {
           pool: deck,
           storeId: 'pool:' + ordered.map(function (l) { return l.id; }).sort().join(','),
@@ -161,7 +174,7 @@
           afterAction: { label: '← Chọn lại các bài', attr: 'data-nav="study"' }
         });
       } else {
-        var heading = ordered.map(function (l) { return 'Bài ' + JPD.meta(l.id).lesson.n; }).join(', ');
+        var heading = ordered.map(function (l) { var mm = JPD.meta(l.id); return (mm.book.tone === 'red' ? 'Đỏ ' : 'Vàng ') + mm.lesson.n; }).join(', ');
         window.runFlashSession(root, { source: deck, heading: heading, backNav: 'study' });
       }
     }

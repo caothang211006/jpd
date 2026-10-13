@@ -77,6 +77,7 @@
      hint (dạng cần chia, vd 'て形'). */
   function runExamSession(root, lesson, test, items, idx, total) {
     var questions = flattenExam(items);
+    currentLesson = lesson;
     var storeId = storeKey(lesson, test, idx);
     var label = test.title + (total > 1 ? ' — Đề ' + idx : '');
     setup();
@@ -94,6 +95,7 @@
 
     function start() {
       var idx = 0, answers = [], done = [];
+      questions = mixExam(flattenExam(items));   // mỗi lần làm: xáo câu trong từng phần + xáo đáp án
       render();
       function isRight(q, a) { return q.opt ? a === q.ans : matchesFill(a, q.acc || q.ans); }
       function rightText(q) {
@@ -117,7 +119,8 @@
         if (checked) {
           var ok = isRight(q, a);
           fb = '<div class="q-feedback ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Đúng' : '✗ Sai') +
-            (ok && q.opt ? '' : ' — Đáp án: <span class="jp">' + furi(rightText(q)) + '</span>') + '</div>';
+            (ok && q.opt ? '' : ' — Đáp án: <span class="jp">' + furi(rightText(q)) + '</span>') + '</div>' +
+            explain(q);
         }
         var score = done.reduce(function (n, d, i) { return n + (d && isRight(questions[i], answers[i]) ? 1 : 0); }, 0);
         root.innerHTML = '<div class="quiz-wrap"><div class="qbar"><i style="width:' + (idx / questions.length * 100) + '%"></i></div>' +
@@ -127,8 +130,8 @@
           (q.pic ? '<div class="q-pic">' + esc(q.pic) + '</div>' : '') +
           '<div class="q jp' + (String(q.q).replace(/（[^）]*）/g, '').length > 14 ? ' long' : '') + '">' + furi(q.q) + '</div>' +
           (q.hint ? '<div class="q-hint">→ <span class="jp">' + esc(q.hint) + '</span></div>' : '') + '</div>' + body + fb +
-          '<div class="flash-controls"><button class="btn" id="qprev"' + (idx ? '' : ' disabled') + '>← Trước</button><button class="btn primary" id="qnext"' + (checked ? '' : ' disabled') + '>' +
-          (idx + 1 === questions.length ? 'Xem kết quả' : 'Tiếp →') + '</button></div></div>';
+          '<div class="flash-controls"><button class="btn" id="qprev"' + (idx ? '' : ' disabled') + '>← Trước</button><button class="btn primary" id="qnext">' +
+          (idx + 1 === questions.length ? 'Nộp bài' : 'Tiếp →') + '</button></div>' + navGrid() + '</div>';
         Array.prototype.forEach.call(root.querySelectorAll('.opt'), function (b) {
           b.addEventListener('click', function () {
             if (done[idx]) return;
@@ -142,13 +145,35 @@
         }
         root.querySelector('#qprev').addEventListener('click', function (e) { if (e.detail === 0) return; idx--; render(); });
         root.querySelector('#qnext').addEventListener('click', function (e) { if (e.detail === 0) return; next(); });
+        // Bảng số câu: bấm để chuyển câu
+        Array.prototype.forEach.call(root.querySelectorAll('[data-jumpq]'), function (b) {
+          b.addEventListener('click', function () { idx = parseInt(b.getAttribute('data-jumpq'), 10); render(); });
+        });
+        var fin = root.querySelector('#qfinish');
+        if (fin) fin.addEventListener('click', function () { var save = idx; idx = questions.length - 1; next(); idx = save; });
+      }
+      function navGrid() {
+        var h = '<div class="qnav"><div class="qnav-head"><span>Bảng câu hỏi · đã làm ' + done.filter(Boolean).length + '/' + questions.length + '</span>' +
+          '<button class="btn" id="qfinish" style="padding:4px 10px;font-size:12.5px">Nộp bài</button></div><div class="qnav-grid">';
+        var lastSec = null;
+        questions.forEach(function (q, i) {
+          if (q.sec !== lastSec) { lastSec = q.sec; h += '<div class="qnav-sec">' + esc(String(q.sec || '').split('.')[0]) + '</div>'; }
+          var cls = 'qnav-b' + (i === idx ? ' cur' : '') + (done[i] ? (isRight(q, answers[i]) ? ' ok' : ' bad') : '');
+          h += '<button class="' + cls + '" data-jumpq="' + i + '">' + (i + 1) + '</button>';
+        });
+        return h + '</div></div>';
       }
       function check() {
         var fill = root.querySelector('#qfill');
         if (done[idx] || !fill) return;
         answers[idx] = fill.value; done[idx] = true; render();
       }
-      function next() { if (!done[idx]) return; if (idx + 1 === questions.length) finish(); else { idx++; render(); } }
+      function next() {
+        if (idx + 1 < questions.length) { idx++; render(); return; }
+        var left = questions.length - done.filter(Boolean).length;
+        if (left && !confirm('Còn ' + left + ' câu chưa làm (tính là sai). Nộp bài?')) return;
+        finish();
+      }
       /* Phím tắt: Enter = kiểm tra / sang câu tiếp; 1–4 = chọn đáp án */
       function onKey(e) {
         if (!document.body.contains(root) || !root.querySelector('#qnext')) {
@@ -179,6 +204,45 @@
         root.querySelector('#qagain').addEventListener('click', setup);
       }
     }
+  }
+
+  /* Xáo thứ tự câu trong mỗi phần (giữ thứ tự các phần) và xáo các lựa chọn. */
+  function mixExam(qs) {
+    var secs = [], by = {};
+    qs.forEach(function (q) { var s = q.sec || ''; if (!by[s]) { by[s] = []; secs.push(s); } by[s].push(q); });
+    var out = [];
+    secs.forEach(function (s) {
+      shuffle(by[s].slice()).forEach(function (q) {
+        if (q.opt && !q.passage) {
+          var idx = shuffle(q.opt.map(function (_, i) { return i; }));
+          var c = {}; for (var k in q) c[k] = q[k];
+          c.opt = idx.map(function (i) { return q.opt[i]; });
+          c.ans = idx.indexOf(q.ans);
+          out.push(c);
+        } else out.push(q);
+      });
+    });
+    return out;
+  }
+
+  /* Giải thích sau khi trả lời: mẫu ngữ pháp + lý do (đề ngữ pháp),
+     hoặc từ vựng tương ứng (đề từ vựng). */
+  var currentLesson = null;
+  function explain(q) {
+    var L = currentLesson || {}, h = '';
+    if (typeof q.g === 'number' && q.g >= 0 && L.grammar && L.grammar[q.g]) h += '<span class="pat">' + esc(L.grammar[q.g].pat) + '</span>';
+    if (q.why) h += furi(q.why);
+    if (!h && L.vocab) {
+      var right = q.opt ? q.opt[q.ans] : (q.acc || [])[0];
+      var key = String(right || '').replace(/（[^）]*）/g, '').trim();
+      var hit = L.vocab.filter(function (w) {
+        var base = String(w.w).replace(/（[^）]*）|［[^］]*］|～/g, '').trim();
+        return key && (base === key || w.w === key || w.k === key || String(w.k).replace(/（[^）]*）/g, '') === key);
+      })[0];
+      if (hit) h = '<span class="jp">' + esc(hit.w) + (hit.k ? '（' + esc(hit.k) + '）' : '') + '</span>' +
+        (hit.hv ? ' · <b>' + esc(hit.hv) + '</b>' : '') + ' — ' + esc(hit.m);
+    }
+    return h ? '<div class="q-explain">' + h + '</div>' : '';
   }
 
   function flattenExam(exam) {

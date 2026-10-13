@@ -25,7 +25,8 @@
         '<button class="btn primary" id="kflash">Học flashcard kanji</button>' +
         '<button class="btn" id="kreset">Bỏ đánh dấu</button>' +
         '<span class="count" id="kcount"></span>' +
-      '</div><div class="kgrid" id="kbody"></div>';
+      '</div><div class="kgrid" id="kbody"></div>' +
+      ((lesson.yomeru || []).length ? '<h2 class="ksec-title">読める・見て、わかる <span class="note">(từ đọc được trong bài)</span></h2><div class="words yomeru" id="kyomeru"></div>' : '');
 
     var body = root.querySelector('#kbody');
     var count = root.querySelector('#kcount');
@@ -57,8 +58,22 @@
                  '<button class="mark kmark" data-k="' + esc(kk) + '" title="Đánh dấu đã thuộc">✓</button>' +
                '</div>';
       }).join('');
+      var yb = root.querySelector('#kyomeru');
+      if (yb) yb.innerHTML = lesson.yomeru.map(function (w) {
+        var wk = compoundKey(w);
+        return '<div class="kword' + (Store.isKnown(store, wk) ? ' known' : '') + '" data-k="' + esc(wk) + '" title="Bấm để đánh dấu / bỏ đánh dấu">' +
+               esc(w.jp) + (w.k ? '（' + esc(w.k) + '）' : '') +
+               (w.hv ? ' <span class="hv">' + esc(w.hv) + '</span>' : '') +
+               ' <span class="vi">' + esc(w.vi) + '</span>' + (w.src ? ' <span class="note">· ' + esc(w.src) + '</span>' : '') + '</div>';
+      }).join('');
     }
 
+    root.addEventListener('click', function (e) {
+      var el = e.target.closest('#kyomeru .kword');
+      if (!el) return;
+      Store.toggleKnown(store, el.getAttribute('data-k'));
+      draw();
+    });
     body.addEventListener('click', function (e) {
       var el = e.target.closest('.kmark, .kword');
       if (!el || !body.contains(el)) return;

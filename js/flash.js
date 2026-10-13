@@ -35,13 +35,25 @@
         out.push({ kind: 'compound', w: x.jp, k: x.k, m: x.vi, hv: x.hv || '', vi: x.vi, tag: 'từ ghép của ' + k.c, store: store });
       });
     });
+    // Từ ở mục 読める / 見て、わかる của trang kanji
+    (lesson.yomeru || []).forEach(function (x) {
+      var id = x.jp + '|' + (x.k || '');
+      if (seen[id]) return;
+      seen[id] = 1;
+      out.push({ kind: 'compound', w: x.jp, k: x.k, m: x.vi, hv: x.hv || '', vi: x.vi, tag: x.src || '読める', store: store });
+    });
     return out;
   }
 
   function buildVocabDeck(lesson) {
     var store = lesson.id;
     return (lesson.vocab || []).map(function (w) {
-      return { kind: 'vocab', w: w.w, k: w.k, m: w.m, hv: w.hv || '', store: store };
+      // Nghĩa dạng "Lạc (道に迷う。— Lạc đường.)": câu ví dụ tiếng Nhật lên mặt trước,
+      // phần dịch ở mặt sau.
+      var m = String(w.m || ''), exJp = '', exVi = '';
+      var mm = m.match(/^(.*?)\s*\(([^()]*[\u3040-\u30ff\u3400-\u9fff][^()]*?)\s*—\s*([^()]*)\)\s*$/);
+      if (mm) { m = mm[1]; exJp = mm[2]; exVi = mm[3]; }
+      return { kind: 'vocab', w: w.w, k: w.k, m: m, ex: exJp, exVi: exVi, hv: w.hv || '', store: store };
     });
   }
   window.buildVocabDeck = buildVocabDeck;
@@ -190,9 +202,12 @@
         jpSide =
           '<div class="big jp">' + esc(w.k || w.w) + '</div>' +
           (hasKanji && showKanji ? '<div class="kana jp">' + esc(w.w) + '</div>' : '') +
+          (w.ex ? '<div class="card-ex">' + esc(w.ex) + '</div>' : '') +
           flip;
-        var vHv = w.hv ? '<div class="kv-label">Âm Hán Việt</div><div class="mean-big hanviet">' + esc(w.hv) + '</div><div class="kv-label">Nghĩa tiếng Việt</div>' : '';
-        viSide = vHv + '<div class="mean-big">' + esc(w.m) + '</div>' + tag + hint;
+        // tắt "Hiện kanji" thì ẩn luôn âm Hán Việt
+        var vHv = (w.hv && showKanji) ? '<div class="kv-label">Âm Hán Việt</div><div class="mean-big hanviet">' + esc(w.hv) + '</div><div class="kv-label">Nghĩa tiếng Việt</div>' : '';
+        viSide = vHv + '<div class="mean-big">' + esc(w.m) + '</div>' +
+          (w.exVi ? '<div class="card-ex-vi">VD: ' + esc(w.exVi) + '</div>' : '') + tag + hint;
       } else { // compound
         jpSide = '<div class="big jp">' + esc(w.w) + '</div>' + flip;
         // Từ ghép: Âm Hán Việt (VD 試験 → THÍ NGHIỆM) và nghĩa tiếng Việt thật (kỳ thi), tách 2 phần

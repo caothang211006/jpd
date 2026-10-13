@@ -32,6 +32,10 @@
 - Không bịa nội dung thi thật. Bài 12-15: `exam: []`; vocab/grammar bài 12-15 chờ tài liệu giáo viên.
 
 ## Quy tắc code
+- Đề ngữ pháp: mỗi câu có `g` (chỉ số mẫu trong `grammar`, -1 = kiến thức chung) và `why` (giải thích). Sau khi trả lời hiện mẫu ngữ pháp + giải thích; đề từ vựng hiện từ vựng tương ứng. Mỗi lần làm đề: xáo câu trong từng phần + xáo đáp án (js/quiz.js mixExam). Đề phải có cả trường hợp thường lẫn đặc biệt (する/来る, 行く→行って, いい→よく, ナA/N だ→な/の, nhóm I trông như nhóm II…).
+- `yomeru: [{jp,k,hv,vi,src}]` = từ mục 読める／見て、わかる trang kanji sách vàng; hiện ở tab Kanji và gộp vào flashcard kanji.
+- Trang chủ/ôn tập: thanh tab dẫn tới `#/all/<tab>` (chọn bài) và `#/all/<tab>/all` (dữ liệu tất cả các bài). Trang ôn nhiều bài có ô "Ôn từ đầu đến bài…".
+- Flashcard từ vựng: nghĩa dạng "Nghĩa (câu JP。— dịch)" → câu JP lên mặt trước, dịch ở mặt sau. Tắt "Hiện kanji" thì ẩn cả âm Hán Việt.
 - Phím tắt: #view dùng chung cho mọi trang → handler keydown phải tự gỡ khi phần tử của nó không còn (flash: #fknown, đề: #qnext). Click do bàn phím (e.detail === 0) trên nút Trước/Sau bị bỏ qua. Đề: Enter = kiểm tra/sang câu, 1–9 = chọn đáp án; bỏ qua khi đang gõ IME.
 - Thẻ flashcard gộp nhiều bài ghi rõ sách: "Sách đỏ 初級 · Bài N" / "Sách vàng 初中級 · Bài N".
 - Furigana: viết 漢字（かな） trong data; `window.furi()` (js/app.js) đổi thành <ruby> hiện trên đầu chữ. Dùng ở ngữ pháp và đề kiểm tra. Đề ngữ pháp + phần Ⅱ đề từ vựng đã gắn furigana tự động (sudachipy); KHÔNG gắn cho phần Ⅲ Cách đọc (sẽ lộ đáp án).
