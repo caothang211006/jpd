@@ -41,8 +41,8 @@
       });
 
       root.innerHTML =
-        '<h1>Ôn tập nhiều bài cùng lúc</h1>' +
-        '<p class="sub">Chọn các bài muốn gộp lại, rồi học flashcard hoặc làm bài kiểm tra trên toàn bộ.</p>' +
+        '<h1>Ôn từ vựng / kanji nhiều bài</h1>' +
+        '<p class="sub">Chọn các bài muốn gộp từ vựng hoặc kanji, rồi học flashcard hoặc luyện nghĩa từ. Muốn làm đề kiểm tra gộp nhiều bài: <button class="btn btn-sm" data-nav="all-quiz">Đề kiểm tra gộp</button></p>' +
         '<div class="toolbar">' +
           '<button class="btn" data-mode="vocab" aria-pressed="' + (mode === 'vocab') + '">Từ vựng</button>' +
           '<button class="btn" data-mode="kanji" aria-pressed="' + (mode === 'kanji') + '">Kanji &amp; từ ghép</button>' +
@@ -50,7 +50,7 @@
         '</div>' +
         '<div class="st-range"><span>Ôn từ đầu đến:</span><select id="stRange"><option value="">— chọn bài —</option>' +
           list.map(function (x, i) {
-            return '<option value="' + i + '">' + (x.book.tone === 'red' ? 'Sách đỏ' : 'Sách vàng') + ' · Bài ' + esc(x.lesson.n) + ' ' + esc(x.lesson.jp) + '</option>';
+            return '<option value="' + i + '">' + bookLabel(x.book) + ' · Bài ' + esc(x.lesson.n) + ' ' + esc(x.lesson.jp) + '</option>';
           }).join('') +
         '</select><span class="note">(chọn tất cả các bài từ bài 1 sách đỏ đến bài này)</span></div>' +
         order.map(function (book) {
@@ -58,8 +58,8 @@
                    '<span class="book-dot ' + book.tone + '"></span>' +
                    '<h2>' + esc(book.name) + '</h2>' +
                    '<span class="note">' +
-                     '<button class="btn" data-pickall="' + esc(book.id) + '" style="padding:4px 10px;font-size:12.5px">Chọn hết</button> ' +
-                     '<button class="btn" data-pickclear="' + esc(book.id) + '" style="padding:4px 10px;font-size:12.5px">Bỏ chọn</button>' +
+                     '<button class="btn btn-sm" data-pickall="' + esc(book.id) + '">Chọn hết</button> ' +
+                     '<button class="btn btn-sm" data-pickclear="' + esc(book.id) + '">Bỏ chọn</button>' +
                    '</span>' +
                  '</div>' +
                  '<div class="picker-list">' +
@@ -76,7 +76,7 @@
         }).join('') +
         '<div class="flash-controls" style="margin-top:22px">' +
           '<button class="btn primary" id="stFlash" ' + (selectedCount ? '' : 'disabled') + '>Học flashcard</button>' +
-          '<button class="btn" id="stQuiz" ' + (selectedCount && mode === 'vocab' ? '' : 'disabled') + '>Làm bài kiểm tra</button>' +
+          '<button class="btn" id="stQuiz" ' + (selectedCount && mode === 'vocab' ? '' : 'disabled') + '>Luyện nghĩa từ (trắc nghiệm)</button>' +
         '</div>';
 
       Array.prototype.forEach.call(root.querySelectorAll('[data-mode]'), function (b) {
@@ -166,15 +166,15 @@
             '<br><button class="btn" data-nav="study" style="margin-top:12px">← Chọn lại</button></div>';
           return;
         }
-        var label = ordered.map(function (l) { var mm = JPD.meta(l.id); return (mm.book.tone === 'red' ? 'Đỏ ' : 'Vàng ') + mm.lesson.n; }).join(', ');
+        var label = ordered.map(function (l) { var mm = JPD.meta(l.id); return bookShort(mm.book) + ' ' + mm.lesson.n; }).join(', ');
         window.runQuizSession(root, {
           pool: deck,
           storeId: 'pool:' + ordered.map(function (l) { return l.id; }).sort().join(','),
-          title: 'Kiểm tra gộp — ' + esc(label),
+          title: 'Luyện nghĩa từ gộp — ' + esc(label),
           afterAction: { label: '← Chọn lại các bài', attr: 'data-nav="study"' }
         });
       } else {
-        var heading = ordered.map(function (l) { var mm = JPD.meta(l.id); return (mm.book.tone === 'red' ? 'Đỏ ' : 'Vàng ') + mm.lesson.n; }).join(', ');
+        var heading = ordered.map(function (l) { var mm = JPD.meta(l.id); return bookShort(mm.book) + ' ' + mm.lesson.n; }).join(', ');
         window.runFlashSession(root, { source: deck, heading: heading, backNav: 'study' });
       }
     }

@@ -32,6 +32,11 @@
 - Không bịa nội dung thi thật. Bài 12-15: `exam: []`; vocab/grammar bài 12-15 chờ tài liệu giáo viên.
 
 ## Quy tắc code
+- Routes: `#/` · `#/l/<id>/<tab>` · `#/all/<tab>` (browse.js: 2 khối sách mở/đóng, Từ vựng/Ngữ pháp/Kanji mở nội dung bài tại chỗ, tải lười) · `#/mix/<type>/<de>/<per>/<ids>` (đề gộp) · `#/study` (ôn từ vựng/kanji nhiều bài). Tab trên topbar sáng theo trang (study → Flashcard, mix → Kiểm tra).
+- Đề kiểm tra: thứ tự CỐ ĐỊNH đã xáo (seededRandom theo storeId; đề gộp theo storeId gộp), không trùng thứ tự gốc / thứ tự mẫu ngữ pháp; câu cùng passage đi cùng nhóm (_group). Mỗi câu mang `_lesson` để explain() lấy đúng bài gốc.
+- Đề gộp lưu điểm ở `mix:<type>:<de>:<per>:<ids>` — không đụng điểm từng bài.
+- Câu đề có `tr` (dịch câu đã điền đáp án) và `trCheck: true` nếu bản dịch cần người xem lại (danh sách: tools/tr-check.md).
+- manifest: `tests` (số đề) và `testTypes` ('tuvung nguphap' / 'de') — cập nhật khi thêm đề.
 - Đề ngữ pháp: mỗi câu có `g` (chỉ số mẫu trong `grammar`, -1 = kiến thức chung) và `why` (giải thích). Sau khi trả lời hiện mẫu ngữ pháp + giải thích; đề từ vựng hiện từ vựng tương ứng. Mỗi lần làm đề: xáo câu trong từng phần + xáo đáp án (js/quiz.js mixExam). Đề phải có cả trường hợp thường lẫn đặc biệt (する/来る, 行く→行って, いい→よく, ナA/N だ→な/の, nhóm I trông như nhóm II…).
 - `yomeru: [{jp,k,hv,vi,src}]` = từ mục 読める／見て、わかる trang kanji sách vàng; hiện ở tab Kanji và gộp vào flashcard kanji.
 - Trang chủ/ôn tập: thanh tab dẫn tới `#/all/<tab>` (chọn bài) và `#/all/<tab>/all` (dữ liệu tất cả các bài). Trang ôn nhiều bài có ô "Ôn từ đầu đến bài…".

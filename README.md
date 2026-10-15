@@ -35,8 +35,8 @@ Hán–Việt và từ ghép lấy từ chính từ vựng của bài.
 
 Sách vàng (**できる日本語 初中級**) cũng đã có nội dung đầy đủ cho cả 15 bài
 (từ vựng + ngữ pháp). Giáo trình gốc của sách vàng không có danh sách kanji
-riêng theo bài (khác với sách đỏ chỉ có ở bài 8–11), nên mảng `kanji` của mọi
-bài sách vàng đều để trống.
+riêng theo bài (khác với sách đỏ chỉ có ở bài 8–11), nên kanji sách vàng được nhập từ trang kanji của sách
+(bài 5–15); bài 1–4 chưa có.
 
 | Bài | Từ vựng | Ngữ pháp | Kanji |
 |-----|---------|----------|-------|
@@ -70,10 +70,11 @@ Bài 8 ra 41 thẻ từ 12 chữ (chữ đơn + từ ghép, đã loại trùng �
 映 và 画 nhưng chỉ hiện một lần). Hai bộ thẻ đếm tiến độ riêng, nên đánh dấu
 thuộc kanji không ảnh hưởng số từ vựng.
 
-### Ôn tập nhiều bài cùng lúc
+### Ôn từ vựng / kanji nhiều bài
 
-Nút **"Ôn tập nhiều bài cùng lúc"** trên trang chủ (`#/study`) cho chọn nhiều
-bài rồi gộp thành một bộ flashcard hoặc một đề kiểm tra duy nhất — dùng để ôn
+Nút **"Ôn từ vựng / kanji nhiều bài"** trên trang chủ (`#/study`) cho chọn nhiều
+bài rồi gộp từ vựng/kanji thành một bộ flashcard hoặc một bài luyện nghĩa từ.
+Đề kiểm tra gộp câu hỏi của nhiều bài nằm ở tab **Kiểm tra** (`#/all/quiz`) — dùng để ôn
 trước khi thi, không phải học từng bài riêng lẻ. Đánh dấu "đã thuộc" trong
 phiên gộp vẫn ghi lại đúng vào tiến độ của bài gốc chứa từ đó, nên số liệu ở
 trang chủ và ở từng bài luôn khớp với những gì đã ôn gộp.
