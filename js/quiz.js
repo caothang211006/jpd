@@ -24,7 +24,10 @@
   function each(root, sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
   function hasItems(a) { return Array.isArray(a) && a.length > 0; }
 
-  /* Số ngẫu nhiên có seed: cùng seed → cùng dãy số, nên thứ tự đề cố định. */
+  /* Số ngẫu nhiên có seed: cùng seed → cùng dãy số, nên thứ tự đề cố định.
+     Chỉ dùng phép tính số nguyên 32-bit (Math.imul, >>>), không dùng
+     Math.random, Date hay sort() ngẫu nhiên, nên mọi máy, mọi trình duyệt
+     cho cùng một thứ tự. Kiểm tra: node tools/order-check.js */
   function seededRandom(seedText) {
     var h = 1779033703 ^ seedText.length;
     for (var i = 0; i < seedText.length; i++) {
@@ -39,8 +42,9 @@
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
+  /* Fisher-Yates. rand bắt buộc: đề dùng seededRandom; luyện từ nhanh
+     (không phải đề) truyền Math.random để mỗi lần ra bộ từ khác. */
   function shuffle(a, rand) {
-    rand = rand || Math.random;
     for (var n = a.length - 1; n > 0; n--) {
       var j = Math.floor(rand() * (n + 1)), t = a[n];
       a[n] = a[j]; a[j] = t;
@@ -136,6 +140,8 @@
     return c;
   }
 
+  window.JPDOrder = { seededRandom: seededRandom, shuffle: shuffle, flattenExam: flattenExam, orderExam: orderExam };
+
   function isRight(q, a) { return q.opt ? a === q.ans : matchesFill(a, q.acc || q.ans); }
   function rightText(q) {
     if (q.opt) return q.opt[q.ans];
@@ -170,11 +176,19 @@
       }
     }
     if (q.tr) {
-      var full = /＿/.test(q.q || '') ? String(q.q).replace(/＿+/, rightText(q).split(' / ')[0]) : q.q;
+      var full = filledSentence(q);
       lines.push('<b>Dịch:</b> <span class="jp">「' + furi(full) + '」</span> → ' + esc(q.tr) +
                  (q.trCheck ? ' <span class="tr-check">(bản dịch cần kiểm tra)</span>' : ''));
     }
     return lines.length ? '<div class="q-explain">' + lines.map(function (l) { return '<div>' + l + '</div>'; }).join('') + '</div>' : '';
+  }
+  /* Câu đã điền đáp án: điền mọi chỗ trống, bỏ ～ đầu đáp án (～代 → 代),
+     bỏ phần chỉ dẫn cuối câu như ［尊敬語で］ hay （gợi ý: …）. */
+  function filledSentence(q) {
+    var s = String(q.q || '').replace(/\s*(［[^］]*］|（gợi ý[^）]*）)\s*$/, '');
+    if (!/＿/.test(s)) return s;
+    var ans = rightText(q).split(' / ')[0].replace(/^[～〜]/, '');
+    return s.replace(/＿+/g, ans);
   }
   function vocabFor(q, L) {
     if (!L.vocab) return null;
@@ -275,10 +289,12 @@
 
   /* ------------------------------------------------------ exam session */
 
-  /* opts = {title, label, questions, storeId, backNav, mixed} */
+  /* opts = {title, label, questions, storeId, backNav, mixed, retry}
+     retry: phiên "Làm lại câu sai" — vào thẳng câu đầu, không lưu điểm, để
+     điểm của đề (và của đề gộp) không bị đổi bởi phiên chỉ có câu sai. */
   function runExamSession(root, opts) {
     var questions = opts.questions;
-    setup();
+    if (opts.retry) start(); else setup();
 
     function setup() {
       var best = Store.bestScore(opts.storeId), n = questions.length;
@@ -410,12 +426,26 @@
         questions.forEach(function (q, i) {
           if (isRight(q, answers[i])) correct++; else wrong.push({ q: q, answer: answers[i] });
         });
-        Store.addScore(opts.storeId, correct, questions.length);
+        if (!opts.retry) Store.addScore(opts.storeId, correct, questions.length);
         root.innerHTML = '<div class="quiz-wrap score"><div class="big">' + correct + '<small>/' + questions.length + '</small></div>' +
-          '<p class="sub">' + esc(opts.label) + ' · đúng ' + Math.round(correct / questions.length * 100) + '%.</p>' +
-          '<div class="flash-controls"><button class="btn primary" id="qagain">Làm lại</button>' +
+          '<p class="sub">' + esc(opts.label) + ' · đúng ' + Math.round(correct / questions.length * 100) + '%.' +
+          (opts.retry ? ' Phiên làm lại câu sai không lưu điểm.' : '') + '</p>' +
+          '<div class="flash-controls">' +
+          (wrong.length ? '<button class="btn primary" id="qretry">Làm lại câu sai (' + wrong.length + ')</button>' : '') +
+          '<button class="btn' + (wrong.length ? '' : ' primary') + '" id="qagain">' + (opts.retry ? 'Làm lại cả đề' : 'Làm lại') + '</button>' +
           '<button class="btn" data-nav="' + opts.backNav + '">Chọn bài khác</button></div>' + review(wrong, opts.mixed) + '</div>';
-        root.querySelector('#qagain').addEventListener('click', setup);
+        root.querySelector('#qagain').addEventListener('click', function () {
+          if (opts.retry) runExamSession(root, opts.parent); else setup();
+        });
+        var rb = root.querySelector('#qretry');
+        if (rb) rb.addEventListener('click', function () {
+          runExamSession(root, {
+            title: opts.title, label: 'Làm lại câu sai · ' + (opts.parent || opts).label,
+            questions: wrong.map(function (x) { return x.q; }),   // giữ thứ tự cố định của đề
+            storeId: opts.storeId, backNav: opts.backNav, mixed: opts.mixed,
+            retry: true, parent: opts.parent || opts
+          });
+        });
       }
     }
   }
@@ -474,23 +504,26 @@
       });
     }
 
-    function start(count, mode) {
-      var questions = shuffle(pool.slice()).slice(0, count).map(function (w) {
-        var dir = mode === 'mix' ? (Math.random() < 0.5 ? 'jp2vi' : 'vi2jp') : mode;
-        return { word: w, dir: dir, options: makeOptions(w, dir) };
-      });
+    /* retryOf: danh sách câu sai của lượt trước → làm lại đúng các câu đó
+       (cùng chiều hỏi, đáp án xếp lại), không lưu điểm. */
+    function start(count, mode, retryOf) {
+      var questions = retryOf ? retryOf.map(function (q) { return { word: q.word, dir: q.dir, options: makeOptions(q.word, q.dir) }; })
+        : shuffle(pool.slice(), Math.random).slice(0, count).map(function (w) {
+          var dir = mode === 'mix' ? (Math.random() < 0.5 ? 'jp2vi' : 'vi2jp') : mode;
+          return { word: w, dir: dir, options: makeOptions(w, dir) };
+        });
       var idx = 0, correct = 0, wrong = [];
       render();
 
       function makeOptions(w, dir) {
         var field = dir === 'jp2vi' ? 'm' : 'w';
-        var others = shuffle(pool.filter(function (o) { return o !== w && o[field] !== w[field]; }));
+        var others = shuffle(pool.filter(function (o) { return o !== w && o[field] !== w[field]; }), Math.random);
         var seen = {}, out = [w];
         seen[w[field]] = 1;
         for (var i = 0; i < others.length && out.length < 4; i++) {
           if (!seen[others[i][field]]) { seen[others[i][field]] = 1; out.push(others[i]); }
         }
-        return shuffle(out);
+        return shuffle(out, Math.random);
       }
       function optionLabel(o, dir) {
         return dir === 'jp2vi' ? esc(o.m)
@@ -501,7 +534,7 @@
         var q = questions[idx], w = q.word;
         var prompt = q.dir === 'jp2vi'
           ? '<div class="q jp">' + esc(w.w) + '</div>' + (w.k ? '<div class="kana jp q-kana">' + esc(w.k) + '</div>' : '')
-          : '<div class="q vi">' + esc(w.m) + '</div>';
+          : '<div class="q vi">' + vtMeaning(w) + '</div>';
         root.innerHTML = '<div class="quiz-wrap"><div class="qbar"><i style="width:' + (idx / questions.length * 100) + '%"></i></div>' +
           '<div class="qprompt"><div class="lead">Câu ' + (idx + 1) + '/' + questions.length + ' · ' +
           (q.dir === 'jp2vi' ? 'Từ này nghĩa là gì?' : 'Từ tiếng Nhật nào có nghĩa này?') + '</div>' + prompt + '</div>' +
@@ -523,14 +556,18 @@
         setTimeout(function () { if (!document.body.contains(root)) return; idx++; render(); }, ok ? 420 : 1150);
       }
       function finish() {
-        Store.addScore(opts.storeId, correct, questions.length);
+        if (!retryOf) Store.addScore(opts.storeId, correct, questions.length);
         var pct = Math.round(correct / questions.length * 100);
         root.innerHTML = '<div class="quiz-wrap score"><div class="big">' + pct + '<small>%</small></div>' +
-          '<p class="sub">Đúng ' + correct + '/' + questions.length + ' câu.</p>' +
-          '<div class="flash-controls"><button class="btn primary" id="qagain">Làm lại</button>' +
+          '<p class="sub">Đúng ' + correct + '/' + questions.length + ' câu.' + (retryOf ? ' Phiên làm lại câu sai không lưu điểm.' : '') + '</p>' +
+          '<div class="flash-controls">' +
+          (wrong.length ? '<button class="btn primary" id="qretry">Làm lại câu sai (' + wrong.length + ')</button>' : '') +
+          '<button class="btn' + (wrong.length ? '' : ' primary') + '" id="qagain">Làm lại</button>' +
           (opts.afterAction ? '<button class="btn" ' + opts.afterAction.attr + '>' + esc(opts.afterAction.label) + '</button>' : '') + '</div>' +
           drillReview(wrong) + '</div>';
         root.querySelector('#qagain').addEventListener('click', setup);
+        var rb = root.querySelector('#qretry');
+        if (rb) rb.addEventListener('click', function () { start(0, mode, wrong.map(function (x) { return x.q; })); });
       }
       function drillReview(list) {
         if (!list.length) return '';
@@ -538,7 +575,7 @@
           var w = x.q.word, jp = x.q.dir === 'jp2vi';
           return '<div class="row"><span class="jp">' + esc(w.w) + (w.k ? ' <span class="opt-kana">' + esc(w.k) + '</span>' : '') + '</span>' +
             '<span><span class="yours">Bạn chọn: ' + esc(jp ? x.picked.m : x.picked.w) + '</span><br>' +
-            '<span class="right">Đúng: ' + esc(jp ? w.m : w.w) + '</span></span></div>';
+            '<span class="right">Đúng: ' + (jp ? vtMeaning(w) : esc(w.w)) + '</span></span></div>';
         }).join('') + '</div>';
       }
     }

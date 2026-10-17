@@ -52,6 +52,11 @@
                '<button class="btn btn-sm" data-nav="study">Ôn từ vựng / kanji nhiều bài</button></p>';
       }
       if (tab === 'quiz') return '<p class="sub">Bấm tên bài để làm đề của bài đó, hoặc tích chọn nhiều bài để làm đề gộp.</p>';
+      if (tab === 'vocab') {
+        return '<p class="sub">Bấm một bài để xem nội dung ngay tại đây.</p>' +
+          '<div class="toolbar"><button class="btn" id="bkata" aria-pressed="' + Pref.get(VOCAB_KATA_KEY) + '">Chỉ katakana</button>' +
+          '<span class="note">Áp dụng cho mọi bài đang mở và trang từ vựng của từng bài.</span></div>';
+      }
       return '<p class="sub">Bấm một bài để xem nội dung ngay tại đây.</p>';
     }
 
@@ -143,6 +148,7 @@
         if (openLessons[key]) delete openLessons[key]; else openLessons[key] = true;
         render();
       });
+      on('#bkata', 'click', function () { Pref.set(VOCAB_KATA_KEY, !Pref.get(VOCAB_KATA_KEY)); render(); });
       if (tab !== 'quiz') return;
       on('[data-pick]', 'change', function (el) {
         var id = el.getAttribute('data-pick');
@@ -172,7 +178,7 @@
         if (!lesson) { box.innerHTML = '<div class="empty">Chưa có nội dung.</div>'; return; }
         box.innerHTML = '<div class="bl-actions"><button class="btn btn-sm" data-golesson="' + esc(id) + '">Mở bài này</button></div><div class="bl-content"></div>';
         box.querySelector('[data-golesson]').addEventListener('click', function () { go('#/l/' + id + '/' + tab); });
-        window.Views[tab](box.querySelector('.bl-content'), lesson, JPD.meta(id).lesson);
+        window.Views[tab](box.querySelector('.bl-content'), lesson, JPD.meta(id).lesson, tab === 'vocab' ? 'inline' : undefined);
       });
     }
 

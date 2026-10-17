@@ -11,7 +11,7 @@
 - Code: `js/flash.js`, `js/kanji.js`, `js/grammar.js`, `js/quiz.js`, `css/style.css`.
 
 ## Cấu trúc data
-- vocab: `{g, w, k, hv, m}` — `hv` = Âm Hán Việt VIẾT HOA cho từ có kanji (hiện trên flashcard mặt sau và danh sách từ vựng); từ không có kanji thì không có `hv` (nhóm, từ, cách đọc, nghĩa). Không có trường ví dụ riêng; câu ví dụ gộp vào `m`.
+- vocab: `{g, w, k, hv, m, vt}` — `vt` = nhóm động từ `'I' | 'II' | 'III'` (kể cả danh từ + する; cụm cố định như 失礼します không gắn; danh sách + quy tắc: tools/verb-check.md; từ chưa chắc thêm `vtCheck: true`). Mặt nghĩa hiện "Động từ nhóm II · …" (window.vtMeaning).  `hv` = Âm Hán Việt VIẾT HOA cho từ có kanji (hiện trên flashcard mặt sau và danh sách từ vựng); từ không có kanji thì không có `hv` (nhóm, từ, cách đọc, nghĩa). Không có trường ví dụ riêng; câu ví dụ gộp vào `m`.
 - grammar: `{pat, desc, ex:[{jp, ro, vi}]}`.
   - `desc`: dòng thường = đoạn văn; dòng bắt đầu bằng `•` = danh sách; ` → ` được tô màu.
   - `ex.jp` có furigana trong （）, `ro` = romaji, `vi` = nghĩa.
@@ -33,12 +33,15 @@
 
 ## Quy tắc code
 - Routes: `#/` · `#/l/<id>/<tab>` · `#/all/<tab>` (browse.js: 2 khối sách mở/đóng, Từ vựng/Ngữ pháp/Kanji mở nội dung bài tại chỗ, tải lười) · `#/mix/<type>/<de>/<per>/<ids>` (đề gộp) · `#/study` (ôn từ vựng/kanji nhiều bài). Tab trên topbar sáng theo trang (study → Flashcard, mix → Kiểm tra).
-- Đề kiểm tra: thứ tự CỐ ĐỊNH đã xáo (seededRandom theo storeId; đề gộp theo storeId gộp), không trùng thứ tự gốc / thứ tự mẫu ngữ pháp; câu cùng passage đi cùng nhóm (_group). Mỗi câu mang `_lesson` để explain() lấy đúng bài gốc.
+- Đề kiểm tra: thứ tự CỐ ĐỊNH đã xáo, giống nhau trên mọi máy (seededRandom = băm chuỗi + mulberry32, Fisher-Yates; KHÔNG Math.random/Date/sort ngẫu nhiên; kiểm tra bằng `node tools/order-check.js`, mã băm phải giữ nguyên nếu data đề không đổi). Không có nút "Xáo lại". Seed = storeId; đề gộp theo storeId gộp, không trùng thứ tự gốc / thứ tự mẫu ngữ pháp; câu cùng passage đi cùng nhóm (_group). Mỗi câu mang `_lesson` để explain() lấy đúng bài gốc.
 - Đề gộp lưu điểm ở `mix:<type>:<de>:<per>:<ids>` — không đụng điểm từng bài.
-- Câu đề có `tr` (dịch câu đã điền đáp án) và `trCheck: true` nếu bản dịch cần người xem lại (danh sách: tools/tr-check.md).
+- Câu đề có `tr` (dịch câu đã điền đáp án) và `trCheck: true` nếu bản dịch cần người xem lại (danh sách: tools/tr-check.md). explain() điền đáp án vào MỌI chỗ ＿, bỏ ～ đầu đáp án, bỏ chỉ dẫn cuối câu ［…］/（gợi ý: …）. Chỉ dẫn trong câu đề viết bằng ［］, không lồng （（））.
+- Sửa data: ghi từng thay đổi vào tools/data-fixes.md.
+- Kết quả đề có nút "Làm lại câu sai": phiên đó không lưu điểm (đề lẻ, đề gộp, luyện từ nhanh).
+- "Chỉ katakana" (w chỉ gồm katakana, ー, ・, ～): trang từ vựng + #/all/vocab dùng khóa `jpd.vocab.kataOnly`, flashcard từ vựng dùng `jpd.flash.kataOnly` (window.Pref, ngoài jpd.progress.v1).
 - manifest: `tests` (số đề) và `testTypes` ('tuvung nguphap' / 'de') — cập nhật khi thêm đề.
-- Đề ngữ pháp: mỗi câu có `g` (chỉ số mẫu trong `grammar`, -1 = kiến thức chung) và `why` (giải thích). Sau khi trả lời hiện mẫu ngữ pháp + giải thích; đề từ vựng hiện từ vựng tương ứng. Mỗi lần làm đề: xáo câu trong từng phần + xáo đáp án (js/quiz.js mixExam). Đề phải có cả trường hợp thường lẫn đặc biệt (する/来る, 行く→行って, いい→よく, ナA/N だ→な/の, nhóm I trông như nhóm II…).
-- `yomeru: [{jp,k,hv,vi,src}]` = từ mục 読める／見て、わかる trang kanji sách vàng; hiện ở tab Kanji và gộp vào flashcard kanji.
+- Đề ngữ pháp: mỗi câu có `g` (chỉ số mẫu trong `grammar`, -1 = kiến thức chung) và `why` (giải thích). Sau khi trả lời hiện mẫu ngữ pháp + giải thích; đề từ vựng hiện từ vựng tương ứng. Câu trong từng phần và đáp án đã được xáo một lần theo seed (js/quiz.js orderExam), lần nào làm cũng cùng thứ tự. Đề phải có cả trường hợp thường lẫn đặc biệt (する/来る, 行く→行って, いい→よく, ナA/N だ→な/の, nhóm I trông như nhóm II…).
+- `yomeru: [{jp,k,hv,vi,src}]` = từ mục 読める／見て、わかる trang kanji sách vàng; `src` phân biệt 2 mục. Cả hai hiện ở tab Kanji; CHỈ `src:'読める'` vào flashcard kanji.
 - Trang chủ/ôn tập: thanh tab dẫn tới `#/all/<tab>` (chọn bài) và `#/all/<tab>/all` (dữ liệu tất cả các bài). Trang ôn nhiều bài có ô "Ôn từ đầu đến bài…".
 - Flashcard từ vựng: nghĩa dạng "Nghĩa (câu JP。— dịch)" → câu JP lên mặt trước, dịch ở mặt sau. Tắt "Hiện kanji" thì ẩn cả âm Hán Việt.
 - Phím tắt: #view dùng chung cho mọi trang → handler keydown phải tự gỡ khi phần tử của nó không còn (flash: #fknown, đề: #qnext). Click do bàn phím (e.detail === 0) trên nút Trước/Sau bị bỏ qua. Đề: Enter = kiểm tra/sang câu, 1–9 = chọn đáp án; bỏ qua khi đang gõ IME.

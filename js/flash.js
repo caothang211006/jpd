@@ -35,8 +35,10 @@
         out.push({ kind: 'compound', w: x.jp, k: x.k, m: x.vi, hv: x.hv || '', vi: x.vi, tag: 'từ ghép của ' + k.c, store: store });
       });
     });
-    // Từ ở mục 読める / 見て、わかる của trang kanji
+    // Chỉ từ mục 読める vào flashcard; từ 見て、わかる (chỉ cần nhận ra khi
+    // nhìn) vẫn hiện trên trang kanji nhưng không thành thẻ.
     (lesson.yomeru || []).forEach(function (x) {
+      if (x.src === '見て、わかる') return;
       var id = x.jp + '|' + (x.k || '');
       if (seen[id]) return;
       seen[id] = 1;
@@ -53,7 +55,7 @@
       var m = String(w.m || ''), exJp = '', exVi = '';
       var mm = m.match(/^(.*?)\s*\(([^()]*[\u3040-\u30ff\u3400-\u9fff][^()]*?)\s*—\s*([^()]*)\)\s*$/);
       if (mm) { m = mm[1]; exJp = mm[2]; exVi = mm[3]; }
-      return { kind: 'vocab', w: w.w, k: w.k, m: m, ex: exJp, exVi: exVi, hv: w.hv || '', store: store };
+      return { kind: 'vocab', w: w.w, k: w.k, m: m, ex: exJp, exVi: exVi, hv: w.hv || '', vt: w.vt || '', store: store };
     });
   }
   window.buildVocabDeck = buildVocabDeck;
@@ -95,6 +97,8 @@
     var onlyWatch = false;
     var compoundOnly = false;   // kanji deck: ẩn chữ gốc, chỉ giữ từ ghép
     var showLocked = false;     // panel quản lý từ đã loại ra
+    var KATA_KEY = 'jpd.flash.kataOnly';
+    var kataOnly = Pref.get(KATA_KEY);   // thẻ từ vựng: chỉ giữ từ katakana
 
     function setSource(list) {
       source = list;
@@ -102,7 +106,11 @@
     }
 
     function activeSource() {
-      return compoundOnly ? source.filter(function (w) { return w.kind !== 'kanji'; }) : source;
+      return source.filter(function (w) {
+        if (compoundOnly && w.kind === 'kanji') return false;
+        if (kataOnly && w.kind === 'vocab' && !isKatakanaWord(w)) return false;
+        return true;
+      });
     }
 
     function build() {
@@ -156,6 +164,7 @@
           '<button class="btn" id="fshowkanji" aria-pressed="true">Hiện kanji</button>' +
           '<button class="btn" id="fonlywatch" aria-pressed="false">Chỉ học từ cần lưu ý</button>' +
           '<button class="btn" id="fcompound" aria-pressed="false" title="Bỏ các thẻ kanji gốc, chỉ học từ ghép">Chỉ từ ghép (ẩn kanji gốc)</button>' +
+          '<button class="btn" id="fkata" aria-pressed="false">Chỉ katakana</button>' +
           '<button class="btn" id="flockedbtn" aria-pressed="false">Từ đã loại ra</button>' +
         '</div>' +
         '<div id="flocked"></div>' +
@@ -206,7 +215,7 @@
           flip;
         // tắt "Hiện kanji" thì ẩn luôn âm Hán Việt
         var vHv = (w.hv && showKanji) ? '<div class="kv-label">Âm Hán Việt</div><div class="mean-big hanviet">' + esc(w.hv) + '</div><div class="kv-label">Nghĩa tiếng Việt</div>' : '';
-        viSide = vHv + '<div class="mean-big">' + esc(w.m) + '</div>' +
+        viSide = vHv + '<div class="mean-big">' + vtMeaning(w) + '</div>' +
           (w.exVi ? '<div class="card-ex-vi">VD: ' + esc(w.exVi) + '</div>' : '') + tag + hint;
       } else { // compound
         jpSide = '<div class="big jp">' + esc(w.w) + '</div>' + flip;
@@ -257,6 +266,9 @@
       var cb = root.querySelector('#fcompound');
       cb.style.display = hasKanjiCard ? '' : 'none';
       cb.setAttribute('aria-pressed', compoundOnly ? 'true' : 'false');
+      var kb = root.querySelector('#fkata');
+      kb.style.display = hasVocab ? '' : 'none';
+      kb.setAttribute('aria-pressed', kataOnly ? 'true' : 'false');
       renderLocked();
 
       if (modes) {
@@ -276,10 +288,12 @@
         root.querySelector('#fwatch').disabled = true;
         root.querySelector('#fexclude').disabled = true;
         var emptyMsg;
-        if (!activeSource().length) emptyMsg = 'Không có thẻ nào ở đây.';
+        if (!activeSource().length) emptyMsg = kataOnly && hasVocab
+          ? 'Không có từ katakana trong bộ thẻ này. Tắt “Chỉ katakana” để học toàn bộ.'
+          : 'Không có thẻ nào ở đây.';
         else if (onlyWatch) emptyMsg = 'Chưa có từ nào trong danh sách cần lưu ý (hoặc đã thuộc hết). Tắt “Chỉ học từ cần lưu ý” để quay lại toàn bộ thẻ.';
         else emptyMsg = 'Bạn đã đánh dấu thuộc hết thẻ của phần này. Tắt “Bỏ qua thẻ đã thuộc” để ôn lại, hoặc mở “Từ đã loại ra” để khôi phục từng từ.';
-        prog.innerHTML = '<div class="empty"><b>Xong rồi!</b><br>' + emptyMsg + '</div>' +
+        prog.innerHTML = '<div class="empty">' + (activeSource().length ? '<b>Xong rồi!</b><br>' : '') + emptyMsg + '</div>' +
           (activeSource().length && !onlyWatch ? '<div class="toolbar" style="justify-content:center"><button class="btn" id="freset">Bỏ đánh dấu tất cả</button></div>' : '');
         var rb = prog.querySelector('#freset');
         if (rb) rb.addEventListener('click', function () {
@@ -371,6 +385,12 @@
     });
     root.querySelector('#fcompound').addEventListener('click', function () {
       compoundOnly = !compoundOnly;
+      build();
+      draw();
+    });
+    root.querySelector('#fkata').addEventListener('click', function () {
+      kataOnly = !kataOnly;
+      Pref.set(KATA_KEY, kataOnly);
       build();
       draw();
     });
