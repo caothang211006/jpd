@@ -42,7 +42,8 @@
 
       root.innerHTML =
         '<h1>Ôn từ vựng / kanji nhiều bài</h1>' +
-        '<p class="sub">Chọn các bài muốn gộp từ vựng hoặc kanji, rồi học flashcard hoặc luyện nghĩa từ. Muốn làm đề kiểm tra gộp nhiều bài: <button class="btn btn-sm" data-nav="all-quiz">Đề kiểm tra gộp</button></p>' +
+        '<p class="sub">Chọn các bài muốn gộp từ vựng hoặc kanji, rồi học flashcard hoặc luyện nghĩa từ. ' +
+          'Muốn làm đề kiểm tra gộp nhiều bài: <button class="btn btn-sm" data-nav="all-quiz">Đề kiểm tra gộp</button></p>' +
         '<div class="toolbar">' +
           '<button class="btn" data-mode="vocab" aria-pressed="' + (mode === 'vocab') + '">Từ vựng</button>' +
           '<button class="btn" data-mode="kanji" aria-pressed="' + (mode === 'kanji') + '">Kanji &amp; từ ghép</button>' +
@@ -74,46 +75,34 @@
                    }).join('') +
                  '</div>';
         }).join('') +
-        '<div class="flash-controls" style="margin-top:22px">' +
+        '<div class="flash-controls st-actions">' +
           '<button class="btn primary" id="stFlash" ' + (selectedCount ? '' : 'disabled') + '>Học flashcard</button>' +
           '<button class="btn" id="stQuiz" ' + (selectedCount && mode === 'vocab' ? '' : 'disabled') + '>Luyện nghĩa từ (trắc nghiệm)</button>' +
         '</div>';
 
-      Array.prototype.forEach.call(root.querySelectorAll('[data-mode]'), function (b) {
-        b.addEventListener('click', function () { mode = b.getAttribute('data-mode'); render(); });
+      on(root, '[data-mode]', 'click', function (b) { mode = b.getAttribute('data-mode'); render(); });
+      on(root, '[data-pick]', 'change', function (b) {
+        var id = b.getAttribute('data-pick');
+        if (b.checked) checked[id] = true; else delete checked[id];
+        render();
       });
-      Array.prototype.forEach.call(root.querySelectorAll('[data-pick]'), function (b) {
-        b.addEventListener('change', function () {
-          var id = b.getAttribute('data-pick');
-          if (b.checked) checked[id] = true; else delete checked[id];
-          render();
-        });
-      });
-      var rangeSel = root.querySelector('#stRange');
-      if (rangeSel) rangeSel.addEventListener('change', function () {
-        if (rangeSel.value === '') return;
-        var upto = parseInt(rangeSel.value, 10);
+      on(root, '#stRange', 'change', function (sel) {
+        if (sel.value === '') return;
+        var upto = parseInt(sel.value, 10);
         checked = {};
         list.forEach(function (x, i) { if (i <= upto) checked[x.lesson.id] = true; });
         render();
       });
-      Array.prototype.forEach.call(root.querySelectorAll('[data-pickall]'), function (b) {
-        b.addEventListener('click', function () {
-          byBook[b.getAttribute('data-pickall')].forEach(function (l) { checked[l.id] = true; });
-          render();
-        });
+      on(root, '[data-pickall]', 'click', function (b) {
+        byBook[b.getAttribute('data-pickall')].forEach(function (l) { checked[l.id] = true; });
+        render();
       });
-      Array.prototype.forEach.call(root.querySelectorAll('[data-pickclear]'), function (b) {
-        b.addEventListener('click', function () {
-          byBook[b.getAttribute('data-pickclear')].forEach(function (l) { delete checked[l.id]; });
-          render();
-        });
+      on(root, '[data-pickclear]', 'click', function (b) {
+        byBook[b.getAttribute('data-pickclear')].forEach(function (l) { delete checked[l.id]; });
+        render();
       });
-
-      var flashBtn = root.querySelector('#stFlash');
-      var quizBtn = root.querySelector('#stQuiz');
-      if (flashBtn) flashBtn.addEventListener('click', function () { launch('flash'); });
-      if (quizBtn) quizBtn.addEventListener('click', function () { launch('quiz'); });
+      on(root, '#stFlash', 'click', function () { launch('flash'); });
+      on(root, '#stQuiz', 'click', function () { launch('quiz'); });
     }
 
     function launch(kind) {
@@ -123,22 +112,15 @@
       if (!ids.length) return;
 
       root.innerHTML = '<div class="empty">Đang tải ' + ids.length + ' bài…</div>';
-
-      var lessons = [];
-      var left = ids.length;
-      ids.forEach(function (id) {
-        JPD.load(id, function (data) {
-          if (data) lessons.push(data);
-          if (--left === 0) afterLoad(lessons, kind);
-        });
-      });
+      loadLessons(ids, function (lessons) { afterLoad(lessons, kind); });
     }
 
     function afterLoad(lessons, kind) {
-      // keep manifest order rather than load-finish order
+      // giữ thứ tự các bài như lúc chọn (không theo thứ tự tải xong)
       var byId = {};
       lessons.forEach(function (l) { byId[l.id] = l; });
       var ordered = Object.keys(checked).map(function (id) { return byId[id]; }).filter(Boolean);
+      var label = ordered.map(function (l) { return lessonShort(l.id); }).join(', ');
 
       if (!ordered.length) { render(); return; }
 
@@ -146,7 +128,8 @@
       ordered.forEach(function (l) {
         var meta = JPD.meta(l.id).lesson;
         var bk = JPD.meta(l.id).book;
-        var tagPrefix = (bk.tone === 'red' ? 'Sách đỏ 初級' : bk.tone === 'gold' ? 'Sách vàng 初中級' : bk.name) + ' · Bài ' + meta.n;
+        var bookName = bk.tone === 'red' ? 'Sách đỏ 初級' : bk.tone === 'gold' ? 'Sách vàng 初中級' : bk.name;
+        var tagPrefix = bookName + ' · Bài ' + meta.n;
         if (mode === 'kanji') {
           window.buildKanjiDeck(l).forEach(function (c) {
             c.tag = tagPrefix + (c.tag ? ' · ' + c.tag : '');
@@ -163,10 +146,9 @@
       if (kind === 'quiz') {
         if (deck.length < 4) {
           root.innerHTML = '<div class="empty">Cần chọn nhiều từ hơn (ít nhất 4) để tạo bài kiểm tra. ' +
-            '<br><button class="btn" data-nav="study" style="margin-top:12px">← Chọn lại</button></div>';
+            '<br><button class="btn empty-action" data-nav="study">← Chọn lại</button></div>';
           return;
         }
-        var label = ordered.map(function (l) { var mm = JPD.meta(l.id); return bookShort(mm.book) + ' ' + mm.lesson.n; }).join(', ');
         window.runQuizSession(root, {
           pool: deck,
           storeId: 'pool:' + ordered.map(function (l) { return l.id; }).sort().join(','),
@@ -174,8 +156,7 @@
           afterAction: { label: '← Chọn lại các bài', attr: 'data-nav="study"' }
         });
       } else {
-        var heading = ordered.map(function (l) { var mm = JPD.meta(l.id); return bookShort(mm.book) + ' ' + mm.lesson.n; }).join(', ');
-        window.runFlashSession(root, { source: deck, heading: heading, backNav: 'study' });
+        window.runFlashSession(root, { source: deck, heading: label, backNav: 'study' });
       }
     }
 

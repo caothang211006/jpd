@@ -15,14 +15,16 @@
   window.Views = window.Views || {};
 
   var TESTS = [
-    { sub: 'tuvung',  key: 'examVocab',   store: ':exam-vocab',   title: 'Bài kiểm tra từ vựng',  jp: 'ことばテスト' },
-    { sub: 'nguphap', key: 'examGrammar', store: ':exam-grammar', title: 'Bài kiểm tra ngữ pháp', jp: '文法テスト' },
-    { sub: 'de',      key: 'exam',        store: ':exam',         title: 'Đề luyện tập tổng hợp', jp: '' }
+    { sub: 'tuvung', key: 'examVocab', store: ':exam-vocab',
+      title: 'Bài kiểm tra từ vựng', jp: 'ことばテスト' },
+    { sub: 'nguphap', key: 'examGrammar', store: ':exam-grammar',
+      title: 'Bài kiểm tra ngữ pháp', jp: '文法テスト' },
+    { sub: 'de', key: 'exam', store: ':exam',
+      title: 'Đề luyện tập tổng hợp', jp: '' }
   ];
 
   /* ------------------------------------------------------------ helpers */
 
-  function each(root, sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
   function hasItems(a) { return Array.isArray(a) && a.length > 0; }
 
   /* Số ngẫu nhiên có seed: cùng seed → cùng dãy số, nên thứ tự đề cố định.
@@ -43,15 +45,8 @@
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
-  /* Fisher-Yates. rand bắt buộc: đề dùng seededRandom; luyện từ nhanh
-     (không phải đề) truyền Math.random để mỗi lần ra bộ từ khác. */
-  function shuffle(a, rand) {
-    for (var n = a.length - 1; n > 0; n--) {
-      var j = Math.floor(rand() * (n + 1)), t = a[n];
-      a[n] = a[j]; a[j] = t;
-    }
-    return a;
-  }
+  /* Xáo: window.shuffle (js/util.js, Fisher-Yates). Đề truyền seededRandom;
+     luyện từ nhanh (không phải đề) truyền Math.random để mỗi lần ra bộ từ khác. */
 
   /* examVocab / examGrammar có thể là 1 đề (mảng câu) hoặc nhiều đề (mảng các mảng). */
   function testsOf(lesson, key) {
@@ -59,18 +54,11 @@
     if (!hasItems(v)) return [];
     return Array.isArray(v[0]) ? v.filter(hasItems) : [v];
   }
-  window.examTestsOf = function (lesson) {
-    return TESTS.map(function (t) { return { test: t, list: testsOf(lesson, t.key) }; })
-                .filter(function (x) { return x.list.length; });
-  };
   window.EXAM_TYPES = TESTS;
 
   function storeKey(lesson, test, idx) { return lesson.id + test.store + (idx > 1 ? ':' + idx : ''); }
 
-  function lessonTag(lesson) {
-    var m = JPD.meta(lesson.id);
-    return m ? (m.book.tone === 'red' ? 'Đỏ ' : 'Vàng ') + m.lesson.n : '';
-  }
+  function lessonTag(lesson) { return lessonShort(lesson.id); }
 
   /* Trải phẳng đề: mỗi câu biết bài gốc (_lesson) và nhóm (_group). Các câu
      cùng một đoạn văn có chung _group để luôn đi cùng nhau. */
@@ -141,7 +129,10 @@
     return c;
   }
 
-  window.JPDOrder = { seededRandom: seededRandom, shuffle: shuffle, flattenExam: flattenExam, orderExam: orderExam };
+  // dùng cho tools/order-check.js
+  window.JPDOrder = {
+    seededRandom: seededRandom, shuffle: shuffle, flattenExam: flattenExam, orderExam: orderExam
+  };
 
   function isRight(q, a) { return q.opt ? a === q.ans : matchesFill(a, q.acc || q.ans); }
   function rightText(q) {
@@ -253,33 +244,44 @@
   /* spec = {type: 'tuvung'|'nguphap'|'de', de: số đề, per: số câu mỗi bài (0 = tất cả), ids: [...]}.
      Điểm lưu ở storeId riêng 'mix:<type>:<de>:<per>:<ids đã sắp xếp>' — không
      ghi vào điểm của từng bài, vì đề gộp có thể chỉ lấy một phần câu của mỗi bài. */
-  window.runMixedExam = function (root, spec, lessons) {
-    var test = TESTS.filter(function (t) { return t.sub === spec.type; })[0];
+  function mixStoreId(spec, lessons) {
     var ids = lessons.map(function (l) { return l.id; }).sort();
-    var storeId = 'mix:' + spec.type + ':' + spec.de + ':' + (spec.per || 0) + ':' + ids.join(',');
+    return 'mix:' + spec.type + ':' + spec.de + ':' + (spec.per || 0) + ':' + ids.join(',');
+  }
+
+  /* Lấy khoảng `per` câu của một bài: chọn nguyên nhóm câu (đoạn văn đi cùng
+     nhau) theo thứ tự xáo cố định, rồi giữ thứ tự gốc của các câu được chọn. */
+  function pickUnits(qs, per, seed) {
+    var units = shuffle(unitsOf(qs), seededRandom(seed)), keep = {}, count = 0;
+    units.forEach(function (u) {
+      if (count < per) { keep[u[0]._group] = 1; count += u.length; }
+    });
+    return qs.filter(function (q) { return keep[q._group]; });
+  }
+
+  function mixedQuestions(spec, lessons, test, storeId) {
     var questions = [];
     lessons.forEach(function (l) {
       var list = testsOf(l, test.key);
       if (!list.length) return;
-      var items = list[Math.min(spec.de, list.length) - 1];
-      var qs = flattenExam(items, l, l.id + '#');
-      if (spec.per) {
-        var units = shuffle(unitsOf(qs), seededRandom(storeId + '|pick|' + l.id)), picked = [], count = 0;
-        units.forEach(function (u) { if (count < spec.per) { picked.push(u); count += u.length; } });
-        var keep = {};
-        picked.forEach(function (u) { keep[u[0]._group] = 1; });
-        qs = qs.filter(function (q) { return keep[q._group]; });
-      }
+      var qs = flattenExam(list[Math.min(spec.de, list.length) - 1], l, l.id + '#');
+      if (spec.per) qs = pickUnits(qs, spec.per, storeId + '|pick|' + l.id);
       questions = questions.concat(qs);
     });
+    return questions;
+  }
+
+  window.runMixedExam = function (root, spec, lessons) {
+    var test = TESTS.filter(function (t) { return t.sub === spec.type; })[0];
+    var storeId = mixStoreId(spec, lessons);
+    var questions = mixedQuestions(spec, lessons, test, storeId);
     if (!questions.length) {
       root.innerHTML = '<div class="empty">Các bài đã chọn chưa có đề loại này.<br>' +
-        '<button class="btn" data-nav="all-quiz" style="margin-top:12px">← Chọn lại</button></div>';
+        '<button class="btn empty-action" data-nav="all-quiz">← Chọn lại</button></div>';
       return;
     }
-    var tags = lessons.map(lessonTag).join(', ');
     runExamSession(root, {
-      title: 'Đề gộp — ' + test.title.replace('Bài kiểm tra ', '') + ' · ' + tags,
+      title: 'Đề gộp — ' + test.title.replace('Bài kiểm tra ', '') + ' · ' + lessons.map(lessonTag).join(', '),
       label: 'Đề gộp',
       questions: orderExam(questions, storeId),
       storeId: storeId,
@@ -288,9 +290,91 @@
     });
   };
 
+  /* ------------------------------------------- shared by both sessions */
+
+  var NO_SAVE_NOTE = ' Phiên làm lại câu sai không lưu điểm.';
+
+  /* Thanh tiến độ: độ rộng tính lúc chạy nên giữ style width. */
+  function progressBar(idx, total) {
+    return '<div class="qbar"><i style="width:' + (idx / total * 100) + '%"></i></div>';
+  }
+
+  /* Màn kết quả chung cho đề và luyện từ nhanh.
+     o = {big, small, sub, wrong, againLabel, extra, review, onAgain, onRetry} */
+  function scoreScreen(root, o) {
+    root.innerHTML = '<div class="quiz-wrap score">' +
+      '<div class="big">' + o.big + '<small>' + o.small + '</small></div>' +
+      '<p class="sub">' + o.sub + '</p>' +
+      '<div class="flash-controls">' +
+        (o.wrong ? '<button class="btn primary" id="qretry">Làm lại câu sai (' + o.wrong + ')</button>' : '') +
+        '<button class="btn' + (o.wrong ? '' : ' primary') + '" id="qagain">' + o.againLabel + '</button>' +
+        (o.extra || '') +
+      '</div>' + o.review + '</div>';
+    on(root, '#qagain', 'click', function () { o.onAgain(); });
+    on(root, '#qretry', 'click', function () { o.onRetry(); });
+  }
+
   /* ------------------------------------------------------ exam session */
 
-  /* opts = {title, label, questions, storeId, backNav, mixed, retry}
+  function answerHtml(q, checked, a) {
+    if (q.opt) {
+      return '<div class="opts">' + q.opt.map(function (o, i) {
+        var cls = 'opt';
+        if (checked) { if (i === q.ans) cls += ' correct'; else if (i === a) cls += ' wrong'; }
+        return '<button class="' + cls + '" data-i="' + i + '"' + (checked ? ' disabled' : '') + '>' + furi(o) + '</button>';
+      }).join('') + '</div>';
+    }
+    return '<div class="fill-answer"><input id="qfill" autocomplete="off" autocapitalize="off" value="' + esc(a || '') +
+           '" placeholder="Nhập đáp án"' + (checked ? ' disabled' : '') + '>' +
+           (checked ? '' : '<button class="btn primary" id="qcheck">Kiểm tra</button>') + '</div>';
+  }
+
+  function feedbackHtml(q, a) {
+    var ok = isRight(q, a);
+    return '<div class="q-feedback ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Đúng' : '✗ Sai') +
+           (ok && q.opt ? '' : ' — Đáp án: <span class="jp">' + furi(rightText(q)) + '</span>') + '</div>' + explain(q);
+  }
+
+  function promptHtml(q, lead) {
+    var plain = String(q.q).replace(/（[^）]*）/g, '');
+    var box = q.box ? q.box.map(function (w) { return '<span>' + furi(w) + '</span>'; }).join('') : '';
+    return '<div class="qprompt"><div class="lead">' + esc(lead) + '</div>' +
+      (q.passage ? '<div class="passage jp">' + furi(q.passage) + '</div>' : '') +
+      (q.box ? '<div class="word-box jp">' + box + '</div>' : '') +
+      (q.pic ? '<div class="q-pic">' + esc(q.pic) + '</div>' : '') +
+      '<div class="q jp' + (plain.length > 14 ? ' long' : '') + '">' + furi(q.q) + '</div>' +
+      (q.hint ? '<div class="q-hint">→ <span class="jp">' + esc(q.hint) + '</span></div>' : '') + '</div>';
+  }
+
+  /* Bảng số câu: chia theo phần, tô màu câu đúng/sai, câu đang làm. */
+  function navGridHtml(questions, idx, done, answers) {
+    var h = '<div class="qnav"><div class="qnav-head">' +
+      '<span>Bảng câu hỏi · đã làm ' + done.filter(Boolean).length + '/' + questions.length + '</span>' +
+      '<button class="btn btn-sm" id="qfinish">Nộp bài</button></div><div class="qnav-grid">';
+    var lastSec = null;
+    questions.forEach(function (q, i) {
+      if (q.sec !== lastSec) {
+        lastSec = q.sec;
+        h += '<div class="qnav-sec">' + esc(String(q.sec || '').split('.')[0]) + '</div>';
+      }
+      var cls = 'qnav-b' + (i === idx ? ' cur' : '') + (done[i] ? (isRight(q, answers[i]) ? ' ok' : ' bad') : '');
+      h += '<button class="' + cls + '" data-jumpq="' + i + '">' + (i + 1) + '</button>';
+    });
+    return h + '</div></div>';
+  }
+
+  function introHtml(opts, questions) {
+    var best = Store.bestScore(opts.storeId), n = questions.length;
+    var sections = sectionNames(questions).map(function (s) { return '<span>' + esc(s) + '</span>'; }).join('');
+    return '<div class="quiz-wrap"><h1>' + esc(opts.title) + '</h1>' +
+      '<p class="sub">' + n + ' câu · ' + n + ' điểm · chọn đáp án là biết đúng sai ngay.' +
+      (best !== null ? ' Điểm cao nhất: <b>' + Math.round(best * n) + '/' + n + '</b>.' : '') + '</p>' +
+      '<div class="exam-sections">' + sections + '</div>' +
+      '<button class="btn primary" id="qstart">Bắt đầu làm bài</button>' +
+      '<div class="toolbar"><button class="btn" data-nav="' + opts.backNav + '">← Chọn bài khác</button></div></div>';
+  }
+
+  /* opts = {title, label, questions, storeId, backNav, mixed, retry, parent}
      retry: phiên "Làm lại câu sai" — vào thẳng câu đầu, không lưu điểm, để
      điểm của đề (và của đề gộp) không bị đổi bởi phiên chỉ có câu sai. */
   function runExamSession(root, opts) {
@@ -298,14 +382,8 @@
     if (opts.retry) start(); else setup();
 
     function setup() {
-      var best = Store.bestScore(opts.storeId), n = questions.length;
-      root.innerHTML = '<div class="quiz-wrap"><h1>' + esc(opts.title) + '</h1>' +
-        '<p class="sub">' + n + ' câu · ' + n + ' điểm · chọn đáp án là biết đúng sai ngay.' +
-        (best !== null ? ' Điểm cao nhất: <b>' + Math.round(best * n) + '/' + n + '</b>.' : '') + '</p>' +
-        '<div class="exam-sections">' + sectionNames(questions).map(function (s) { return '<span>' + esc(s) + '</span>'; }).join('') + '</div>' +
-        '<button class="btn primary" id="qstart">Bắt đầu làm bài</button>' +
-        '<div class="toolbar"><button class="btn" data-nav="' + opts.backNav + '">← Chọn bài khác</button></div></div>';
-      root.querySelector('#qstart').addEventListener('click', start);
+      root.innerHTML = introHtml(opts, questions);
+      on(root, '#qstart', 'click', start);
     }
 
     function start() {
@@ -316,72 +394,27 @@
         return done.reduce(function (n, d, i) { return n + (d && isRight(questions[i], answers[i]) ? 1 : 0); }, 0);
       }
 
-      function answerHtml(q, checked, a) {
-        if (q.opt) {
-          return '<div class="opts">' + q.opt.map(function (o, i) {
-            var cls = 'opt';
-            if (checked) { if (i === q.ans) cls += ' correct'; else if (i === a) cls += ' wrong'; }
-            return '<button class="' + cls + '" data-i="' + i + '"' + (checked ? ' disabled' : '') + '>' + furi(o) + '</button>';
-          }).join('') + '</div>';
-        }
-        return '<div class="fill-answer"><input id="qfill" autocomplete="off" autocapitalize="off" value="' + esc(a || '') +
-               '" placeholder="Nhập đáp án"' + (checked ? ' disabled' : '') + '>' +
-               (checked ? '' : '<button class="btn primary" id="qcheck">Kiểm tra</button>') + '</div>';
-      }
-
-      function feedbackHtml(q, a) {
-        var ok = isRight(q, a);
-        return '<div class="q-feedback ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Đúng' : '✗ Sai') +
-               (ok && q.opt ? '' : ' — Đáp án: <span class="jp">' + furi(rightText(q)) + '</span>') + '</div>' + explain(q);
-      }
-
-      function promptHtml(q) {
-        var lead = (opts.mixed ? lessonTag(q._lesson) + ' · ' : '') + (q.sec || opts.label) +
-                   ' · Câu ' + (idx + 1) + '/' + questions.length + ' · Đúng ' + score();
-        var plain = String(q.q).replace(/（[^）]*）/g, '');
-        return '<div class="qprompt"><div class="lead">' + esc(lead) + '</div>' +
-          (q.passage ? '<div class="passage jp">' + furi(q.passage) + '</div>' : '') +
-          (q.box ? '<div class="word-box jp">' + q.box.map(function (w) { return '<span>' + furi(w) + '</span>'; }).join('') + '</div>' : '') +
-          (q.pic ? '<div class="q-pic">' + esc(q.pic) + '</div>' : '') +
-          '<div class="q jp' + (plain.length > 14 ? ' long' : '') + '">' + furi(q.q) + '</div>' +
-          (q.hint ? '<div class="q-hint">→ <span class="jp">' + esc(q.hint) + '</span></div>' : '') + '</div>';
-      }
-
-      function navGrid() {
-        var h = '<div class="qnav"><div class="qnav-head"><span>Bảng câu hỏi · đã làm ' + done.filter(Boolean).length + '/' + questions.length + '</span>' +
-          '<button class="btn btn-sm" id="qfinish">Nộp bài</button></div><div class="qnav-grid">';
-        var lastSec = null;
-        questions.forEach(function (q, i) {
-          if (q.sec !== lastSec) { lastSec = q.sec; h += '<div class="qnav-sec">' + esc(String(q.sec || '').split('.')[0]) + '</div>'; }
-          var cls = 'qnav-b' + (i === idx ? ' cur' : '') + (done[i] ? (isRight(q, answers[i]) ? ' ok' : ' bad') : '');
-          h += '<button class="' + cls + '" data-jumpq="' + i + '">' + (i + 1) + '</button>';
-        });
-        return h + '</div></div>';
-      }
-
       function render() {
         var q = questions[idx], checked = done[idx], a = answers[idx];
-        root.innerHTML = '<div class="quiz-wrap"><div class="qbar"><i style="width:' + (idx / questions.length * 100) + '%"></i></div>' +
-          promptHtml(q) + answerHtml(q, checked, a) + (checked ? feedbackHtml(q, a) : '') +
+        var lead = (opts.mixed ? lessonTag(q._lesson) + ' · ' : '') + (q.sec || opts.label) +
+                   ' · Câu ' + (idx + 1) + '/' + questions.length + ' · Đúng ' + score();
+        root.innerHTML = '<div class="quiz-wrap">' + progressBar(idx, questions.length) +
+          promptHtml(q, lead) + answerHtml(q, checked, a) + (checked ? feedbackHtml(q, a) : '') +
           '<div class="flash-controls"><button class="btn" id="qprev"' + (idx ? '' : ' disabled') + '>← Trước</button>' +
           '<button class="btn primary" id="qnext">' + (idx + 1 === questions.length ? 'Nộp bài' : 'Tiếp →') + '</button></div>' +
-          navGrid() + '</div>';
+          navGridHtml(questions, idx, done, answers) + '</div>';
 
-        each(root, '.opt', function (b) {
-          b.addEventListener('click', function () { choose(parseInt(b.getAttribute('data-i'), 10)); });
-        });
+        on(root, '.opt', 'click', function (b) { choose(parseInt(b.getAttribute('data-i'), 10)); });
         var fill = root.querySelector('#qfill');
         if (fill && !checked) {
           fill.focus();
-          root.querySelector('#qcheck').addEventListener('click', check);
+          on(root, '#qcheck', 'click', check);
         }
         // e.detail === 0: click sinh ra từ bàn phím — phím tắt đã xử lý riêng
-        root.querySelector('#qprev').addEventListener('click', function (e) { if (e.detail === 0) return; idx--; render(); });
-        root.querySelector('#qnext').addEventListener('click', function (e) { if (e.detail === 0) return; next(); });
-        each(root, '[data-jumpq]', function (b) {
-          b.addEventListener('click', function () { idx = parseInt(b.getAttribute('data-jumpq'), 10); render(); });
-        });
-        root.querySelector('#qfinish').addEventListener('click', submit);
+        on(root, '#qprev', 'click', function (el, e) { if (e.detail === 0) return; idx--; render(); });
+        on(root, '#qnext', 'click', function (el, e) { if (e.detail === 0) return; next(); });
+        on(root, '[data-jumpq]', 'click', function (b) { idx = parseInt(b.getAttribute('data-jumpq'), 10); render(); });
+        on(root, '#qfinish', 'click', submit);
       }
 
       function choose(i) {
@@ -428,24 +461,24 @@
           if (isRight(q, answers[i])) correct++; else wrong.push({ q: q, answer: answers[i] });
         });
         if (!opts.retry) Store.addScore(opts.storeId, correct, questions.length);
-        root.innerHTML = '<div class="quiz-wrap score"><div class="big">' + correct + '<small>/' + questions.length + '</small></div>' +
-          '<p class="sub">' + esc(opts.label) + ' · đúng ' + Math.round(correct / questions.length * 100) + '%.' +
-          (opts.retry ? ' Phiên làm lại câu sai không lưu điểm.' : '') + '</p>' +
-          '<div class="flash-controls">' +
-          (wrong.length ? '<button class="btn primary" id="qretry">Làm lại câu sai (' + wrong.length + ')</button>' : '') +
-          '<button class="btn' + (wrong.length ? '' : ' primary') + '" id="qagain">' + (opts.retry ? 'Làm lại cả đề' : 'Làm lại') + '</button>' +
-          '<button class="btn" data-nav="' + opts.backNav + '">Chọn bài khác</button></div>' + review(wrong, opts.mixed) + '</div>';
-        root.querySelector('#qagain').addEventListener('click', function () {
-          if (opts.retry) runExamSession(root, opts.parent); else setup();
-        });
-        var rb = root.querySelector('#qretry');
-        if (rb) rb.addEventListener('click', function () {
-          runExamSession(root, {
-            title: opts.title, label: 'Làm lại câu sai · ' + (opts.parent || opts).label,
-            questions: wrong.map(function (x) { return x.q; }),   // giữ thứ tự cố định của đề
-            storeId: opts.storeId, backNav: opts.backNav, mixed: opts.mixed,
-            retry: true, parent: opts.parent || opts
-          });
+        var parent = opts.parent || opts;
+        scoreScreen(root, {
+          big: correct, small: '/' + questions.length,
+          sub: esc(opts.label) + ' · đúng ' + Math.round(correct / questions.length * 100) + '%.' +
+               (opts.retry ? NO_SAVE_NOTE : ''),
+          wrong: wrong.length,
+          againLabel: opts.retry ? 'Làm lại cả đề' : 'Làm lại',
+          extra: '<button class="btn" data-nav="' + opts.backNav + '">Chọn bài khác</button>',
+          review: review(wrong, opts.mixed),
+          onAgain: function () { if (opts.retry) runExamSession(root, parent); else setup(); },
+          onRetry: function () {
+            runExamSession(root, {
+              title: opts.title, label: 'Làm lại câu sai · ' + parent.label,
+              questions: wrong.map(function (x) { return x.q; }),   // giữ thứ tự cố định của đề
+              storeId: opts.storeId, backNav: opts.backNav, mixed: opts.mixed,
+              retry: true, parent: parent
+            });
+          }
         });
       }
     }
@@ -481,27 +514,26 @@
       root.innerHTML = '<div class="quiz-wrap"><h1>' + opts.title + '</h1>' +
         '<p class="sub">' + (opts.intro || 'Chọn nghĩa đúng. Sai ở đâu sẽ được liệt kê lại ở cuối để ôn.') +
         (best !== null ? ' Điểm cao nhất của bạn: <b>' + Math.round(best * 100) + '%</b>.' : '') + '</p>' +
-        '<div class="toolbar"><button class="btn" data-n="10">10 câu</button><button class="btn" data-n="20">20 câu</button>' +
-        '<button class="btn" data-n="0">Toàn bộ (' + pool.length + ' câu)</button></div>' +
-        '<div class="toolbar"><button class="btn" data-mode="jp2vi" aria-pressed="true">Nhật → Việt</button>' +
-        '<button class="btn" data-mode="vi2jp">Việt → Nhật</button><button class="btn" data-mode="mix">Trộn cả hai</button></div>' +
+        '<div class="toolbar">' + choice('n', '10', '10 câu', true) + choice('n', '20', '20 câu') +
+          choice('n', '0', 'Toàn bộ (' + pool.length + ' câu)') + '</div>' +
+        '<div class="toolbar">' + choice('mode', 'jp2vi', 'Nhật → Việt', true) +
+          choice('mode', 'vi2jp', 'Việt → Nhật') + choice('mode', 'mix', 'Trộn cả hai') + '</div>' +
         '<button class="btn primary" id="qstart">Bắt đầu</button></div>';
       var n = 10, mode = 'jp2vi';
-      pressGroup('[data-n]', true, function (b) { n = parseInt(b.getAttribute('data-n'), 10); });
-      pressGroup('[data-mode]', false, function (b) { mode = b.getAttribute('data-mode'); });
+      pressGroup('[data-n]', function (b) { n = parseInt(b.getAttribute('data-n'), 10); });
+      pressGroup('[data-mode]', function (b) { mode = b.getAttribute('data-mode'); });
       root.querySelector('#qstart').addEventListener('click', function () {
         start(n === 0 ? pool.length : Math.min(n, pool.length), mode);
       });
     }
-    function pressGroup(sel, pressFirst, onPick) {
-      var all = root.querySelectorAll(sel);
-      Array.prototype.forEach.call(all, function (b, i) {
-        if (pressFirst && !i) b.setAttribute('aria-pressed', 'true');
-        b.addEventListener('click', function () {
-          onPick(b);
-          Array.prototype.forEach.call(all, function (x) { x.setAttribute('aria-pressed', 'false'); });
-          b.setAttribute('aria-pressed', 'true');
-        });
+    function choice(attr, value, label, pressed) {
+      return '<button class="btn" data-' + attr + '="' + value + '" aria-pressed="' + !!pressed + '">' + label + '</button>';
+    }
+    /* Nhóm nút chọn một: nút được bấm sáng, các nút khác tắt. */
+    function pressGroup(sel, onPick) {
+      on(root, sel, 'click', function (b) {
+        onPick(b);
+        each(root, sel, function (x) { setPressed(x, x === b); });
       });
     }
 
@@ -536,7 +568,7 @@
         var prompt = q.dir === 'jp2vi'
           ? '<div class="q jp">' + esc(w.w) + '</div>' + (w.k ? '<div class="kana jp q-kana">' + esc(w.k) + '</div>' : '')
           : '<div class="q vi">' + vtMeaning(w) + '</div>';
-        root.innerHTML = '<div class="quiz-wrap"><div class="qbar"><i style="width:' + (idx / questions.length * 100) + '%"></i></div>' +
+        root.innerHTML = '<div class="quiz-wrap">' + progressBar(idx, questions.length) +
           '<div class="qprompt"><div class="lead">Câu ' + (idx + 1) + '/' + questions.length + ' · ' +
           (q.dir === 'jp2vi' ? 'Từ này nghĩa là gì?' : 'Từ tiếng Nhật nào có nghĩa này?') + '</div>' + prompt + '</div>' +
           '<div class="opts">' + q.options.map(function (o, i) {
@@ -558,17 +590,17 @@
       }
       function finish() {
         if (!retryOf) Store.addScore(opts.storeId, correct, questions.length);
-        var pct = Math.round(correct / questions.length * 100);
-        root.innerHTML = '<div class="quiz-wrap score"><div class="big">' + pct + '<small>%</small></div>' +
-          '<p class="sub">Đúng ' + correct + '/' + questions.length + ' câu.' + (retryOf ? ' Phiên làm lại câu sai không lưu điểm.' : '') + '</p>' +
-          '<div class="flash-controls">' +
-          (wrong.length ? '<button class="btn primary" id="qretry">Làm lại câu sai (' + wrong.length + ')</button>' : '') +
-          '<button class="btn' + (wrong.length ? '' : ' primary') + '" id="qagain">Làm lại</button>' +
-          (opts.afterAction ? '<button class="btn" ' + opts.afterAction.attr + '>' + esc(opts.afterAction.label) + '</button>' : '') + '</div>' +
-          drillReview(wrong) + '</div>';
-        root.querySelector('#qagain').addEventListener('click', setup);
-        var rb = root.querySelector('#qretry');
-        if (rb) rb.addEventListener('click', function () { start(0, mode, wrong.map(function (x) { return x.q; })); });
+        var after = opts.afterAction;
+        scoreScreen(root, {
+          big: Math.round(correct / questions.length * 100), small: '%',
+          sub: 'Đúng ' + correct + '/' + questions.length + ' câu.' + (retryOf ? NO_SAVE_NOTE : ''),
+          wrong: wrong.length,
+          againLabel: 'Làm lại',
+          extra: after ? '<button class="btn" ' + after.attr + '>' + esc(after.label) + '</button>' : '',
+          review: drillReview(wrong),
+          onAgain: setup,
+          onRetry: function () { start(0, mode, wrong.map(function (x) { return x.q; })); }
+        });
       }
       function drillReview(list) {
         if (!list.length) return '';

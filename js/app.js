@@ -49,6 +49,11 @@
   /* "Đỏ 3" / "Vàng 12" và "Sách đỏ" / "Sách vàng" */
   window.bookShort = function (book) { return book.tone === 'red' ? 'Đỏ' : 'Vàng'; };
   window.bookLabel = function (book) { return book.tone === 'red' ? 'Sách đỏ' : 'Sách vàng'; };
+  /* "Vàng 4" theo id bài; '' nếu không có trong manifest. */
+  window.lessonShort = function (id) {
+    var m = JPD.meta(id);
+    return m ? bookShort(m.book) + ' ' + m.lesson.n : '';
+  };
 
   function go(hash) { location.hash = hash; }
   window.go = go;
@@ -101,14 +106,10 @@
             '<p class="sub">Chọn một bài để xem từ vựng, ngữ pháp, kanji và làm bài kiểm tra. ' +
             'Tiến độ được lưu tự động trên máy bạn.</p>' +
             '<div class="cta-row">' +
-              '<button class="study-cta" data-nav="study"><span>' +
-                '<span class="study-cta-title">Ôn từ vựng / kanji nhiều bài</span>' +
-                '<span class="study-cta-sub">Gộp từ vựng hoặc kanji của nhiều bài thành một bộ flashcard hoặc bài luyện nghĩa từ</span>' +
-              '</span></button>' +
-              '<button class="study-cta" data-nav="all-quiz"><span>' +
-                '<span class="study-cta-title">Đề kiểm tra gộp nhiều bài</span>' +
-                '<span class="study-cta-sub">Gộp câu hỏi kiểm tra (từ vựng / ngữ pháp) của nhiều bài thành một đề</span>' +
-              '</span></button>' +
+              cta('study', 'Ôn từ vựng / kanji nhiều bài',
+                  'Gộp từ vựng hoặc kanji của nhiều bài thành một bộ flashcard hoặc bài luyện nghĩa từ') +
+              cta('all-quiz', 'Đề kiểm tra gộp nhiều bài',
+                  'Gộp câu hỏi kiểm tra (từ vựng / ngữ pháp) của nhiều bài thành một đề') +
             '</div>';
 
     JPD.books.forEach(function (book) {
@@ -126,6 +127,13 @@
     });
   }
 
+  function cta(nav, title, sub) {
+    return '<button class="study-cta" data-nav="' + nav + '"><span>' +
+             '<span class="study-cta-title">' + title + '</span>' +
+             '<span class="study-cta-sub">' + sub + '</span>' +
+           '</span></button>';
+  }
+
   function homeCard(book, l) {
     var known = Store.knownCount(l.id);
     var pct = l.words ? Math.min(100, Math.round(known / l.words * 100)) : 0;
@@ -137,7 +145,7 @@
       h += '<div class="meta"><span>' + (l.words || 0) + ' từ</span>' +
              '<span>' + (l.grammar || 0) + ' mẫu ngữ pháp</span>' +
              (l.kanji ? '<span>' + l.kanji + ' kanji</span>' : '') + '</div>' +
-           '<div class="bar"><i style="width:' + pct + '%"></i></div>';
+           '<div class="bar"><i style="width:' + pct + '%"></i></div>';   // độ rộng tính lúc chạy
     } else {
       h += '<div class="meta"><span>Chưa có nội dung</span></div>';
     }
@@ -241,7 +249,6 @@
   window.App = {
     // manifest.js là thẻ <script> cuối cùng, nên đây mới là lần render đầu:
     // gọi route() sớm hơn sẽ thấy danh mục rỗng và đẩy link trực tiếp về '#/'.
-    onManifest: route,
-    refreshHome: renderHome
+    onManifest: route
   };
 })();

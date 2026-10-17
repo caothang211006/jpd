@@ -24,6 +24,7 @@ function run(file) { vm.runInContext(fs.readFileSync(path.join(ROOT, file), 'utf
 
 run('data/manifest.js');
 books.forEach(function (b) { b.lessons.forEach(function (l) { if (l.file) run(l.file); }); });
+run('js/util.js');
 run('js/quiz.js');
 
 var O = sandbox.JPDOrder, T = sandbox.EXAM_TYPES;

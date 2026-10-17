@@ -74,9 +74,6 @@
       save();
       return !!b.watch[wordKey];
     },
-    watchCount: function (lessonId) {
-      return Object.keys(bucket(lessonId).watch).length;
-    },
 
     /* ---- loại từ ra: gỡ khỏi danh sách lưu ý + đánh dấu thuộc vĩnh viễn ---- */
     isLocked: function (lessonId, wordKey) {
@@ -106,10 +103,6 @@
         if (best === null || pct > best) best = pct;
       }
       return best;
-    },
-    resetAll: function () {
-      data = {};
-      save();
     }
   };
 })();

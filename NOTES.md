@@ -8,7 +8,9 @@
 
 ## File
 - `data/shochukyu/lNN.js` (sơ-trung cấp), `data/shokyu/lNN.js` (sơ cấp), `data/manifest.js` (số `words` / `grammar` / `kanji` mỗi bài, phải cập nhật khi thêm nội dung).
-- Code: `js/flash.js`, `js/kanji.js`, `js/grammar.js`, `js/quiz.js`, `css/style.css`.
+- Code (thứ tự nạp trong index.html): `js/util.js` (hàm dùng chung: shuffle, each/on, setPressed, Pref, wordKey, isKatakanaWord, vtMeaning) → `js/store.js` → `js/data.js` → `js/vocab.js`, `js/flash.js`, `js/grammar.js`, `js/kanji.js`, `js/quiz.js`, `js/study.js`, `js/browse.js` → `js/app.js` (router; esc, furi, bookShort, bookLabel, lessonShort, go, loadLessons) → `data/manifest.js`. CSS: `css/style.css`.
+- Không viết style="" trong JS (trừ độ rộng thanh tiến độ tính lúc chạy); ẩn/hiện bằng thuộc tính hidden. Công tắc dùng aria-pressed (setPressed), khối mở/đóng dùng aria-expanded.
+- tools/order-check.js nạp js/util.js + js/quiz.js; đổi code xáo đề thì chạy lại, mã băm phải giữ nguyên.
 
 ## Cấu trúc data
 - vocab: `{g, w, k, hv, m, vt}` — `vt` = nhóm động từ `'I' | 'II' | 'III'` (kể cả danh từ + する; cụm cố định như 失礼します không gắn; danh sách + quy tắc: tools/verb-check.md; từ chưa chắc thêm `vtCheck: true`; sách đỏ xác định bằng cách so dạng ～ます với thể từ điển trong ［］, sách vàng ～iる/～eる đối chiếu với dạng chia có trong data). Mặt nghĩa hiện "Động từ nhóm II · …" (window.vtMeaning).  `hv` = Âm Hán Việt VIẾT HOA cho từ có kanji (hiện trên flashcard mặt sau và danh sách từ vựng); từ không có kanji thì không có `hv` (nhóm, từ, cách đọc, nghĩa). Không có trường ví dụ riêng; câu ví dụ gộp vào `m`.

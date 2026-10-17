@@ -43,34 +43,42 @@
         books.map(bookBlock).join('');
       bind();
       // nội dung bài đang mở: tải lại (đã có trong bộ nhớ thì tức thì)
-      Array.prototype.forEach.call(root.querySelectorAll('.bl-body[data-load]'), loadInto);
+      each(root, '.bl-body[data-load]', loadInto);
     }
 
     function intro() {
+      var inlineSub = '<p class="sub">Bấm một bài để xem nội dung ngay tại đây.</p>';
       if (tab === 'flash') {
         return '<p class="sub">Chọn một bài để học flashcard. Muốn gộp nhiều bài: ' +
                '<button class="btn btn-sm" data-nav="study">Ôn từ vựng / kanji nhiều bài</button></p>';
       }
-      if (tab === 'quiz') return '<p class="sub">Bấm tên bài để làm đề của bài đó, hoặc tích chọn nhiều bài để làm đề gộp.</p>';
+      if (tab === 'quiz') {
+        return '<p class="sub">Bấm tên bài để làm đề của bài đó, hoặc tích chọn nhiều bài để làm đề gộp.</p>';
+      }
       if (tab === 'vocab') {
-        return '<p class="sub">Bấm một bài để xem nội dung ngay tại đây.</p>' +
-          '<div class="toolbar"><button class="btn" id="bkata" aria-pressed="' + Pref.get(VOCAB_KATA_KEY) + '">Chỉ katakana</button>' +
+        return inlineSub + '<div class="toolbar">' +
+          '<button class="btn" id="bkata" aria-pressed="' + Pref.get(VOCAB_KATA_KEY) + '">Chỉ katakana</button>' +
           '<span class="note">Áp dụng cho mọi bài đang mở và trang từ vựng của từng bài.</span></div>';
       }
-      return '<p class="sub">Bấm một bài để xem nội dung ngay tại đây.</p>';
+      return inlineSub;
     }
 
     function bookBlock(book) {
       var open = !!openBooks[book.id];
       var total = book.lessons.filter(function (l) { return amount(tab, l); }).length;
+      var listId = 'bl-' + book.id;
       return '<section class="book-block">' +
-        '<button class="book-toggle" data-book="' + esc(book.id) + '" aria-expanded="' + open + '">' +
+        '<button class="book-toggle" data-book="' + esc(book.id) + '" aria-expanded="' + open + '"' +
+          (open ? ' aria-controls="' + esc(listId) + '"' : '') + '>' +
           '<span class="book-dot ' + book.tone + '"></span>' +
-          '<span class="bt-name">' + esc(bookLabel(book)) + ' <span class="jp">' + esc(book.name.split(' — ')[0]) + '</span></span>' +
-          '<span class="bt-count">' + (total ? total + '/' + book.lessons.length + ' bài có nội dung' : 'chưa có') + '</span>' +
-          '<span class="bt-caret">' + (open ? '▾' : '▸') + '</span>' +
+          '<span class="bt-name">' + esc(bookLabel(book)) +
+            ' <span class="jp">' + esc(book.name.split(' — ')[0]) + '</span></span>' +
+          '<span class="bt-count">' +
+            (total ? total + '/' + book.lessons.length + ' bài có nội dung' : 'chưa có') + '</span>' +
+          '<span class="bt-caret" aria-hidden="true">' + (open ? '▾' : '▸') + '</span>' +
         '</button>' +
-        (open ? '<div class="book-lessons">' + book.lessons.map(function (l) { return lessonRow(book, l); }).join('') + '</div>' : '') +
+        (open ? '<div class="book-lessons" id="' + esc(listId) + '">' +
+          book.lessons.map(function (l) { return lessonRow(book, l); }).join('') + '</div>' : '') +
       '</section>';
     }
 
@@ -85,12 +93,14 @@
       }
       return '<div class="bl-row' + (n ? '' : ' bl-none') + (open ? ' open' : '') + '">' +
           '<div class="bl-head">' + check +
-            '<button class="bl-open" data-row="' + esc(l.id) + '"' + (n || tab === 'quiz' && l.file ? '' : ' disabled') + '>' +
+            '<button class="bl-open" data-row="' + esc(l.id) + '"' +
+              (n || tab === 'quiz' && l.file ? '' : ' disabled') +
+              (INLINE[tab] && n ? ' aria-expanded="' + !!open + '"' : '') + '>' +
               '<span class="bl-num">Bài ' + esc(l.n) + '</span>' +
               '<span class="bl-title jp">' + esc(l.jp) + '</span>' +
               '<span class="bl-vi">' + esc(l.vi) + '</span>' +
               '<span class="bl-meta">' + esc(amountText(tab, l)) + '</span>' +
-              (INLINE[tab] && n ? '<span class="bl-caret">' + (open ? '▾' : '▸') + '</span>' : '') +
+              (INLINE[tab] && n ? '<span class="bl-caret" aria-hidden="true">' + (open ? '▾' : '▸') + '</span>' : '') +
             '</button>' +
           '</div>' +
           (open ? '<div class="bl-body" data-load="' + esc(l.id) + '"><div class="empty">Đang tải…</div></div>' : '') +
@@ -112,61 +122,64 @@
           '<label>Số câu mỗi bài <select id="mixPer">' + [[0, 'Tất cả'], [10, '10'], [5, '5']].map(function (o) {
             return '<option value="' + o[0] + '"' + (mix.per === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
           }).join('') + '</select></label>' +
-          '<label>Chọn từ đầu đến <select id="mixUpto"><option value="">—</option>' + eligible().map(function (x, i) {
-            return '<option value="' + i + '">' + esc(bookShort(x.book) + ' ' + x.l.n) + '</option>';
-          }).join('') + '</select></label></div>' +
+          '<label>Chọn từ đầu đến <select id="mixUpto"><option value="">—</option>' +
+            eligible().map(function (x, i) {
+              return '<option value="' + i + '">' + esc(bookShort(x.book) + ' ' + x.l.n) + '</option>';
+            }).join('') + '</select></label></div>' +
         '<div class="mix-row"><span class="note">Đã chọn ' + ids.length + ' bài' +
-          (ids.length ? ': ' + esc(ids.map(tagOf).join(', ')) : '') + '</span>' +
+          (ids.length ? ': ' + esc(ids.map(lessonShort).join(', ')) : '') + '</span>' +
           '<button class="btn btn-sm" id="mixClear"' + (ids.length ? '' : ' disabled') + '>Bỏ chọn</button>' +
           '<button class="btn primary" id="mixGo"' + (ids.length ? '' : ' disabled') + '>Làm đề gộp</button></div>' +
-        '<p class="note">Đề số N lấy đề N của mỗi bài (bài có ít đề hơn thì lấy đề cuối). Điểm đề gộp lưu riêng, không ảnh hưởng điểm từng bài.</p>' +
+        '<p class="note">Đề số N lấy đề N của mỗi bài (bài có ít đề hơn thì lấy đề cuối). ' +
+          'Điểm đề gộp lưu riêng, không ảnh hưởng điểm từng bài.</p>' +
       '</div>';
     }
     function eligible() {
       var out = [];
-      books.forEach(function (b) { b.lessons.forEach(function (l) { if (hasType(l, mix.type)) out.push({ book: b, l: l }); }); });
+      books.forEach(function (b) {
+        b.lessons.forEach(function (l) { if (hasType(l, mix.type)) out.push({ book: b, l: l }); });
+      });
       return out;
     }
     function pickedIds() {
       return eligible().filter(function (x) { return mix.picked[x.l.id]; }).map(function (x) { return x.l.id; });
     }
-    function tagOf(id) { var m = JPD.meta(id); return bookShort(m.book) + ' ' + m.lesson.n; }
-
     /* ---- sự kiện ---- */
-    function on(sel, ev, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), function (el) { el.addEventListener(ev, function (e) { fn(el, e); }); }); }
 
     function bind() {
-      on('[data-book]', 'click', function (el) {
+      on(root, '[data-book]', 'click', function (el) {
         var id = el.getAttribute('data-book');
         if (openBooks[id]) delete openBooks[id]; else openBooks[id] = true;
         render();
       });
-      on('[data-row]', 'click', function (el) {
+      on(root, '[data-row]', 'click', function (el) {
         var id = el.getAttribute('data-row');
         if (!INLINE[tab]) { go('#/l/' + id + '/' + tab); return; }
         var key = tab + '|' + id;
         if (openLessons[key]) delete openLessons[key]; else openLessons[key] = true;
         render();
       });
-      on('#bkata', 'click', function () { Pref.set(VOCAB_KATA_KEY, !Pref.get(VOCAB_KATA_KEY)); render(); });
+      on(root, '#bkata', 'click', function () { Pref.toggle(VOCAB_KATA_KEY); render(); });
       if (tab !== 'quiz') return;
-      on('[data-pick]', 'change', function (el) {
+      on(root, '[data-pick]', 'change', function (el) {
         var id = el.getAttribute('data-pick');
         if (el.checked) mix.picked[id] = true; else delete mix.picked[id];
         render();
       });
-      on('[data-mixtype]', 'click', function (el) { mix.type = el.getAttribute('data-mixtype'); render(); });
-      on('#mixDe', 'change', function (el) { mix.de = parseInt(el.value, 10); });
-      on('#mixPer', 'change', function (el) { mix.per = parseInt(el.value, 10); });
-      on('#mixUpto', 'change', function (el) {
+      on(root, '[data-mixtype]', 'click', function (el) { mix.type = el.getAttribute('data-mixtype'); render(); });
+      on(root, '#mixDe', 'change', function (el) { mix.de = parseInt(el.value, 10); });
+      on(root, '#mixPer', 'change', function (el) { mix.per = parseInt(el.value, 10); });
+      on(root, '#mixUpto', 'change', function (el) {
         if (el.value === '') return;
         var upto = parseInt(el.value, 10);
         mix.picked = {};
-        eligible().forEach(function (x, i) { if (i <= upto) { mix.picked[x.l.id] = true; openBooks[x.book.id] = true; } });
+        eligible().forEach(function (x, i) {
+          if (i <= upto) { mix.picked[x.l.id] = true; openBooks[x.book.id] = true; }
+        });
         render();
       });
-      on('#mixClear', 'click', function () { mix.picked = {}; render(); });
-      on('#mixGo', 'click', function () {
+      on(root, '#mixClear', 'click', function () { mix.picked = {}; render(); });
+      on(root, '#mixGo', 'click', function () {
         go('#/mix/' + mix.type + '/' + mix.de + '/' + mix.per + '/' + pickedIds().join(','));
       });
     }
@@ -176,9 +189,11 @@
       JPD.load(id, function (lesson) {
         if (!document.body.contains(box)) return;          // đã đóng / đã chuyển trang
         if (!lesson) { box.innerHTML = '<div class="empty">Chưa có nội dung.</div>'; return; }
-        box.innerHTML = '<div class="bl-actions"><button class="btn btn-sm" data-golesson="' + esc(id) + '">Mở bài này</button></div><div class="bl-content"></div>';
-        box.querySelector('[data-golesson]').addEventListener('click', function () { go('#/l/' + id + '/' + tab); });
-        window.Views[tab](box.querySelector('.bl-content'), lesson, JPD.meta(id).lesson, tab === 'vocab' ? 'inline' : undefined);
+        box.innerHTML = '<div class="bl-actions"><button class="btn btn-sm" data-golesson="' + esc(id) + '">' +
+          'Mở bài này</button></div><div class="bl-content"></div>';
+        on(box, '[data-golesson]', 'click', function () { go('#/l/' + id + '/' + tab); });
+        var sub = tab === 'vocab' ? 'inline' : undefined;
+        window.Views[tab](box.querySelector('.bl-content'), lesson, JPD.meta(id).lesson, sub);
       });
     }
 

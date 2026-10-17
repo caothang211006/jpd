@@ -34,10 +34,6 @@
       for (var i = 0; i < waiting.length; i++) waiting[i](l);
     },
 
-    get: function (id) {
-      return lessons[id] || null;
-    },
-
     /* Finds the manifest entry (title, file, counts) without loading content */
     meta: function (id) {
       for (var i = 0; i < books.length; i++) {

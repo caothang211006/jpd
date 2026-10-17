@@ -1,44 +1,39 @@
-/* Word list: search, group headings, mark-as-known. */
+/* Word list: search, group headings, mark-as-known, "Chỉ katakana". */
 (function () {
   'use strict';
   window.Views = window.Views || {};
 
-  function key(w) { return w.w + '|' + (w.k || ''); }
-  window.wordKey = key;
+  var KATA_KEY = window.VOCAB_KATA_KEY;
 
-  /* Từ katakana. Trước khi xét: bỏ ngoặc ví dụ （例：…） và hậu tố
-     （する）／［する］／します. Tính là katakana khi phần còn lại chỉ gồm
-     katakana, ー, ・, ～ và chữ Latin của từ mượn (ICカード, Tシャツ), có ít
-     nhất một chữ katakana. Có kanji, hiragana hay chữ số thì không tính
-     (100円ショップ, マッサージ器). */
-  var KATA = /^[\u30A1-\u30FA\u30FB\u30FC\uFF5E\u301CA-Za-z\uFF21-\uFF3A\uFF41-\uFF5A]+$/;
-  function kataCore(text) {
-    return String(text || '')
-      .replace(/（例[：:][^）]*）/g, '')
-      .replace(/(（する）|［する］)$/, '')
-      .replace(/します$/, '')
-      .trim();
+  function matches(w, query) {
+    if (!query) return true;
+    var q = query.toLowerCase();
+    return [w.w, w.k, w.m].some(function (s) { return s && s.toLowerCase().indexOf(q) >= 0; });
   }
-  window.isKatakanaWord = function (w) {
-    var s = kataCore(w && w.w);
-    return KATA.test(s) && /[\u30A1-\u30FA]/.test(s);
-  };
 
-  /* Nhóm động từ (trường vt trong data: 'I' | 'II' | 'III'). */
-  window.vtLabel = function (w) { return w && w.vt ? 'Động từ nhóm ' + w.vt : ''; };
-  /* Nghĩa kèm nhãn: "Động từ nhóm I · đi" (đã escape). */
-  window.vtMeaning = function (w, m) {
-    var text = esc(m === undefined ? w.m : m);
-    return w && w.vt ? '<span class="vt">' + esc(window.vtLabel(w)) + '</span> · ' + text : text;
-  };
+  /* Gom các từ liên tiếp cùng nhóm (trường g) thành một khối. */
+  function groupsOf(list) {
+    var groups = [];
+    list.forEach(function (w) {
+      var name = w.g || '';
+      var last = groups[groups.length - 1];
+      if (!last || last.name !== name) groups.push({ name: name, words: [w] });
+      else last.words.push(w);
+    });
+    return groups;
+  }
 
-  /* Tùy chọn lưu trên máy (khóa riêng, không đụng tới jpd.progress.v1). */
-  window.Pref = {
-    get: function (k) { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } },
-    set: function (k, on) { try { localStorage.setItem(k, on ? '1' : '0'); } catch (e) {} }
-  };
-  var KATA_KEY = 'jpd.vocab.kataOnly';
-  window.VOCAB_KATA_KEY = KATA_KEY;
+  function rowHtml(w, isKnown) {
+    var k = wordKey(w);
+    return '<div class="word' + (isKnown ? ' known' : '') + '">' +
+             '<div class="jp-main jp">' + esc(w.w) +
+               (w.k ? '<span class="kana">' + esc(w.k) + '</span>' : '') +
+             '</div>' +
+             '<div class="mean">' + (w.hv ? '<span class="hv">' + esc(w.hv) + '</span> ' : '') +
+               vtMeaning(w) + '</div>' +
+             '<button class="mark" data-k="' + esc(k) + '" title="Đánh dấu đã thuộc">✓</button>' +
+           '</div>';
+  }
 
   /* sub === 'inline': hiện trong trang chọn bài (#/all/vocab); công tắc
      "Chỉ katakana" đã có ở đầu trang đó nên không vẽ lại ở đây. */
@@ -59,80 +54,37 @@
     var body = root.querySelector('#vbody');
     var count = root.querySelector('#vcount');
 
-    function matches(w) {
-      if (!query) return true;
-      var q = query.toLowerCase();
-      return (w.w && w.w.toLowerCase().indexOf(q) >= 0) ||
-             (w.k && w.k.toLowerCase().indexOf(q) >= 0) ||
-             (w.m && w.m.toLowerCase().indexOf(q) >= 0);
-    }
+    function isKnown(w) { return Store.isKnown(lesson.id, wordKey(w)); }
 
     function draw() {
+      var kataOnly = Pref.get(KATA_KEY);
       var list = lesson.vocab.filter(function (w) {
-        if (!matches(w)) return false;
-        if (hideKnown && Store.isKnown(lesson.id, key(w))) return false;
-        if (Pref.get(KATA_KEY) && !isKatakanaWord(w)) return false;
-        return true;
+        return matches(w, query) && !(hideKnown && isKnown(w)) && !(kataOnly && !isKatakanaWord(w));
       });
 
-      var known = Store.knownCount(lesson.id);
-      count.textContent = 'Đã thuộc ' + known + '/' + lesson.vocab.length + ' từ';
+      count.textContent = 'Đã thuộc ' + Store.knownCount(lesson.id) + '/' + lesson.vocab.length + ' từ';
 
       if (!list.length) {
-        body.innerHTML = '<div class="empty">' + (Pref.get(KATA_KEY) && !query ? 'Bài này không có từ katakana.' : 'Không có từ nào khớp.') + '</div>';
+        var msg = kataOnly && !query ? 'Bài này không có từ katakana.' : 'Không có từ nào khớp.';
+        body.innerHTML = '<div class="empty">' + msg + '</div>';
         return;
       }
 
-      // bucket into consecutive groups, then emit one .wlist per group
-      var groups = [];
-      list.forEach(function (w) {
-        var name = w.g || '';
-        var last = groups[groups.length - 1];
-        if (!last || last.name !== name) groups.push({ name: name, words: [w] });
-        else last.words.push(w);
-      });
-
-      body.innerHTML = groups.map(function (g) {
+      body.innerHTML = groupsOf(list).map(function (g) {
         return (g.name ? '<div class="vocab-group jp">' + esc(g.name) + '</div>' : '') +
-               '<div class="wlist">' + g.words.map(row).join('') + '</div>';
+               '<div class="wlist">' + g.words.map(function (w) { return rowHtml(w, isKnown(w)); }).join('') + '</div>';
       }).join('');
 
-      Array.prototype.forEach.call(body.querySelectorAll('.mark'), function (btn) {
-        btn.addEventListener('click', function () {
-          Store.toggleKnown(lesson.id, btn.getAttribute('data-k'));
-          draw();
-        });
+      on(body, '.mark', 'click', function (btn) {
+        Store.toggleKnown(lesson.id, btn.getAttribute('data-k'));
+        draw();
       });
     }
 
-    function row(w) {
-      var k = key(w);
-      var isKnown = Store.isKnown(lesson.id, k);
-      return '<div class="word' + (isKnown ? ' known' : '') + '">' +
-               '<div class="jp-main jp">' + esc(w.w) +
-                 (w.k ? '<span class="kana">' + esc(w.k) + '</span>' : '') +
-               '</div>' +
-               '<div class="mean">' + (w.hv ? '<span class="hv">' + esc(w.hv) + '</span> ' : '') + vtMeaning(w) + '</div>' +
-               '<button class="mark" data-k="' + esc(k) + '" title="Đánh dấu đã thuộc">✓</button>' +
-             '</div>';
-    }
-
-    root.querySelector('#vq').addEventListener('input', function (e) {
-      query = e.target.value.trim();
-      draw();
-    });
-    root.querySelector('#vhide').addEventListener('click', function (e) {
-      hideKnown = !hideKnown;
-      e.target.setAttribute('aria-pressed', hideKnown ? 'true' : 'false');
-      draw();
-    });
-    var kb = root.querySelector('#vkata');
-    if (kb) kb.addEventListener('click', function () {
-      Pref.set(KATA_KEY, !Pref.get(KATA_KEY));
-      kb.setAttribute('aria-pressed', String(Pref.get(KATA_KEY)));
-      draw();
-    });
-    root.querySelector('#vreset').addEventListener('click', function () {
+    on(root, '#vq', 'input', function (el) { query = el.value.trim(); draw(); });
+    on(root, '#vhide', 'click', function (el) { hideKnown = !hideKnown; setPressed(el, hideKnown); draw(); });
+    on(root, '#vkata', 'click', function (el) { setPressed(el, Pref.toggle(KATA_KEY)); draw(); });
+    on(root, '#vreset', 'click', function () {
       if (confirm('Bỏ đánh dấu tất cả từ đã thuộc trong bài này?')) {
         Store.clearKnown(lesson.id);
         draw();
