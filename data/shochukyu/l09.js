@@ -82,7 +82,7 @@ JPD.lesson({
     { g: '楽しいアルバイト', w: '届く', k: 'とどく', hv: 'GIỚI', m: 'Được gửi đến, tới nơi', vt: 'I' },
     { g: '楽しいアルバイト', w: 'かける', k: '', m: 'Ngồi (こちらのいすにおかけください。— Xin mời ngồi ghế này.)', vt: 'II' },
     { g: '楽しいアルバイト', w: '切れる', k: 'きれる', hv: 'THIẾT', m: 'Hết, đứt', vt: 'II' },
-    { g: '楽しいアルバイト', w: '焦げる', k: 'こげる', hv: 'TIÊU', m: 'Bị cháy, khét', vt: 'II' },
+    { g: '楽しいアルバイト', w: '焦げる', k: 'こげる', hv: 'TIÊU', m: 'Bị cháy, khét', vt: 'II', vtCheck: true },
     { g: '楽しいアルバイト', w: '確かめる', k: 'たしかめる', hv: 'XÁC', m: 'Xác nhận, kiểm tra lại', vt: 'II' },
     { g: '楽しいアルバイト', w: '破れる', k: 'やぶれる', hv: 'PHÁ', m: 'Rách', vt: 'II' },
     { g: '楽しいアルバイト', w: '休憩（する）', k: 'きゅうけい（する）', hv: 'HƯU KHẾ', m: 'Nghỉ giải lao', vt: 'III' },

@@ -5,9 +5,9 @@ Mỗi dòng: file | vị trí | trước -> sau | lý do. Vị trí "TV" = examV
 ## Lỗi đề đã liệt kê
 
 - data/shochukyu/l07.js | NP1 câu 25 | q "社長はもう＿＿＿。（尊敬語（そんけいご）で）" -> "社長はもう＿＿＿。［尊敬語（そんけいご）で］" | ngoặc （ lồng trong （ làm công cụ bỏ furigana để lại "で）"; đổi sang ［］, nội dung giữ nguyên. Bản dịch giữ nguyên, bỏ trCheck.
-- data/shochukyu/l06.js | TV4 câu 15 | không đổi data | câu có 2 chỗ trống, phần Dịch chỉ điền chỗ đầu. Sửa ở js/quiz.js (filledSentence điền mọi chỗ ＿). Bỏ trCheck.
+- data/shochukyu/l06.js | TV4 câu 15 | (lần 1: vá trong js/quiz.js — đã gỡ ở lần 2, xem mục "Lần 2"). Bỏ trCheck.
 - data/shochukyu/l04.js | TV5 câu 8 | xóa tr "Trung tâm (VD: trung tâm cư dân) — viết bằng katakana" | câu là đề viết từ bằng tiếng Việt, không phải câu cần dịch; khi trả lời app hiện dòng "Từ: センター". Bỏ trCheck.
-- data/shochukyu/l11.js | TV2 câu 20 | không đổi data | đáp án "～代" điền vào câu thành "食事～代". Sửa ở js/quiz.js (bỏ ～ đầu đáp án khi điền) -> "食事代". Bỏ trCheck.
+- data/shochukyu/l11.js | TV2 câu 20 | (lần 1: vá trong js/quiz.js — đã gỡ ở lần 2, xem mục "Lần 2"). Bỏ trCheck.
 
 ## Soát 25 câu trCheck
 
@@ -40,3 +40,13 @@ Năm câu trCheck của l09 giữ nguyên, kể cả dấu trCheck:
 - Thêm trường `vt` vào 433 từ vựng ở 28 file (cả l09, vì đây là trường mới, không đổi nội dung bài). Chi tiết: tools/verb-check.md.
 
 Kiểm tra: so từng bài cũ/mới bằng Node — ngoài các dòng trên và trường `vt`, data không đổi gì.
+
+## Lần 2
+
+Đưa 2 chỗ vá trong code về data. Thêm trường `full` (câu đã điền đáp án, có furigana); explain() dùng `full` khi có, còn lại như cũ (điền chỗ trống đầu). Không đổi q, opt, ans nên thứ tự đề và mã băm order-check không đổi.
+- data/shochukyu/l06.js | TV4 câu 15 | thêm full: "このホテルには朝食付きのプランと朝食なしのプランがあります。" | câu 2 chỗ trống, điền cả hai.
+- data/shochukyu/l11.js | TV2 câu 20 | thêm full: "…食事代がたくさんかかりました。" ("食事～代" -> "食事代") | bỏ ký hiệu ～. Lựa chọn "～代" trong khung giữ nguyên như sách.
+
+Nhóm động từ:
+- data/shochukyu/l09.js | vocab 焦げる | thêm vtCheck: true | data không có dạng chia nào để đối chiếu nhóm II.
+- data/shochukyu/l11.js | vocab 折れる | thêm vtCheck: true | như trên.

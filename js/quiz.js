@@ -8,7 +8,8 @@
      {sec, t:'fill', q, acc:[đáp án chấp nhận, ...]}
      {sec, t:'reading', passage, qs:[{q, opt, ans}]}
    Trường tùy chọn: pic, box, hint, g (chỉ số mẫu ngữ pháp), why (giải thích),
-   tr (bản dịch câu đã điền đáp án), trCheck (bản dịch cần người kiểm tra). */
+   tr (bản dịch câu đã điền đáp án), trCheck (bản dịch cần người kiểm tra),
+   full (câu đã điền đáp án, chỉ ghi khi không tự điền được). */
 (function () {
   'use strict';
   window.Views = window.Views || {};
@@ -182,13 +183,13 @@
     }
     return lines.length ? '<div class="q-explain">' + lines.map(function (l) { return '<div>' + l + '</div>'; }).join('') + '</div>' : '';
   }
-  /* Câu đã điền đáp án: điền mọi chỗ trống, bỏ ～ đầu đáp án (～代 → 代),
-     bỏ phần chỉ dẫn cuối câu như ［尊敬語で］ hay （gợi ý: …）. */
+  /* Câu đã điền đáp án. Câu đặc biệt (2 chỗ trống, đáp án có ～) ghi sẵn
+     câu đầy đủ trong data (trường full); câu thường: điền đáp án vào chỗ
+     trống, bỏ phần chỉ dẫn cuối câu như ［尊敬語で］ hay （gợi ý: …）. */
   function filledSentence(q) {
+    if (q.full) return q.full;
     var s = String(q.q || '').replace(/\s*(［[^］]*］|（gợi ý[^）]*）)\s*$/, '');
-    if (!/＿/.test(s)) return s;
-    var ans = rightText(q).split(' / ')[0].replace(/^[～〜]/, '');
-    return s.replace(/＿+/g, ans);
+    return /＿/.test(s) ? s.replace(/＿+/, rightText(q).split(' / ')[0]) : s;
   }
   function vocabFor(q, L) {
     if (!L.vocab) return null;

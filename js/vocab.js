@@ -6,10 +6,23 @@
   function key(w) { return w.w + '|' + (w.k || ''); }
   window.wordKey = key;
 
-  /* Từ katakana: trường w chỉ gồm katakana, ー, ・ và ～.
-     Từ lẫn kanji/hiragana (テレビ番組, カット（する）) không tính. */
-  var KATA = /^[\u30A1-\u30FA\u30FB\u30FC\uFF5E\u301C]+$/;
-  window.isKatakanaWord = function (w) { return KATA.test(String(w && w.w || '')); };
+  /* Từ katakana. Trước khi xét: bỏ ngoặc ví dụ （例：…） và hậu tố
+     （する）／［する］／します. Tính là katakana khi phần còn lại chỉ gồm
+     katakana, ー, ・, ～ và chữ Latin của từ mượn (ICカード, Tシャツ), có ít
+     nhất một chữ katakana. Có kanji, hiragana hay chữ số thì không tính
+     (100円ショップ, マッサージ器). */
+  var KATA = /^[\u30A1-\u30FA\u30FB\u30FC\uFF5E\u301CA-Za-z\uFF21-\uFF3A\uFF41-\uFF5A]+$/;
+  function kataCore(text) {
+    return String(text || '')
+      .replace(/（例[：:][^）]*）/g, '')
+      .replace(/(（する）|［する］)$/, '')
+      .replace(/します$/, '')
+      .trim();
+  }
+  window.isKatakanaWord = function (w) {
+    var s = kataCore(w && w.w);
+    return KATA.test(s) && /[\u30A1-\u30FA]/.test(s);
+  };
 
   /* Nhóm động từ (trường vt trong data: 'I' | 'II' | 'III'). */
   window.vtLabel = function (w) { return w && w.vt ? 'Động từ nhóm ' + w.vt : ''; };
