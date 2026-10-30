@@ -337,16 +337,20 @@
 
   function promptHtml(q, lead) {
     var plain = String(q.q).replace(/（[^）]*）/g, '');
-    var box = q.box ? q.box.map(function (w) { return '<span>' + furi(w) + '</span>'; }).join('') : '';
+    // Ô từ (q.box) chỉ hiện ở câu tự điền: câu trắc nghiệm đã có đáp án bên dưới
+    // nên ô này thừa. Data vẫn giữ nguyên trường box.
+    var showBox = q.box && !q.opt;
+    var box = showBox ? q.box.map(function (w) { return '<span>' + furi(w) + '</span>'; }).join('') : '';
     return '<div class="qprompt"><div class="lead">' + esc(lead) + '</div>' +
       (q.passage ? '<div class="passage jp">' + furi(q.passage) + '</div>' : '') +
-      (q.box ? '<div class="word-box jp">' + box + '</div>' : '') +
+      (showBox ? '<div class="word-box jp">' + box + '</div>' : '') +
       (q.pic ? '<div class="q-pic">' + esc(q.pic) + '</div>' : '') +
       '<div class="q jp' + (plain.length > 14 ? ' long' : '') + '">' + furi(q.q) + '</div>' +
       (q.hint ? '<div class="q-hint">→ <span class="jp">' + esc(q.hint) + '</span></div>' : '') + '</div>';
   }
 
-  /* Bảng số câu: chia theo phần, tô màu câu đúng/sai, câu đang làm. */
+  /* Bảng số câu: chia theo phần (nhãn = tên phần đầy đủ trong data, VD
+     "Ⅰ. Chọn đáp án đúng"), tô màu câu đúng/sai, câu đang làm. */
   function navGridHtml(questions, idx, done, answers) {
     var h = '<div class="qnav"><div class="qnav-head">' +
       '<span>Bảng câu hỏi · đã làm ' + done.filter(Boolean).length + '/' + questions.length + '</span>' +
@@ -355,7 +359,7 @@
     questions.forEach(function (q, i) {
       if (q.sec !== lastSec) {
         lastSec = q.sec;
-        h += '<div class="qnav-sec">' + esc(String(q.sec || '').split('.')[0]) + '</div>';
+        h += '<div class="qnav-sec">' + esc(q.sec || '') + '</div>';
       }
       var cls = 'qnav-b' + (i === idx ? ' cur' : '') + (done[i] ? (isRight(q, answers[i]) ? ' ok' : ' bad') : '');
       h += '<button class="' + cls + '" data-jumpq="' + i + '">' + (i + 1) + '</button>';
@@ -396,8 +400,8 @@
 
       function render() {
         var q = questions[idx], checked = done[idx], a = answers[idx];
-        var lead = (opts.mixed ? lessonTag(q._lesson) + ' · ' : '') + (q.sec || opts.label) +
-                   ' · Câu ' + (idx + 1) + '/' + questions.length + ' · Đúng ' + score();
+        // tên phần nằm ở Bảng câu hỏi, dòng đầu khung câu hỏi chỉ còn số câu + điểm
+        var lead = 'Câu ' + (idx + 1) + '/' + questions.length + ' · Đúng ' + score();
         root.innerHTML = '<div class="quiz-wrap">' + progressBar(idx, questions.length) +
           promptHtml(q, lead) + answerHtml(q, checked, a) + (checked ? feedbackHtml(q, a) : '') +
           '<div class="flash-controls"><button class="btn" id="qprev"' + (idx ? '' : ' disabled') + '>← Trước</button>' +

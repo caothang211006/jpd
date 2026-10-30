@@ -95,13 +95,14 @@
 
   /* Kanji glyphs deliberately hide their reading on the recognition side —
      that's the whole point of a kanji drill — and surface it opposite the
-     meaning instead. */
+     meaning instead. Tắt "Hiện tiếng Việt" thì ẩn cả nghĩa lẫn âm Hán Việt
+     (thẻ kanji và thẻ từ ghép). */
   function kanjiFaces(w, view) {
     var vi = (view.showVi && w.vi) ? labelled('Nghĩa tiếng Việt', '<div class="mean-big">' + esc(w.vi) + '</div>') : '';
     return {
       jp: '<div class="big jp kanji-solo">' + esc(w.w) + '</div>' + FLIP_HINT,
       vi: (w.k ? '<div class="onkun jp">' + esc(w.k) + '</div>' : '') +
-          (w.hv ? labelled('Âm Hán Việt', hanviet(w.hv)) : '') + vi + KEY_HINT
+          (w.hv && view.showVi ? labelled('Âm Hán Việt', hanviet(w.hv)) : '') + vi + KEY_HINT
     };
   }
 
@@ -126,7 +127,7 @@
     return {
       jp: '<div class="big jp">' + esc(w.w) + '</div>' + FLIP_HINT,
       vi: (w.k ? '<div class="kana jp">' + esc(w.k) + '</div>' : '') +
-          (w.hv ? labelled('Âm Hán Việt', hanviet(w.hv)) : '') + vi + tagHtml(w) + KEY_HINT
+          (w.hv && view.showVi ? labelled('Âm Hán Việt', hanviet(w.hv)) : '') + vi + tagHtml(w) + KEY_HINT
     };
   }
 
@@ -161,6 +162,7 @@
         btn('fshowvi', 'Hiện tiếng Việt', true) +
         btn('fshowkanji', 'Hiện kanji', true) +
         btn('fonlywatch', 'Chỉ học từ cần lưu ý', false) +
+        btn('fwatchclear', 'Bỏ đánh dấu tất cả', undefined, 'Bỏ đánh dấu “cần lưu ý” của mọi từ trong bộ lọc này') +
         btn('fcompound', 'Chỉ từ ghép (ẩn kanji gốc)', false, 'Bỏ các thẻ kanji gốc, chỉ học từ ghép') +
         btn('fkata', 'Chỉ katakana', false) +
         btn('flockedbtn', 'Từ đã loại ra', false) +
@@ -294,8 +296,11 @@
       setPressed($('fkata'), kataOnly);
       renderLocked();
       each(root, '[data-mode]', function (b) { setPressed(b, b.getAttribute('data-mode') === activeKey); });
-      $('fonlywatch').textContent = 'Chỉ học từ cần lưu ý (' + activeSource().filter(isWatch).length + ')';
+      var watched = activeSource().filter(isWatch).length;
+      $('fonlywatch').textContent = 'Chỉ học từ cần lưu ý (' + watched + ')';
       setPressed($('fonlywatch'), onlyWatch);
+      $('fwatchclear').hidden = !onlyWatch;           // chỉ có trong chế độ lọc "cần lưu ý"
+      $('fwatchclear').disabled = !watched;
       return hasVocab;
     }
 
@@ -395,6 +400,15 @@
     toggle('fkata', function () { kataOnly = !kataOnly; Pref.set(FLASH_KATA_KEY, kataOnly); }, true);
     toggle('flockedbtn', function () { showLocked = !showLocked; });
     toggle('fonlywatch', function () { onlyWatch = !onlyWatch; }, true);
+    /* Bỏ cờ "cần lưu ý" của mọi từ đang có cờ trong bộ thẻ này (đúng số ở nút
+       "Chỉ học từ cần lưu ý (N)"); chỉ xóa cờ watch, không đụng đã thuộc/loại ra. */
+    on(root, '#fwatchclear', 'click', function () {
+      var list = activeSource().filter(isWatch);
+      if (!list.length || !confirm('Bỏ đánh dấu “cần lưu ý” của ' + list.length + ' từ?')) return;
+      list.forEach(function (w) { if (isWatch(w)) Store.toggleWatch(w.store, wordKey(w)); });
+      build();
+      draw();
+    });
     toggle('fdir', function (el) {
       jpFirst = !jpFirst;
       el.textContent = jpFirst ? 'Nhật → Việt' : 'Việt → Nhật';

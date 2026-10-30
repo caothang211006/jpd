@@ -39,6 +39,8 @@
 - Đề gộp lưu điểm ở `mix:<type>:<de>:<per>:<ids>` — không đụng điểm từng bài.
 - Câu đề có `tr` (dịch câu đã điền đáp án) và `trCheck: true` nếu bản dịch cần người xem lại (danh sách: tools/tr-check.md). explain() điền đáp án vào chỗ ＿ đầu tiên và bỏ chỉ dẫn cuối câu ［…］/（gợi ý: …）. Câu không tự điền được (2 chỗ trống, đáp án có ～) ghi sẵn câu đầy đủ ở trường `full` (có furigana). Chỉ dẫn trong câu đề viết bằng ［］, không lồng （（））.
 - Sửa data: ghi từng thay đổi vào tools/data-fixes.md.
+- Màn làm đề: dòng đầu khung câu hỏi chỉ "Câu X/Y · Đúng Z"; tên phần (sec đầy đủ trong data) hiện ở Bảng câu hỏi. Ô từ (box) chỉ hiện ở câu tự điền (phần Ⅲ ngữ pháp); câu trắc nghiệm có box (phần Ⅱ từ vựng) không hiện ô vì đáp án đã ở dưới.
+- Flashcard: khi bật "Chỉ học từ cần lưu ý" có nút "Bỏ đánh dấu tất cả" (#fwatchclear) — chỉ bỏ cờ watch của các từ có cờ trong bộ thẻ hiện tại. "Hiện tiếng Việt" tắt thì thẻ kanji/từ ghép ẩn cả nghĩa lẫn âm Hán Việt.
 - Kết quả đề có nút "Làm lại câu sai": phiên đó không lưu điểm (đề lẻ, đề gộp, luyện từ nhanh).
 - "Chỉ katakana": bỏ （例：…） và hậu tố （する）/［する］/します, phần còn lại chỉ gồm katakana, ー, ・, ～, chữ Latin (ICカード, Tシャツ) và có ít nhất 1 chữ katakana; có kanji/hiragana/chữ số thì không tính (window.isKatakanaWord, js/vocab.js). trang từ vựng + #/all/vocab dùng khóa `jpd.vocab.kataOnly`, flashcard từ vựng dùng `jpd.flash.kataOnly` (window.Pref, ngoài jpd.progress.v1).
 - manifest: `tests` (số đề) và `testTypes` ('tuvung nguphap' / 'de') — cập nhật khi thêm đề.

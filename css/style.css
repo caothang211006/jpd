@@ -473,7 +473,10 @@ ruby { ruby-position: over; }
 }
 .qnav-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--ink-soft); margin-bottom: 8px; }
 .qnav-grid { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.qnav-sec { width: 100%; font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+.qnav-sec {
+  width: 100%; font-size: 12px; color: var(--ink-faint); margin-top: 4px;
+  overflow-wrap: anywhere; line-height: 1.4;
+}
 .qnav-b {
   width: 36px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2);
   color: var(--ink); font: inherit; font-size: 13.5px; cursor: pointer; touch-action: manipulation;
