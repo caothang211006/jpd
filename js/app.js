@@ -3,6 +3,7 @@
      #/l/<id>/<tab>[/...]     một bài, một tab (vocab|flash|grammar|kanji|quiz)
      #/all/<tab>              chọn bài theo sách cho một tab (browse.js)
      #/mix/<type>/<de>/<per>/<id,id,...>   đề kiểm tra gộp nhiều bài
+     #/review/<set id>/<số đề>   đề ôn tổng hợp (VD #/review/review-1-8/2)
      #/study                  ôn từ vựng / kanji nhiều bài (flashcard, luyện nghĩa) */
 (function () {
   'use strict';
@@ -203,6 +204,20 @@
     });
   }
 
+  /* ---------------------------------------------- đề ôn tổng hợp */
+  function renderReview(parts) {
+    leaveLesson('quiz');
+    var set = (window.REVIEW_SETS || []).filter(function (x) { return x.id === parts[1]; })[0];
+    if (!set) { go('#/all/quiz'); return; }
+    var token = current.tab = 'review:' + parts.slice(1).join('/');
+    view.innerHTML = '<div class="empty">Đang tải đề…</div>';
+    JPD.loadFile(set.id, set.file, function (lesson) {
+      if (current.tab !== token) return;
+      if (!lesson) { view.innerHTML = '<div class="empty">Không tải được đề.</div>'; return; }
+      window.runReviewExam(view, set, lesson, parseInt(parts[2], 10) || 1);
+    });
+  }
+
   /* Tải nhiều bài, trả về theo thứ tự manifest. */
   function loadLessons(ids, cb) {
     var got = {}, left = ids.length;
@@ -239,6 +254,8 @@
       renderAll(parts[1]);           // #/all/<tab>/all vẫn dẫn về cùng trang
     } else if (parts[0] === 'mix') {
       renderMix(parts);
+    } else if (parts[0] === 'review') {
+      renderReview(parts);
     } else {
       renderHome();
     }

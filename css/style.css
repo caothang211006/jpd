@@ -541,3 +541,18 @@ ruby { ruby-position: over; }
 .toolbar-center { justify-content: center; }
 .empty .empty-action { margin-top: 12px; }
 .st-actions { margin-top: 22px; }
+
+/* tìm kiếm trong tất cả các bài (#/all/vocab, #/all/kanji) */
+.sr-results { margin: 4px 0 20px; }
+.sr-count { margin: 0 0 10px; }
+.sr-lesson { white-space: nowrap; }
+.sr-kcard .kword { cursor: default; }
+.sr-kcard .kword:hover { background: none; }
+.sr-actions { margin-top: 8px; }
+
+/* đề ôn tổng hợp: gợi ý cách gõ dưới ô nhập, nhãn bài/loại ở màn xem lại */
+.fill-hint { margin-top: 6px; font-size: 13px; color: var(--ink-faint); }
+.unit-tag {
+  display: inline-block; margin-right: 6px; padding: 1px 7px; border-radius: 99px;
+  background: var(--panel-2); color: var(--ink-soft); font-family: var(--ui); font-size: 11.5px;
+}

@@ -9,6 +9,7 @@
   window.Views = window.Views || {};
 
   var INLINE = { vocab: 1, grammar: 1, kanji: 1 };
+  var SEARCH = { vocab: 1, kanji: 1 };         // trang có ô tìm trong tất cả các bài
   var openBooks = {};          // book id -> true (giữ trạng thái khi quay lại trang)
   var openLessons = {};        // tab + '|' + lesson id -> true
   var mix = { type: 'nguphap', de: 1, per: 0, picked: {} };
@@ -39,9 +40,11 @@
       root.innerHTML =
         '<h1>' + esc(TAB_LABEL[tab]) + ' — chọn bài</h1>' +
         intro() +
-        (tab === 'quiz' ? mixPanel() : '') +
-        books.map(bookBlock).join('');
+        (tab === 'quiz' ? reviewPanel() + mixPanel() : '') +
+        (SEARCH[tab] ? '<div id="bsearchResults" class="sr-results" hidden></div>' : '') +
+        '<div id="bbooks">' + books.map(bookBlock).join('') + '</div>';
       bind();
+      if (SEARCH[tab]) Search.mount(root, tab, { kataOnly: function () { return Pref.get(VOCAB_KATA_KEY); } });
       // nội dung bài đang mở: tải lại (đã có trong bộ nhớ thì tức thì)
       each(root, '.bl-body[data-load]', loadInto);
     }
@@ -56,11 +59,19 @@
         return '<p class="sub">Bấm tên bài để làm đề của bài đó, hoặc tích chọn nhiều bài để làm đề gộp.</p>';
       }
       if (tab === 'vocab') {
-        return inlineSub + '<div class="toolbar">' +
+        return inlineSub + '<div class="toolbar">' + searchBox() +
           '<button class="btn" id="bkata" aria-pressed="' + Pref.get(VOCAB_KATA_KEY) + '">Chỉ katakana</button>' +
-          '<span class="note">Áp dụng cho mọi bài đang mở và trang từ vựng của từng bài.</span></div>';
+          '<span class="note">Áp dụng cho mọi bài đang mở, kết quả tìm kiếm và trang từ vựng của từng bài.</span></div>';
       }
+      if (tab === 'kanji') return inlineSub + '<div class="toolbar">' + searchBox() + '</div>';
       return inlineSub;
+    }
+
+    /* Ô tìm trong tất cả các bài (js/search.js); từ khóa chỉ giữ trong bộ nhớ. */
+    function searchBox() {
+      var ph = tab === 'kanji' ? 'Tìm kanji: chữ, âm On/Kun, Hán Việt, nghĩa…' : 'Tìm từ trong tất cả các bài: từ, cách đọc, nghĩa…';
+      return '<input type="search" id="bsearch" placeholder="' + ph + '" aria-label="' + ph + '" autocomplete="off">' +
+        '<button class="btn" id="bsearchClear" hidden>Xóa</button>';
     }
 
     function bookBlock(book) {
@@ -108,6 +119,25 @@
     }
 
     /* ---- đề gộp ---- */
+    /* ---- đề ôn tổng hợp (#/review/...) ---- */
+    function reviewPanel() {
+      return (window.REVIEW_SETS || []).map(function (set) {
+        var cards = [];
+        for (var i = 1; i <= set.count; i++) {
+          var best = Store.bestScore(reviewStoreKey(set, i));
+          cards.push('<button class="exam-card" data-review="' + esc(set.id) + '/' + i + '">' +
+            '<span class="exam-card-title">Đề ' + i + '</span>' +
+            '<span class="exam-card-meta">Bài đọc + câu hỏi' +
+              (best !== null ? ' · cao nhất ' + Math.round(best * 100) + '%' : '') + '</span>' +
+          '</button>');
+        }
+        return '<div class="mix-panel"><h2>' + esc(set.title) + '</h2>' +
+          '<p class="note">Mỗi đề là một bài đọc, có câu trắc nghiệm và câu tự gõ, ôn kanji, từ vựng, ngữ pháp bài 1–8. ' +
+          'Điểm lưu riêng từng đề.</p>' +
+          '<div class="exam-pick">' + cards.join('') + '</div></div>';
+      }).join('');
+    }
+
     function mixPanel() {
       var ids = pickedIds();
       return '<div class="mix-panel">' +
@@ -160,6 +190,7 @@
         render();
       });
       on(root, '#bkata', 'click', function () { Pref.toggle(VOCAB_KATA_KEY); render(); });
+      on(root, '[data-review]', 'click', function (el) { go('#/review/' + el.getAttribute('data-review')); });
       if (tab !== 'quiz') return;
       on(root, '[data-pick]', 'change', function (el) {
         var id = el.getAttribute('data-pick');

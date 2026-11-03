@@ -49,15 +49,20 @@
 
     load: function (id, cb) {
       if (lessons[id]) { cb(lessons[id]); return; }
-
       var m = this.meta(id);
       if (!m || !m.lesson.file) { cb(null); return; }
+      this.loadFile(id, m.lesson.file, cb);
+    },
 
+    /* Nạp một file data (gọi JPD.lesson) theo đường dẫn — dùng cho bài trong
+       manifest và cho bộ đề ôn tổng hợp (không nằm trong manifest). */
+    loadFile: function (id, file, cb) {
+      if (lessons[id]) { cb(lessons[id]); return; }
       if (pending[id]) { pending[id].push(cb); return; }
       pending[id] = [cb];
 
       var s = document.createElement('script');
-      s.src = m.lesson.file;
+      s.src = file;
       s.onerror = function () {
         var waiting = pending[id] || [];
         delete pending[id];

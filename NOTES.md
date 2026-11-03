@@ -8,7 +8,7 @@
 
 ## File
 - `data/shochukyu/lNN.js` (sơ-trung cấp), `data/shokyu/lNN.js` (sơ cấp), `data/manifest.js` (số `words` / `grammar` / `kanji` mỗi bài, phải cập nhật khi thêm nội dung).
-- Code (thứ tự nạp trong index.html): `js/util.js` (hàm dùng chung: shuffle, each/on, setPressed, Pref, wordKey, isKatakanaWord, vtMeaning) → `js/store.js` → `js/data.js` → `js/vocab.js`, `js/flash.js`, `js/grammar.js`, `js/kanji.js`, `js/quiz.js`, `js/study.js`, `js/browse.js` → `js/app.js` (router; esc, furi, bookShort, bookLabel, lessonShort, go, loadLessons) → `data/manifest.js`. CSS: `css/style.css`.
+- Code (thứ tự nạp trong index.html): `js/util.js` (hàm dùng chung: shuffle, each/on, setPressed, Pref, wordKey, isKatakanaWord, vtMeaning) → `js/store.js` → `js/data.js` → `js/vocab.js`, `js/flash.js`, `js/grammar.js`, `js/kanji.js`, `js/quiz.js`, `js/study.js`, `js/search.js`, `js/browse.js` → `js/app.js` (router; esc, furi, bookShort, bookLabel, lessonShort, go, loadLessons) → `data/manifest.js`. CSS: `css/style.css`.
 - Không viết style="" trong JS (trừ độ rộng thanh tiến độ tính lúc chạy); ẩn/hiện bằng thuộc tính hidden. Công tắc dùng aria-pressed (setPressed), khối mở/đóng dùng aria-expanded.
 - tools/order-check.js nạp js/util.js + js/quiz.js; đổi code xáo đề thì chạy lại, mã băm phải giữ nguyên.
 
@@ -34,11 +34,12 @@
 - Không bịa nội dung thi thật. Bài 12-15: `exam: []`; vocab/grammar bài 12-15 chờ tài liệu giáo viên.
 
 ## Quy tắc code
-- Routes: `#/` · `#/l/<id>/<tab>` · `#/all/<tab>` (browse.js: 2 khối sách mở/đóng, Từ vựng/Ngữ pháp/Kanji mở nội dung bài tại chỗ, tải lười) · `#/mix/<type>/<de>/<per>/<ids>` (đề gộp) · `#/study` (ôn từ vựng/kanji nhiều bài). Tab trên topbar sáng theo trang (study → Flashcard, mix → Kiểm tra).
+- Routes: `#/` · `#/l/<id>/<tab>` · `#/all/<tab>` (browse.js: 2 khối sách mở/đóng, Từ vựng/Ngữ pháp/Kanji mở nội dung bài tại chỗ, tải lười; `#/all/vocab` và `#/all/kanji` có ô tìm trong tất cả các bài — search.js: chuẩn hóa NFKC, bỏ dấu tiếng Việt, katakana = hiragana, khớp một phần, khớp nguyên trường lên trước rồi theo thứ tự bài; từ khóa chỉ giữ trong bộ nhớ trang, không localStorage, không đổi URL; Esc/Xóa để thoát; "Chỉ katakana" lọc cả kết quả; chữ 見て、わかる ở bài vàng 2–4 (SEE_ONLY) không hiện như kanji) · `#/mix/<type>/<de>/<per>/<ids>` (đề gộp) · `#/study` (ôn từ vựng/kanji nhiều bài). Tab trên topbar sáng theo trang (study → Flashcard, mix → Kiểm tra).
 - Đề kiểm tra: thứ tự CỐ ĐỊNH đã xáo, giống nhau trên mọi máy (seededRandom = băm chuỗi + mulberry32, Fisher-Yates; KHÔNG Math.random/Date/sort ngẫu nhiên; kiểm tra bằng `node tools/order-check.js`, mã băm phải giữ nguyên nếu data đề không đổi). Không có nút "Xáo lại". Seed = storeId; đề gộp theo storeId gộp, không trùng thứ tự gốc / thứ tự mẫu ngữ pháp; câu cùng passage đi cùng nhóm (_group). Mỗi câu mang `_lesson` để explain() lấy đúng bài gốc.
 - Đề gộp lưu điểm ở `mix:<type>:<de>:<per>:<ids>` — không đụng điểm từng bài.
 - Câu đề có `tr` (dịch câu đã điền đáp án) và `trCheck: true` nếu bản dịch cần người xem lại (danh sách: tools/tr-check.md). explain() điền đáp án vào chỗ ＿ đầu tiên và bỏ chỉ dẫn cuối câu ［…］/（gợi ý: …）. Câu không tự điền được (2 chỗ trống, đáp án có ～) ghi sẵn câu đầy đủ ở trường `full` (có furigana). Chỉ dẫn trong câu đề viết bằng ［］, không lồng （（））.
 - Sửa data: ghi từng thay đổi vào tools/data-fixes.md.
+- Đề ôn tổng hợp: `REVIEW_SETS` (js/quiz.js) trỏ tới file data ngoài manifest (data/shochukyu/review-1-8.js, key `examReview`, 5 đề, cùng nội dung với bản in de-on/de-on-tong-hop-1-8.docx), nạp bằng `JPD.loadFile`. Route `#/review/<id>/<số đề>`, danh sách ở đầu #/all/quiz. Điểm lưu `review-1-8:exam-review:<n>`. Câu tự gõ dùng `acc` + `inputHint` (hiện dưới ô), chấm bằng matchesFill có sẵn. `unit`/`kind` chỉ hiện ở màn xem lại. tools/order-check.js KHÔNG duyệt các đề này (hash cũ giữ nguyên).
 - Màn làm đề: dòng đầu khung câu hỏi chỉ "Câu X/Y · Đúng Z"; tên phần (sec đầy đủ trong data) hiện ở Bảng câu hỏi. Ô từ (box) chỉ hiện ở câu tự điền (phần Ⅲ ngữ pháp); câu trắc nghiệm có box (phần Ⅱ từ vựng) không hiện ô vì đáp án đã ở dưới.
 - Flashcard: khi bật "Chỉ học từ cần lưu ý" có nút "Bỏ đánh dấu tất cả" (#fwatchclear) — chỉ bỏ cờ watch của các từ có cờ trong bộ thẻ hiện tại. "Hiện tiếng Việt" tắt thì thẻ kanji/từ ghép ẩn cả nghĩa lẫn âm Hán Việt.
 - Kết quả đề có nút "Làm lại câu sai": phiên đó không lưu điểm (đề lẻ, đề gộp, luyện từ nhanh).

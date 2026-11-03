@@ -9,7 +9,9 @@
      {sec, t:'reading', passage, qs:[{q, opt, ans}]}
    Trường tùy chọn: pic, box, hint, g (chỉ số mẫu ngữ pháp), why (giải thích),
    tr (bản dịch câu đã điền đáp án), trCheck (bản dịch cần người kiểm tra),
-   full (câu đã điền đáp án, chỉ ghi khi không tự điền được). */
+   full (câu đã điền đáp án, chỉ ghi khi không tự điền được),
+   inputHint (gợi ý cách gõ, hiện dưới ô nhập), unit + kind (nhãn soát đề ôn
+   tổng hợp: bài 1–8 và kanji | tuvung | nguphap | doc; chỉ hiện ở màn xem lại). */
 (function () {
   'use strict';
   window.Views = window.Views || {};
@@ -55,6 +57,16 @@
     return Array.isArray(v[0]) ? v.filter(hasItems) : [v];
   }
   window.EXAM_TYPES = TESTS;
+
+  /* Bộ đề ôn tổng hợp: file data riêng, không nằm trong manifest (nên không
+     thuộc phạm vi tools/order-check.js). Mỗi đề = một bài đọc + câu hỏi. */
+  var REVIEW_SETS = [
+    { id: 'review-1-8', file: 'data/shochukyu/review-1-8.js', key: 'examReview',
+      title: 'Đề ôn tổng hợp 1-8', count: 5 }
+  ];
+  window.REVIEW_SETS = REVIEW_SETS;
+  function reviewStoreKey(set, idx) { return set.id + ':exam-review:' + idx; }
+  window.reviewStoreKey = reviewStoreKey;
 
   function storeKey(lesson, test, idx) { return lesson.id + test.store + (idx > 1 ? ':' + idx : ''); }
 
@@ -314,6 +326,24 @@
     on(root, '#qretry', 'click', function () { o.onRetry(); });
   }
 
+  /* ---------------------------------------- đề ôn tổng hợp (#/review) */
+
+  /* lesson = file data của bộ đề (JPD.lesson), idx = số đề (1..). Thứ tự câu và
+     đáp án xếp bằng orderExam theo storeId riêng của từng đề, như đề thường. */
+  window.runReviewExam = function (root, set, lesson, idx) {
+    var list = testsOf(lesson, set.key);
+    if (!list.length) { root.innerHTML = '<div class="empty">Chưa có đề.</div>'; return; }
+    idx = Math.max(1, Math.min(list.length, idx || 1));
+    var storeId = reviewStoreKey(set, idx);
+    runExamSession(root, {
+      title: set.title + ' — Đề ' + idx + ((lesson.titles || [])[idx - 1] ? ': ' + lesson.titles[idx - 1] : ''),
+      label: set.title + ' — Đề ' + idx,
+      questions: orderExam(flattenExam(list[idx - 1], lesson), storeId),
+      storeId: storeId,
+      backNav: 'all-quiz'
+    });
+  };
+
   /* ------------------------------------------------------ exam session */
 
   function answerHtml(q, checked, a) {
@@ -326,7 +356,8 @@
     }
     return '<div class="fill-answer"><input id="qfill" autocomplete="off" autocapitalize="off" value="' + esc(a || '') +
            '" placeholder="Nhập đáp án"' + (checked ? ' disabled' : '') + '>' +
-           (checked ? '' : '<button class="btn primary" id="qcheck">Kiểm tra</button>') + '</div>';
+           (checked ? '' : '<button class="btn primary" id="qcheck">Kiểm tra</button>') + '</div>' +
+           (q.inputHint ? '<div class="fill-hint">' + esc(q.inputHint) + '</div>' : '');
   }
 
   function feedbackHtml(q, a) {
@@ -488,13 +519,19 @@
     }
   }
 
+  var KIND_LABEL = { kanji: 'Kanji', tuvung: 'Từ vựng', nguphap: 'Ngữ pháp', doc: 'Đọc hiểu' };
+  /* Nhãn soát của đề ôn tổng hợp: "Bài 4 · Ngữ pháp" (chỉ câu có trường unit). */
+  function unitTag(q) {
+    return q.unit ? '<span class="unit-tag">Bài ' + esc(q.unit) + ' · ' + esc(KIND_LABEL[q.kind] || q.kind) + '</span>' : '';
+  }
+
   function review(wrong, mixed) {
     if (!wrong.length) return '';
     return '<div class="review"><h2>Câu sai (' + wrong.length + ')</h2>' + wrong.map(function (x) {
       var q = x.q;
       var yours = q.opt && x.answer !== undefined ? q.opt[x.answer] : (x.answer || 'Chưa trả lời');
       var label = (mixed ? lessonTag(q._lesson) + ' · ' : '') + (q.pic ? q.pic + ' ' : '') + q.q + (q.hint ? ' → ' + q.hint : '');
-      return '<div class="row exam-review"><span class="jp">' + furi(label) + '</span><span>' +
+      return '<div class="row exam-review"><span class="jp">' + unitTag(q) + furi(label) + '</span><span>' +
              '<span class="yours">Bạn chọn: ' + furi(yours) + '</span><br>' +
              '<span class="right">Đúng: ' + furi(rightText(q)) + '</span></span></div>';
     }).join('') + '</div>';
